@@ -1,0 +1,705 @@
+@charset "utf-8";
+
+/*-------------- Generics / Reset --------------*/
+* { margin: 0; padding: 0; line-height: 1em; font-size: 1em;}
+body { font-size: 62.5%; background-color: #E5E5E5;}
+body, input, select, textarea { color: #000; font-family: "Trebuchet MS", Verdana, Helvetica, Arial, sans-serif;}
+a { text-decoration: none;}
+img { border: none;}
+hr, #skip { display: none;}
+iframe { width: 1px; height: 1px; border: none;}
+h1, h2, h3, h4, h5 { font-weight: normal;}
+h1 { font-size: 2.4em;}
+h2 { font-size: 1.6em;}
+h3 { font-size: 1.4em;}
+h4 { font-size: 1.3em;}
+h5 { font-size: 1.2em;}
+p, li, dt, dd, th, td { font-size: 1.2em;}
+li li, li td { font-size: 1em;}
+ul { list-style-type: none;}
+h1, h2, h3, h4, h5, p { line-height: 1.2em;}
+table, th, td { border: none;}
+
+/*-------------- Apartats generals --------------*/
+#wrapper { 
+	width: 100%;
+}
+/*--- header ---*/
+#header {}
+	#controls {
+		padding: .7em 2em .9em;
+		background-color: #000;
+	}
+		#controls li {
+			float: left;
+			margin-right: .8em;
+			padding-right: 1em;
+			font-size: 1em;
+			background: url(../images/ubiquo/separa_controls.gif) no-repeat right .2em;
+		}
+			#controls li:last-child {
+				margin-right: 0;
+				padding-right: 0;
+				background: none;
+			}
+		#controls li, #controls li a {
+			color: #FFF;
+		}
+			#controls li a, #controls li span {
+				font-size: 1.1em;
+			}
+			#controls li.active a, #controls li.active span {
+				color: #000;
+				background-color: #FFF;
+			}
+			#controls li.ubiquo_user span {
+				padding-left: 14px;
+				background: url(../images/ubiquo/usuari.gif) no-repeat 0 50%;
+			}
+		#general_configuration {
+			float: left;
+		}
+		#accessibility {
+			float: right;
+		}
+	#header_central {
+		height: 6.4em;
+		padding: .7em 2em 1em;
+	}
+		#header_central	h1 {
+			font-size: 3.6em;
+		}
+			#header_central	h1 img {
+				vertical-align: middle;
+				margin-right: .4em;
+			}
+			#header_central h1 a {
+				color: #FFF;
+			}
+			#header_central h1 a:hover {
+				text-decoration: underline;
+			}
+	#tabs {
+		padding: 0 2em;
+	}
+		#tabs li {
+			float: left;
+			margin-right: .3em;
+			padding: .7em 1em;
+		}
+		#tabs li, #tabs li a  {
+			color: #FFF;
+		}
+		#tabs li.active {
+			background-color: #E5E5E5;
+		}
+			#tabs li a, #tabs li span {
+				font-size: 1.1em;
+			}
+		#contents_tabnav { /* navtab */
+			float: left;
+		}
+		#general_tabnav { /* navtab */
+			float: right;
+		}
+/*--- central ---*/
+#central {
+	position: relative;
+	padding: 2em 1em;
+}
+	/*--- content ---*/
+	#content {
+		position: relative;
+		margin-right: 26em;
+		background: #FFF url(../images/ubiquo/bg_content_right.gif) repeat-y right;
+		border-top: 1px solid #CCC;
+		border-left: 2px solid #CCC;
+	}
+	#inner-content {
+		padding: 1.3em 1.4em 1.7em 1em;
+		background: url(../images/ubiquo/bg_content_bottom.gif) repeat-x bottom;
+	}
+		#content a {
+			text-decoration: underline;
+		}
+		#content h1 {
+			line-height: 1.3em;
+			text-align: center;
+		}
+		#content h2 {
+			font-size: 1em;
+		}
+		.submenu {
+			margin: .7em 0 2em;
+			text-align: center;
+		}
+			.submenu li {
+				display: inline;
+			}
+			.submenu li a, .submenu li span {
+				padding: .1em;
+			}
+			.submenu li.active a, .submenu li.active span {
+				color: #FFF;
+			}
+	/*--- sidebar ---*/
+	#sidebar {
+		position: absolute;
+		top: 2em;
+		right: 1em;
+		width: 24em;
+	}
+		#sidebar .sidebar_box {
+			position: relative;
+			margin-bottom: 2em;
+		}
+		#sidebar h3 {
+			margin-bottom: .5em;
+			padding-bottom: .2em;
+			font-size: 1.8em;
+			border-bottom: 1px solid #000;
+		}
+		#sidebar h4 {
+			margin-bottom: .4em;
+			font-size: 1.4em;
+			color: #546D78;
+		}
+		#sidebar p {
+			margin-bottom: .4em;
+		}	
+	/*--- sidebar: filtres ---*/
+	a.bot_filters {
+		position: absolute;
+		top: .5em;
+		right: 0;
+		font-size: 1.2em;
+	}
+	.sidebar_box a.on {
+		color: #FFF;
+	}
+	#links_filter_content li {
+		margin-bottom: .3em;
+		font-size: 1.4em;
+	}
+	#tag_filter_content li {
+		display: inline;
+	}
+		#tag_filter_content li a.size1 {
+			font-size: 1em;
+		}
+		#tag_filter_content li a.size2 {
+			font-size: 1.4em;
+		}
+		#tag_filter_content li a.size3 {
+			font-size: 2em;
+		}
+		#tag_filter_content li a.size4 {
+			font-size: 2.8em;
+		}
+	#date_filter_content p {
+		margin-bottom: .4em;
+	}
+		#date_filter_content label {
+			display: block;
+			float: left;
+			width: 4em;
+			padding-top: .3em;
+			font-size: .9em;
+		}
+		#date_filter_content input.filter_submit {
+			float: right;
+		}
+	/*--- sidebar: maquetacio ---*/
+	#page_info p {
+		padding: .1em 0 .1em 3.3em;
+	}
+	#page_info p.published_page {
+		background: url(../images/ubiquo/published.gif) no-repeat left center;
+	}
+	#page_info p.non_published_page {
+		background: url(../images/ubiquo/non_published.gif) no-repeat left center;
+	}
+		#page_info h4 a {
+			font-size: .8em;
+		}
+		#page_info p a {
+			font-size: .9em;
+		}
+	#page_info .button-to div {
+		text-align: right;
+		font-size: 1.2em;
+	}
+/*--- footer ---*/
+#footer {
+}
+/*-------------- Estils genèrics --------------*/
+/*--- missatges ---*/
+#empty {
+	margin: 1em 0;
+	padding: .8em;
+	font-size: 1.4em;
+	background-color: #ECF5F4;
+	border: 1px solid #C2D2D1;
+        clear: both;
+}
+#feedback_error, #feedback_notice {
+	margin: 0 0 .67em;
+	padding: .67em;
+}
+#feedback_error, #feedback_notice {
+	font-size: 1.5em;
+	font-weight: bold;
+}
+#feedback_error, #errorExplanation {
+	background-color: #EFD2D4;
+	border: 1px solid #B7393D;
+}
+#feedback_error {
+	color: #B7393D;
+}
+#feedback_notice {
+	color: #4CB53B;
+	background-color: #D4EFD0;
+	border: 1px solid #4CB53B;
+}
+#errorExplanation {
+	margin: 0 0 1em;
+	padding: 1em;
+}
+	#errorExplanation h2 {
+		margin: -.54em -.54em .6em;
+		padding: .4em;
+		color: #FFF;
+		font-weight: bold;
+		font-size: 1.3em;
+		background-color: #B7393D;
+	}
+	#errorExplanation ul {
+		padding-left: 2em;
+	}
+	#errorExplanation p, #errorExplanation li {
+		color: #333;
+	}
+	#errorExplanation p {
+		margin-bottom: .7em;
+	}
+	#errorExplanation li {
+		margin-bottom: .5em;
+		list-style-type: square;
+	}
+/*--- botons ---*/
+#content a.new {
+	display: block;
+	float: right;
+	font-size: 1.3em;
+	font-weight: bold;
+        margin-bottom: 1em;
+}
+/*--- paginador ---*/
+.pagination {
+	position: relative;
+	margin: .5em 0;
+	padding: .5em 0;
+}
+	#content .pagination a {
+		position: absolute;
+		top: 0;
+		color: #000;
+		font-size: 1.1em;
+		text-decoration: none;
+		text-transform: lowercase;
+	}
+	.pagination a.bot_pag_prev {
+		left: 0;
+		padding-left: 1.6em;
+		background: url(../images/ubiquo/arrow_left.gif) no-repeat left center;
+	}
+	.pagination a.bot_pag_next {
+		right: 0;
+		padding-right: 1.6em;
+		background: url(../images/ubiquo/arrow_right.gif) no-repeat right center;
+	}
+/*--- corners ---*/
+.corner_tl, .corner_tr, .corner_bl, .corner_br {
+	position: absolute;
+	display: block;
+	width: 9px;
+	height: 9px;
+}
+.corner_tl {
+	background: url(../images/ubiquo/bg_corner_tl.gif) no-repeat 0 0;
+	top: -1px;
+	left: -2px;
+}
+.corner_tr {
+	background: url(../images/ubiquo/bg_corner_tr.gif) no-repeat 0 0;
+	top: -1px;
+	right: 0;
+}
+.corner_bl {
+	background: url(../images/ubiquo/bg_corner_bl.gif) no-repeat 0 0;
+	bottom: 0;
+	left: -2px;
+}
+.corner_br {
+	background: url(../images/ubiquo/bg_corner_br.gif) no-repeat 0 0;
+	bottom: 0;
+	right: 0;
+}
+.form_box .corner_tl, .form_box .corner_tr, .form_box .corner_bl, .form_box .corner_br {
+	width: 6px;
+	height: 6px;
+}
+.form_box .corner_tl {
+	background-image: url(../images/ubiquo/bg_form_box_tl.gif);
+	top: -2px;
+	left: -2px;
+}
+.form_box .corner_tr {
+	background-image: url(../images/ubiquo/bg_form_box_tr.gif);
+	top: -2px;
+	right: -2px;
+}
+.form_box .corner_bl {
+	background-image: url(../images/ubiquo/bg_form_box_bl.gif);
+	bottom: -2px;
+	left: -2px;
+}
+.form_box .corner_br {
+	background: url(../images/ubiquo/bg_form_box_br.gif);
+	bottom: -2px;
+	right: -2px;
+}
+/*-------------- Seccions --------------*/
+/*--- taula dades genèrica ---*/
+#content table {
+	clear: both;
+	margin: 0 0 2em;
+}
+#content th, #content td {
+	border-right: 2px solid #FFF;
+	border-bottom: 2px solid #FFF;
+}
+#content th:last-child, #content td:last-child {
+	border-right: none;
+}
+#content th {
+	padding: .4em;
+	text-align: left;
+	font-size: 1.4em;
+	font-weight: bold;
+	background-color: #E8EDD7;
+}
+#content th.actions {
+	width: 16.8em;
+}
+#content td.actions {
+	width: 20em;
+}
+	#content th a {
+		color: #000;
+		display: block;
+	}
+	#content th a.order_asc {
+		background: url(../images/ubiquo/arrow_asc.png) no-repeat right center;
+	}
+	#content th a.order_desc {
+		background: url(../images/ubiquo/arrow_desc.png) no-repeat right center;
+	}
+#content td {
+	padding: .5em;
+}
+#content tr.odd td, #menu_items_list table.odd {
+	background-color: #E4E5E7;
+}
+#content tr:hover {
+	background: #F0BB47;
+}
+	#content tr:hover td {
+		background: none;
+	}
+/*--- taula mapa web ---*/
+table#menu_items_list_titles {
+	margin: 1em 0 .5em;
+}
+#menu_items_list table {
+	margin: 0 0 .3em;
+}
+	#menu_items_list td {
+		padding: .3em;
+	}
+	#menu_items_list td.handle {
+		width: 1.5em;
+		cursor: move;
+	}
+	#menu_items_list ul {
+		padding-left: 2.5em;
+	}
+/*--- formularis ---*/
+.error_field {
+	padding: .2em;
+	border: 1px solid #FF0000;
+}
+.file_error_field {
+	padding: .2em;
+        width: 30em;
+	border: 1px solid #FF0000;
+}
+.form_box {
+	position: relative;
+	margin: 2em 0 1em;
+	padding: 2em;
+	background-color: #F3F6EB;
+	border: 2px solid #D5D9C2;
+}
+form h3 {
+	font-size: 1.6em;
+	margin-bottom: 1em;
+}
+form fieldset {
+	margin: 1em 0;
+	padding: 1em;
+	border: 1px solid #D5D9C2;
+}
+form legend {
+	padding: 0 .3em;
+	font-weight: bold;
+	font-size: 1.3em;
+}
+form p, form li {
+	margin-bottom: 1em;
+}
+form label {
+	font-weight: bold;
+}
+#content form input, #content form select {
+	display: block;
+	margin-top: .2em;
+}
+#content form p.datetime select {
+	display: inline;
+}
+#content form input[type="checkbox"], #content form input[type="hidden"] {
+	display: inline;
+}
+form .page_templates li {
+	float: left;
+	margin-right: 1em;
+}
+	form .page_templates input {
+		display: inline;
+		vertical-align: middle;
+	}
+	form .page_templates label {
+		font-weight: normal;
+		font-size: 1em;
+	}
+	form .page_templates img {
+		display: block;
+	}
+form textarea {
+	width: 100%;
+}
+.form_buttons {
+	text-align: right;
+}
+#content .form_buttons input {
+	display: inline;
+}
+/*--- Maquetació ---*/
+.column_4, .column_3, .column_2, .column_1 {
+	margin: 0 1.5% 1.5% 0;
+}
+.column_4 {
+	width: 98.5%;
+}
+.column_3, .column_2, .column_1 {
+	float: left;
+}
+.column_3 {
+	width: 73.5%;
+}
+.column_2 {
+	width: 48.5%;
+}
+.column_1 {
+	width: 23.5%;
+}
+#template .draggable_target {
+	background: #E9E9E9 url(../images/ubiquo/fons_arrossega.jpg) no-repeat center center;
+}
+#template .non_draggable_target {
+	background: #F7F7F7 url(../images/ubiquo/fons_no_arrossega.jpg) no-repeat center center;
+}
+.top_options p {
+	margin-bottom: .4em;
+	font-size: 1.1em;
+}
+	.top_options input {
+		vertical-align: middle;
+	}
+	ul.block_type_holder {
+		min-height: 15em;
+		padding: 1em;
+		border: .1em solid #B4B4B4;
+	}
+	.column_3 ul.block_type_holder, .column_2 ul.block_type_holder, .column_1 ul.block_type_holder {
+		min-height: 28em;
+	}
+li.component {
+	position: relative;
+	width: 13.9em;
+	height: 5.2em;
+	padding: 4.2em 1em 0 .7em;
+	margin: 0 auto;
+	font-size: 1em;
+	background: url(../images/ubiquo/component.jpg) no-repeat;
+}
+ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
+	background: url(../images/ubiquo/component_error.jpg) no-repeat;
+}
+#sidebar li.component {
+	width: 23em;
+	height: 4.3em;
+	padding: 1.5em 1em 0 .7em;
+	background-image: url(../images/ubiquo/component_llarg.jpg);
+}
+	li.component a {
+		position: absolute;
+		top: .6em;
+	}
+	li.component a.delete {
+		left: .6em;
+		width: 14px;
+		height: 15px;
+		text-indent: -5000px;
+		background: url(../images/ubiquo/icona_paperera.jpg) no-repeat;
+	}
+	#central li.component a.edit {
+		right: 2.4em;
+		font-size: 1.2em;
+		text-decoration: none;
+	}
+	li.component a.move {
+		right: .9em;
+		width: 17px;
+		height: 17px;
+		text-indent: -5000px;
+		background: url(../images/ubiquo/creu.gif) no-repeat;
+	}
+	li.component a.editor_cancel {
+		position: static;
+	}
+	#sidebar li.component a.move {
+		top: 1.6em;
+		left: .3em;
+	}
+	#central li.component h4 {
+		color: #572F14;
+		text-align: center;
+		font-size: 1.5em;
+		font-weight: bold;
+	}
+	#central li.component form input {
+		display: inline;
+	}
+/*--- Lightwindow ---*/
+#lightwindow_stage {
+	width: 67.9em;
+}
+	#ubiquo_lb {
+		position: relative;
+		overflow: hidden;
+		padding: 2em;
+		background: url(../images/ubiquo/fons_llarg.png) no-repeat left top;
+	}
+		#lightwindow_contents {
+			background: none;
+			border: none;
+		}
+			#lightwindow_contents h3 {
+				margin-bottom: 1em;
+				font-size: 1.8em;
+			}
+			#lightwindow_contents a.close {
+				display: block;
+				position: absolute;
+				top: 0;
+				right: 1em;
+				width: 19px;
+				height: 19px;
+				text-indent: -5000px;
+				background: url(../images/ubiquo/close.jpg) no-repeat 0 0;
+			}
+			#lightwindow_contents input {
+				display: block;
+				width: 26em;	
+			}
+			#lightwindow_contents h4, #lightwindow_contents p {
+				font-size: 1.1em;
+			}
+			#lightwindow_contents h4 {
+				font-weight: bold;
+			}
+			#lightwindow_contents fieldset ul.assets_list {
+				margin-top: .6em;
+			}
+			#lightwindow_contents fieldset li, #lightwindow_contents fieldset .assigned_text {
+				position: relative;
+			}
+			#lightwindow_contents fieldset li {
+				margin-bottom: .4em;
+				padding: 0 0 .4em;
+				font-size: 1em;
+				border-bottom: 1px solid #D5D9C2;
+			}
+				.spinner { /* hauria de ser genèric */}
+				#lightwindow_contents fieldset li a {
+					position: absolute;
+					top: 0;
+					right: 0;
+					font-size: 1.2em;
+				}
+				#lightwindow_contents .handle { /* hauria de ser genèric */
+					display: block;
+					position: static;
+					float: left;
+					width: 17px;
+					height: 17px;
+					text-indent: -5000px;
+					background: url(../images/ubiquo/updownarrows.gif) no-repeat;
+					cursor: move;
+				}
+				#lightwindow_contents fieldset li a.view {
+					right: 6em;
+				}
+				#lightwindow_contents fieldset li h4 {
+					font-size: 1.2em;
+				}
+				#lightwindow_contents fieldset h4, #lightwindow_contents fieldset dt {
+					font-weight: bold;
+				}
+				#lightwindow_contents fieldset dl {
+					margin-top: .4em;
+				}
+				#lightwindow_contents fieldset dt, #lightwindow_contents fieldset dd {
+					display: inline;
+					margin-right: .4em;
+					font-size: 1.1em;
+				}
+				#lightwindow_contents fieldset dd input {
+					display: inline;
+				}
+			#lightwindow_contents .form_buttons {
+				margin-top: 1.5em;
+			}
+				#lightwindow_contents .form_buttons input {
+					width: 6em;	
+				}
+	#lightwindow_stage .inferior {
+		height: 4em;
+		background: url(../images/ubiquo/fons.png) no-repeat left bottom;
+	}
+/*----------- --- Altres --------------*/
+#controls:after, #tabs:after, #central:after, #content:after, .submenu:after, form .page_templates:after, form#frm_calendar p:after, #template:after, .form_box:after { content: "."; display: block; height: 0; clear: both; visibility: hidden;}
+#controls, #tabs, #central, #content, .submenu, form .page_templates, form#frm_calendar p, #template, .form_box { height: 1%;}

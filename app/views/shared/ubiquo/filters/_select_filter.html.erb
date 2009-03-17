@@ -1,0 +1,16 @@
+<% filter_field = options[:field] %>
+
+<div id="select_filter_content">
+  <% form_tag(url_for_options, :method=>:get) do %>
+	  <%= build_hidden_field_tags(link) %>
+	  <% header_option = options[:all_caption] ? "<option value=''>" + options[:all_caption] + "</option>" : "" %>
+	  <% field_value = (params[filter_field] =~ /^\d+/)? params[filter_field].to_i : params[filter_field] %>
+	  <%= select_tag(filter_field, 
+	        header_option + options_from_collection_for_select(options[:collection], 
+            options[:id_field], 
+            options[:name_field], 
+            (params[filter_field].blank? ? options[:default_selected] : field_value)), 
+          :id => nil) %>
+	  <%= submit_tag(t("ubiquo.search"), :class => "select_filter") %>
+  <% end %>
+</div>

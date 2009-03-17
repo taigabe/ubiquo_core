@@ -1,0 +1,14 @@
+<% filter_field = options[:field] %>
+
+<div id="links_filter_content">
+  <ul>	
+    <% options[:collection].each do |object| -%>
+      <% css_class = (params[filter_field].to_s == object.send(options[:id_field]).to_s) ? "on" : "off" %>
+      <% name = object.send(options[:name_field]) %>
+	    <li>
+		    <% link.update(filter_field => object.send(options[:id_field])) %>
+	      <%= link_to name, link, :class => css_class %>
+	    </li>
+    <% end -%>
+  </ul>
+</div>

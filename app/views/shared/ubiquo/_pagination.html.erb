@@ -1,0 +1,10 @@
+<div class="pagination">
+  <% if item_pages %>
+    <% unless item_pages[:previous].nil? %>
+        <%= link_to t("ubiquo.previous"), params.merge({:page => item_pages[:previous]}), {:class => "bot_pag_prev"} %>
+    <% end %>
+    <% unless item_pages[:next].nil? %>
+        <%= link_to t("ubiquo.next"), params.merge({:page => item_pages[:next]}), {:class => "bot_pag_next"} %>
+    <% end %>
+  <% end %>
+</div>

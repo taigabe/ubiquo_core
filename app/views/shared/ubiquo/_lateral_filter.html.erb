@@ -1,0 +1,15 @@
+<div class="sidebar_box">
+
+  <h3><%= title %></h3>
+  <% if fields.map{|f|params[f].blank?}.include?(false) %>
+		  <% 
+		    without_filters = params.dup 
+		    fields.each { |f| without_filters[f] = nil}
+			  without_filters.delete(:page)
+		    without_filters.delete(:commit) 
+		  %>
+    <%= link_to t('ubiquo.drop_filter'), without_filters, :class => 'bot_filters' %>
+  <% end %>
+
+<%= content %>
+</div>

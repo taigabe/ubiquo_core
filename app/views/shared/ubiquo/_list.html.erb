@@ -1,0 +1,78 @@
+<% 
+=begin
+
+parameters:
+ :name         - The name of the model listed
+ :headers      - A Hash. The key is the field name of the model listed(for sorting). The value is the string to show.
+ :rows         - An Array with each row of the list. Each row is a Hash:
+    :id        - The id of this element
+    :columns   - An Array with the columns values of this element
+    :actions   - An Array with the actions for this element
+ :pages        - Pagination for this list.
+
+optionals:
+
+ :actions_width   - Width (in pixels) of the Actions column (default 100)
+ :hide_actions - Set to true to hide actions (default: false)
+ 
+=end
+
+actions_width ||= 100
+hide_actions ||= false
+
+%>
+<% if rows.size > 0 %>
+  <table width="100%" border="1" cellspacing="0" cellpadding="3">
+    <tr>
+      <% headers.each do |column| %>
+        <th>
+          <%= 
+          case column
+              when Symbol
+                link=params.clone
+                if link[:order_by] == "#{name.to_s.pluralize}.#{column.to_s}"
+                  link[:sort_order]=link[:sort_order]=="asc" ? "desc" : "asc"
+                else
+                  link[:order_by]="#{name.pluralize}.#{column.to_s}"
+                  link[:sort_order]="asc"
+                end
+                  #name.classify.human_attribute_name(column.to_s.humanize)
+                  #t("#{name.classify}|#{column.to_s.humanize}").humanize
+                  link_to name.classify.constantize.human_attribute_name(column.to_s), link, {:class => (params[:order_by]=="#{name.pluralize}.#{column.to_s}" ? (params[:sort_order]=="asc" ? "order_desc" : "order_asc") : "order" )}
+              when String
+                column.humanize
+          end
+          %>
+        </th>
+      <% end %>
+      <% unless hide_actions %>
+        <th width="<%= actions_width %>px" class="actions"><%= t('ubiquo.base.actions') %></th>
+      <% end %>
+      </tr>
+      <% rows.each do |row| %>
+        <tr class="<%= cycle('even', 'odd') %>" id="<%= name %>_<%= row[:id] %>">
+          <% row[:columns].each do |col| %>
+            <td>
+              <%= 
+                 case col
+                   when ActiveSupport::TimeWithZone : l(col)
+                   else col.to_s
+                 end %>
+            </td>
+          <% end %>
+          <% unless hide_actions %>
+            <td>
+              <%= row[:actions].delete_if{|r|r.blank?}.join(" | ") %>
+            </td>            
+          <% end %>
+        </tr>
+    <% end %>
+  </table>
+  <% if !pages.nil? %>
+    <%= render :partial => "shared/ubiquo/pagination", :locals => { :item_pages => pages } %>
+  <% end %>
+<% else %>
+  <p id="empty">
+    <%= t 'ubiquo.empty', :thing => name.gsub(/_/, ' ') %>
+  </p>
+<% end %>

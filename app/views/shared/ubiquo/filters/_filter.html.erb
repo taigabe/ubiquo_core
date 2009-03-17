@@ -1,0 +1,3 @@
+<% lateral_filter( t("ubiquo.filter", :thing => partial_locals[:options][:caption]), partial_locals[:options][:field]) do %>
+  <%= render :partial => partial, :locals => partial_locals %>
+<% end %>
