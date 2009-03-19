@@ -87,8 +87,8 @@ es:
     errors:
       template:
         header:
-          one: "no se pudo guardar la entidad {{model}} porque se encontró 1 error"
-          other: "no se pudo guardar la entidad {{model}} porque se encontraron {{count}} errores"
+          one: "No se pudo guardar la entidad {{model}} porque se encontró 1 error"
+          other: "No se pudo guardar la entidad {{model}} porque se encontraron {{count}} errores"
         # The variable :count is also available
         body: "Se encontraron problemas con los siguientes campos:"
  
