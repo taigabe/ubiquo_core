@@ -73,6 +73,6 @@ hide_actions ||= false
   <% end %>
 <% else %>
   <p id="empty">
-    <%= t 'ubiquo.empty', :thing => name.gsub(/_/, ' ') %>
+    <%= t 'ubiquo.empty', :thing => name.classify.constantize.human_name.downcase %>
   </p>
 <% end %>
