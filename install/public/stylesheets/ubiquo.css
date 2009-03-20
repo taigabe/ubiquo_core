@@ -501,6 +501,8 @@ form textarea {
 	width: 100%;
 }
 .form_buttons {
+    border-top: 1px solid #CCC;
+    padding-top: 0.7em;
 	text-align: right;
 }
 #content .form_buttons input {

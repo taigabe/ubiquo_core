@@ -24,6 +24,9 @@ a {
 form h3 {
 	color: #4E8A10;
 }
+.form_buttons {
+    border-top-color: #4E8A10;
+}
 #lightwindow_contents h3 {
 	color: #4FA601;
 }
