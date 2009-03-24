@@ -5,7 +5,7 @@ es:
     remove: "Eliminar"
     add: "Añadir"
     cancel: "Cancelar"
-    confirm_item_removal: "Estas seguro de querer borrar este item?"
+    confirm_item_removal: "Estás seguro de querer borrar este item?"
     save: "Guardar cambios"
     search: "Buscar"
     sidebar: "Aquí puedes consultar el listado de usuarios así como crear, editar borrar o modificar usuarios y sus permisos."
