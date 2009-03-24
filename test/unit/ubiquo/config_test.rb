@@ -171,6 +171,59 @@ class Ubiquo::ConfigTest < ActiveSupport::TestCase
     assert_equal dummy_method({:word => "man"}),  self.ubiquo_config_call(:a, {:context => :new_context, :word => "man"})
   end
   
+  def test_inheritance
+    Ubiquo::Config.add(:a, "hello")
+    Ubiquo::Config.add(:b)
+    assert_raises(Ubiquo::Config::ValueNeverSetted) do
+      Ubiquo::Config.get(:b)
+    end
+    Ubiquo::Config.add_inheritance(:b, :a)
+
+    assert_nothing_raised do
+      assert_equal "hello", Ubiquo::Config.get(:b)
+    end
+    
+    Ubiquo::Config.set(:a, "Bye")
+    assert_nothing_raised do
+      assert_equal "Bye", Ubiquo::Config.get(:b)
+    end
+    
+    Ubiquo::Config.set(:b, "Hello again")
+    assert_nothing_raised do
+      assert_equal "Hello again", Ubiquo::Config.get(:b)
+    end
+  end
+  
+  def test_inheritance_in_different_context
+    Ubiquo::Config.create_context(:new_context_1)
+    Ubiquo::Config.create_context(:new_context_2)
+    
+    Ubiquo::Config.context(:new_context_1).add(:a, "hello")
+    Ubiquo::Config.context(:new_context_2).add(:b)    
+
+    assert_raises(Ubiquo::Config::ValueNeverSetted) do
+      Ubiquo::Config.context(:new_context_2).get(:b)
+    end
+    Ubiquo::Config.context(:new_context_2).add_inheritance(:b, :new_context_1 =>:a)
+    assert_nothing_raised do
+      assert_equal "hello", Ubiquo::Config.context(:new_context_2).get(:b)
+    end
+  end
+  
+  def test_inheritance_in_context_to_base
+    Ubiquo::Config.create_context(:new_context)
+    
+    Ubiquo::Config.add(:a, "hello")
+    Ubiquo::Config.context(:new_context).add(:b)    
+
+    assert_raises(Ubiquo::Config::ValueNeverSetted) do
+      Ubiquo::Config.context(:new_context).get(:b)
+    end
+    Ubiquo::Config.context(:new_context).add_inheritance(:b, :a)
+    assert_nothing_raised do
+      assert_equal "hello", Ubiquo::Config.context(:new_context).get(:b)
+    end
+  end
   
   
   
