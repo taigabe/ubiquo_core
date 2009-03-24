@@ -35,7 +35,7 @@ table, th, td { border: none;}
 			margin-right: .8em;
 			padding-right: 1em;
 			font-size: 1em;
-			background: url(../images/ubiquo/separa_controls.gif) no-repeat right .2em;
+			background: url(../images/ubiquo/controls_divider.gif) no-repeat right .2em;
 		}
 			#controls li:last-child {
 				margin-right: 0;
@@ -54,7 +54,7 @@ table, th, td { border: none;}
 			}
 			#controls li.ubiquo_user span {
 				padding-left: 14px;
-				background: url(../images/ubiquo/usuari.gif) no-repeat 0 50%;
+				background: url(../images/ubiquo/user.gif) no-repeat 0 50%;
 			}
 		#general_configuration {
 			float: left;
@@ -528,10 +528,10 @@ form textarea {
 	width: 23.5%;
 }
 #template .draggable_target {
-	background: #E9E9E9 url(../images/ubiquo/fons_arrossega.jpg) no-repeat center center;
+	background: #E9E9E9 url(../images/ubiquo/bg_dragdrop.jpg) no-repeat center center;
 }
 #template .non_draggable_target {
-	background: #F7F7F7 url(../images/ubiquo/fons_no_arrossega.jpg) no-repeat center center;
+	background: #F7F7F7 url(../images/ubiquo/bg_no_dragdrop.jpg) no-repeat center center;
 }
 .top_options p {
 	margin-bottom: .4em;
@@ -564,7 +564,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 	width: 23em;
 	height: 4.3em;
 	padding: 1.5em 1em 0 .7em;
-	background-image: url(../images/ubiquo/component_llarg.jpg);
+	background-image: url(../images/ubiquo/long_component.jpg);
 }
 	li.component a {
 		position: absolute;
@@ -587,7 +587,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 		width: 17px;
 		height: 17px;
 		text-indent: -5000px;
-		background: url(../images/ubiquo/creu.gif) no-repeat;
+		background: url(../images/ubiquo/cross.gif) no-repeat;
 	}
 	li.component a.editor_cancel {
 		position: static;
@@ -613,7 +613,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 		position: relative;
 		overflow: hidden;
 		padding: 2em;
-		background: url(../images/ubiquo/fons_llarg.png) no-repeat left top;
+		background: url(../images/ubiquo/bg_lightwindow_long.png) no-repeat left top;
 	}
 		#lightwindow_contents {
 			background: none;
@@ -700,7 +700,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 				}
 	#lightwindow_stage .inferior {
 		height: 4em;
-		background: url(../images/ubiquo/fons.png) no-repeat left bottom;
+		background: url(../images/ubiquo/bg_lightwindow.png) no-repeat left bottom;
 	}
 /*----------- --- Altres --------------*/
 #controls:after, #tabs:after, #central:after, #content:after, .submenu:after, form .page_templates:after, form#frm_calendar p:after, #template:after, .form_box:after { content: "."; display: block; height: 0; clear: both; visibility: hidden;}
