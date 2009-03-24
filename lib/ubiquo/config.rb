@@ -22,6 +22,12 @@ require 'ostruct'
 #      <option_2> => <value_2>,
 #      ...
 #      <option_N> => <value_N>,
+#    },
+#    :inherited_values => {
+#      <option_1> => <lambda_1>,
+#      <option_2> => <lambda_2>,
+#      ...
+#      <option_N> => <lambda_N>,
 #    }
 #  }
 # }
@@ -61,6 +67,21 @@ class Ubiquo::Config
       configuration[self.current_context][:default_values][name] = default_value if !default_value.nil?
       configuration[self.current_context][:allowed_options] << name
     end
+  end
+  
+  def self.add_inheritance(name, inherited_value)
+    raise InvalidOptionName if !check_valid_name(name)
+    raise OptionNotFound if !self.option_exists?(name)
+    name = name.to_sym
+  
+    proc = case inherited_value
+           when Hash
+             lambda{ Ubiquo::Config.context(inherited_value.keys.first).get(inherited_value.values.first)}
+           when String, Symbol
+             lambda{ Ubiquo::Config.context(:BASE).get(inherited_value)}
+           end
+    
+    configuration[self.current_context][:inherited_values][name] = proc
   end
   
   #Set a default value to an existent option of the current context( default :BASE).
@@ -149,6 +170,8 @@ class Ubiquo::Config
       configuration[self.current_context][:values][name]
     elsif configuration[self.current_context][:default_values].include?(name)
       configuration[self.current_context][:default_values][name]
+    elsif configuration[self.current_context][:inherited_values].include?(name)
+      configuration[self.current_context][:inherited_values][name].call
     else
       raise ValueNeverSetted
     end
@@ -271,7 +294,8 @@ class Ubiquo::Config
       name.to_sym => {
         :values => {},
         :default_values => {},
-        :allowed_options => []
+        :allowed_options => [],
+        :inherited_values => {}
       }
     }
   end
