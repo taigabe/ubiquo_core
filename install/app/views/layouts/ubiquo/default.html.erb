@@ -37,7 +37,11 @@
 
 			<hr />
 			<div id="tabs">
-				<%= render_navigation_tabs_section :main %>
+                          <% if superadmin_mode? %>
+			    <%= render_navigation_tabs_section :superadmin %>
+                          <% else %>
+			    <%= render_navigation_tabs_section :main %>
+                          <% end %>
 			</div>
 		</div>
 
