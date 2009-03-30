@@ -2,6 +2,7 @@ module Ubiquo
   module Helpers
     module CoreHelpers
       def ubiquo_stylesheet_link_tags(files=['ubiquo','ubiquo_application','lightwindow'])
+        files.delete 'lightwindow' unless File.exists? stylesheet_path('lightwindow')        
         files.collect do |css|
           stylesheet_link_tag "#{css}", :media => "all"
         end.join "\n"
