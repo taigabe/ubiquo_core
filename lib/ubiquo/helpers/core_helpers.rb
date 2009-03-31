@@ -33,6 +33,10 @@ module Ubiquo
       def ubiquo_image_path(name)
         "/images/ubiquo/#{name}"
       end
+      
+      def ubiquo_boolean_image(value)
+        ubiquo_image_tag(value ? 'ok.gif' : 'ko.gif')
+      end
 
       # Return true if string_date is a valid date representation with a 
       # given format (the so-called italian format by default: %d/%m/%Y)
@@ -59,11 +63,11 @@ module Ubiquo
         :locals => {:message => message}
       end
       
-      def url_for_file_attachment(object, attribute)
+      def url_for_file_attachment(object, attribute, style = nil)
         if object.send("#{attribute}_is_public?")
-          url_for(object.send(attribute).url)
+          url_for(object.send(attribute).url(style))
         else
-          url_for(ubiquo_attachment_url(:path => object.send(attribute).url))
+          url_for(ubiquo_attachment_url(:path => object.send(attribute).url(style)))
         end
       end
     end
