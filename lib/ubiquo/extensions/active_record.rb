@@ -35,11 +35,11 @@ module Ubiquo
         #   ":rails_root/#{v_path}/media/:attachment/:id_partition/:style/:basename.:extension"
         # }
         path = ":rails_root/#{visibility}/media/:attachment/:id_partition/:style/:basename.:extension"
-        
         define_method("#{field}_is_public?") do 
           visibility.to_sym == :public
         end
-        has_attached_file field, :path => path, :url => "/media/:attachment/:id_partition/:style/:basename.:extension"
+        styles = options[:styles] || {}
+        has_attached_file field, :path => path, :url => "/media/:attachment/:id_partition/:style/:basename.:extension", :styles => styles
       end
       
       # Function for apply an array of scopes.
@@ -84,7 +84,7 @@ module Ubiquo
       
       def create_scopes(filters)
         filters.inject([]) do |acc, (key, value)|
-          next acc if value.blank?
+          next acc if value.nil? || (value.respond_to?(:empty?) ? value.empty? : false)
           scope = yield(key, value)
           acc + [scope]
         end
