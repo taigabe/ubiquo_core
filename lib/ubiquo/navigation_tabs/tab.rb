@@ -82,19 +82,20 @@ module Ubiquo
       
       # Verifies if a tab must be highlighted in the current controller 
       def is_highlighted?(params)
-        highlighted = false
-        
         @highlights.each do |hl|
+          highlighted = true
           if hl.kind_of? Hash
             hl.each do |key,value|  
-              value.to_s.gsub!(/^\//,"") if key == :controller     
-              highlighted = true if params[:controller] && value == params[:controller]
+              v = value.to_s
+              v.gsub!(/^\//,"") if key == :controller     
+              
+              highlighted &&= params[key] && value.to_s == params[key].to_s
             end
           end
+          return true if highlighted
         end
-        highlighted
+        false
       end
-
     end
   end
 end
