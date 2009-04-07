@@ -8,6 +8,7 @@ module Ubiquo
       end
       
       module InstanceMethods
+        # Adds "append_asterisk" option to 'options' parameter if the field is maked as required.
         def label_with_asterisk(object_name, method, text = nil, options = {})
           object_class = options[:object] ? options[:object].class : object_name.to_s.classify.constantize
           if object_class && 

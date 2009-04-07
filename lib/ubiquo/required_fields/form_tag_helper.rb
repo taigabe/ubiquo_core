@@ -8,6 +8,8 @@ module Ubiquo
       end
       
       module InstanceMethods
+        
+        # appends an asterisk to the text if needed
         def label_tag_with_asterisk(name, text = nil, options = {})
           text += " *" if !text.nil? && options["append_asterisk"] == true
           label_tag_without_asterisk(name, text, options)
