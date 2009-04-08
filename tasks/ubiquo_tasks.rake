@@ -17,7 +17,9 @@ namespace :ubiquo do
 
   desc "Install ubiquo migrations and fixtures to respective folders in the app"
   task :install => :environment do
-    copy_dir(Dir.glob(File.join(RAILS_ROOT, 'vendor', 'plugins', 'ubiquo**', 'install')))
+    overwrite = ENV.delete("OVERWRITE")
+    overwrite = overwrite == 'true' || overwrite == 'yes'  ? true : false
+    copy_dir(Dir.glob(File.join(RAILS_ROOT, 'vendor', 'plugins', 'ubiquo**', 'install')), "/", :force => overwrite)
   end
   
   def copy_dir(from, path = "/", options = {})
