@@ -1,7 +1,7 @@
 UbiquoCore
 ==========
 
-This plugin is has the basic common Ubiquo structure so that other plugins can be built on top of it. This includes:
+This plugin contains the basic common Ubiquo structure so that other plugins can be built on top of it. This includes:
 
 * Ubiquo::Config system
 * Core helpers
