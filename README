@@ -1,13 +1,14 @@
-UbiquoBase
+UbiquoCore
 ==========
 
-Introduction goes here.
+This plugin is has the basic common Ubiquo structure so that other plugins can be built on top of it. This includes:
+
+* Ubiquo::Config system
+* Core helpers
+* Ubiquo layout and styling elements
+* Main ruby/rails extensions
+* Navigation links and tabs system
 
 
-Example
-=======
 
-Example goes here.
-
-
-Copyright (c) 2008 [name of plugin creator], released under the MIT license
+Copyright (c) 2009 International Product Design S.L. - gnuine (http://www.gnuine.com)
