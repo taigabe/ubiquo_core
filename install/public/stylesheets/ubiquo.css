@@ -431,7 +431,7 @@ table, th, td { border: none;}
             min-width:318px;
             padding:0;
             position:relative;
-            width:47%;
+            width:300px;
         }
         .box_list .login{   
             font-size: 1.7em;
