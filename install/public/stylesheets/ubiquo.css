@@ -418,6 +418,35 @@ table, th, td { border: none;}
 	#content tr:hover td {
 		background: none;
 	}
+/*--- taula caixes usuaris ---*/
+.box_list{
+    
+}
+        .box_list .box{
+            background-color:#F1F1F1;
+            float:left;
+            height:90px;
+            margin-bottom:18px;
+            margin-right:19px;
+            min-width:318px;
+            padding:0;
+            position:relative;
+            width:47%;
+        }
+        .box_list .login{   
+            font-size: 1.7em;
+            float: left;
+            padding: 10px 0 20px 10px;
+        }
+        .box_list .photo{
+            float: left;
+            width:66px;  
+            
+        }
+        .box_list .actions{ 
+            float:right;
+        }
+
 /*--- taula mapa web ---*/
 table#menu_items_list_titles {
 	margin: 1em 0 .5em;
