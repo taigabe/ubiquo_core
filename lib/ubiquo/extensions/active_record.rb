@@ -60,7 +60,7 @@ module Ubiquo
       # scopes = create_scopes(filters) do |filter, value|
       #   case filter
       #   when :string
-      #     {:conditions => ["tasks.name ILIKE ? or tasks.description ILIKE ?", "%#{value}%", "%#{value}%"]}
+      #     {:conditions => ["upper(tasks.name) LIKE upper(?) or upper(tasks.description) LIKE upper(?)", "%#{value}%", "%#{value}%"]}
       #   when :time
       #     case value.to_s
       #     when "current"
