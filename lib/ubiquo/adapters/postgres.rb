@@ -1,4 +1,4 @@
-module UbiquoVersions
+module Ubiquo
   module Adapters
     module Postgres
       def self.included(klass)
