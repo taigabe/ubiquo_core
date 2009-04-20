@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + "/../test_helper.rb"
 require 'mocha'
 
-class UbiquoVersions::AdaptersTest < ActiveSupport::TestCase
+class Ubiquo::AdaptersTest < ActiveSupport::TestCase
   def test_sequences
     ActiveRecord::Base.connection.create_sequence(:test)
     
@@ -15,21 +15,15 @@ class UbiquoVersions::AdaptersTest < ActiveSupport::TestCase
     end
   end
   
-  def test_create_content
-    definition = nil
-    ActiveRecord::Base.connection.create_table(:test){|table|
-      definition=table
-      table.content_id :test
-    }
-    assert_not_nil definition[:content_id]
-  end
-  
-  def test_create_content_sequence
+  def test_create_sequence
     ActiveRecord::Base.connection.expects(:create_sequence).with("test_content_id").once
     
+    definition = nil
     ActiveRecord::Base.connection.create_table(:test){|table|
-      table.content_id :test
+      definition = table
+      table.sequence :test, :content_id
     }
+    assert_not_nil definition[:content_id]
   end
   
   

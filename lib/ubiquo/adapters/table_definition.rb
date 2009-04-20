@@ -1,9 +1,9 @@
-module UbiquoVersions
+module Ubiquo
   module Adapters
     module TableDefinition
-      def content_id(table_name)
-        integer :content_id, :null => false 
-        ActiveRecord::Base.connection.create_sequence("%s_content_id" % table_name)
+      def sequence(table_name, field_name)
+        integer field_name, :null => false 
+        ActiveRecord::Base.connection.create_sequence("%s_%s" % [table_name, field_name])
       end
     end
   end
