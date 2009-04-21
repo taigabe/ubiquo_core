@@ -26,5 +26,12 @@ class Ubiquo::AdaptersTest < ActiveSupport::TestCase
     assert_not_nil definition[:content_id]
   end
   
+  def test_gets_sequences_list
+    ActiveRecord::Base.connection.create_table(:test){|table|
+      table.sequence :test, :content_id
+    }
+    assert ActiveRecord::Base.connection.list_sequences("test_").include?('test_content_id')
+  end
+  
   
 end
