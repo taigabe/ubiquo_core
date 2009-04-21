@@ -33,5 +33,16 @@ class Ubiquo::AdaptersTest < ActiveSupport::TestCase
     assert ActiveRecord::Base.connection.list_sequences("test_").include?('test_content_id')
   end
   
+  def test_drop_created_sequences
+    ActiveRecord::Base.connection.create_table(:test){|table|
+      table.sequence :test, :content_id
+    }
+    assert ActiveRecord::Base.connection.list_sequences("test_").include?('test_content_id')
+    
+    ActiveRecord::Base.connection.drop_table(:test)
+    assert_nil ActiveRecord::Base.connection.list_sequences("test_").first
+    
+  end
+  
   
 end
