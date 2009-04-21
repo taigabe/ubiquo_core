@@ -6,12 +6,12 @@ module Ubiquo
       end
       module InstanceMethods
         def create_sequence(name)
+          drop_sequence(name)
           self.execute("CREATE SEQUENCE %s;" % name)
         end
         
         def drop_sequence(name)
-          self.execute("DROP SEQUENCE %s;" % name)
-          
+          self.execute("DROP SEQUENCE IF EXISTS %s;" % name)
         end
         
         def next_val_sequence(name)
