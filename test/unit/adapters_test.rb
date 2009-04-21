@@ -40,7 +40,7 @@ class Ubiquo::AdaptersTest < ActiveSupport::TestCase
     assert ActiveRecord::Base.connection.list_sequences("test_").include?('test_content_id')
     
     ActiveRecord::Base.connection.drop_table(:test)
-    assert_nil ActiveRecord::Base.connection.list_sequences("test_").first
+    assert !ActiveRecord::Base.connection.list_sequences("test_").include?('test_content_id')
     
   end
   
