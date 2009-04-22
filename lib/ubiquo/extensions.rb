@@ -6,6 +6,7 @@ module Ubiquo
     autoload :Routing,               'ubiquo/extensions/routing'
     autoload :ActiveRecord,          'ubiquo/extensions/active_record'
     autoload :DateParser,            'ubiquo/extensions/date_parser'
+    autoload :LocaleChanger,         'ubiquo/extensions/locale_changer'
     autoload :Array,                 'ubiquo/extensions/array'
     autoload :String,                'ubiquo/extensions/string'
     autoload :TestImprovements,      'ubiquo/extensions/test_improvements'
@@ -21,6 +22,7 @@ end
 
 ActionController::Routing::RouteSet::Mapper.send(:include, Ubiquo::Extensions::Routing)
 ActionController::Base.send(:include, Ubiquo::Extensions::DateParser)
+ActionController::Base.send(:include, Ubiquo::Extensions::LocaleChanger)
 ActionController::Base.helper(Ubiquo::Extensions::FiltersHelper)
 ActionView::Base.field_error_proc = Ubiquo::Extensions::ActionView.ubiquo_field_error_proc
 ActiveRecord::Base.send(:extend, Ubiquo::Extensions::ActiveRecord)

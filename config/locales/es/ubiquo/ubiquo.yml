@@ -2,6 +2,7 @@ es:
   ubiquo:
     create: "Crear"
     edit: "Editar"
+    translate: "Traducir"
     remove: "Eliminar"
     add: "Añadir"
     cancel: "Cancelar"
