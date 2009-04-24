@@ -78,6 +78,14 @@ module Ubiquo
         end
         s
       end
+      
+      def show_preview(model_class, options = {}, &block)
+        return unless params[:preview_id]
+        previewed = model_class.find(params[:preview_id], options)
+        return unless previewed
+        locals = {:body=>capture(previewed, &block)}
+        concat(render(:partial => "shared/ubiquo/preview_box", :locals => locals), block.binding)
+      end
     end
   end
 end
