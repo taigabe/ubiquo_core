@@ -3,6 +3,8 @@ es:
     create: "Crear"
     edit: "Editar"
     translate: "Traducir"
+    preview: "Previsualizar"
+    revert: "Recuperar"
     remove: "Eliminar"
     add: "Añadir"
     cancel: "Cancelar"

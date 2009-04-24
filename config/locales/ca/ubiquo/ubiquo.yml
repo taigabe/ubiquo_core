@@ -3,6 +3,8 @@ ca:
     create: "Crear"
     edit: "Editar"
     translate: "Traduir"
+    preview: "Previsualitzar"
+    revert: "Recuperar"
     remove: "Eliminar"
     add: "Afegir"
     cancel: "Cancelar"
