@@ -2,9 +2,10 @@ ca:
   ubiquo:
     create: "Crear"
     edit: "Editar"
+    view: "Veure"
     translate: "Traduir"
     preview: "Previsualitzar"
-    revert: "Recuperar"
+    restore: "Recuperar"
     remove: "Eliminar"
     add: "Afegir"
     cancel: "Cancelar"

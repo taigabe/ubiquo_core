@@ -2,9 +2,10 @@ es:
   ubiquo:
     create: "Crear"
     edit: "Editar"
+    view: "Ver"
     translate: "Traducir"
     preview: "Previsualizar"
-    revert: "Recuperar"
+    restore: "Recuperar"
     remove: "Eliminar"
     add: "Añadir"
     cancel: "Cancelar"
