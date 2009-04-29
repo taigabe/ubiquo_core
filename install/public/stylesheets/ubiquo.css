@@ -71,6 +71,8 @@ table, th, td { border: none;}
 		}
 		#header_central	h1 {
 			font-size: 3.6em;
+                        width: 50%;
+                        float: left;
 		}
 			#header_central	h1 img {
 				vertical-align: middle;
