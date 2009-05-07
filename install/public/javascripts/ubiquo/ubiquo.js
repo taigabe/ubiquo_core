@@ -1,12 +1,25 @@
 document.observe("dom:loaded", function() {
-	//content corners
-	if ($('content')){
-		$('content').insert({bottom: '<span class="corner_tl"></span><span class="corner_tr"></span><span class="corner_bl"></span><span class="corner_br"></span>'});
-	}
-	//form_box corners
-	if ($$('.form_box').first()){
-		$$('.form_box')[0].insert({bottom: '<span class="corner_tl"></span><span class="corner_tr"></span><span class="corner_bl"></span><span class="corner_br"></span>'});
-	}
+    //content corners
+    if ($('content')){
+	$('content').insert({bottom: '<span class="corner_tl"></span><span class="corner_tr"></span><span class="corner_bl"></span><span class="corner_br"></span>'});
+    }
+    //form_box corners
+    if ($$('.form_box').first()){
+	$$('.form_box').each(function(f){
+            f.insert({bottom: '<span class="corner_tl"></span><span class="corner_tr"></span><span class="corner_bl"></span><span class="corner_br"></span>'});
+        });
+    }
+    
+    if($('send_confirm_creation') && $("welcome_message_block")){
+        $('send_confirm_creation').observe("change", function(){
+            ($('send_confirm_creation').checked ? Effect.BlindDown : Effect.BlindUp)("welcome_message_block")
+        });
+        if($('send_confirm_creation').checked){
+            $("welcome_message_block").show();
+        }else{
+            $("welcome_message_block").hide();
+        }
+    }
 });
 
 function send_as_form(div_id, url, method){  
