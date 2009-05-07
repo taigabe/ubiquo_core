@@ -7,9 +7,13 @@ require 'ubiquo/required_fields'
 require 'ubiquo/adapters'
 
 Ubiquo::Config.add(:supported_locales, %w[ ca es en ])
+Ubiquo::Config.add(:default_locale, "ca")
 
-class Ubiquo
+module Ubiquo
   def self.supported_locales
     Ubiquo::Config.get :supported_locales
+  end
+  def self.default_locale
+    Ubiquo::Config.get :default_locale
   end
 end
