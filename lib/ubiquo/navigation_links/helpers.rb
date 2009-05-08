@@ -52,6 +52,7 @@ module Ubiquo
           elsif link.is_disabled?
             li_options[:class] += " #{link.disabled_class}" if link.disabled_class
           end 
+          li_options[:class] = nil if li_options[:class].blank?
 
           attach tag('li', li_options, true)
           if !link.is_disabled? && !link.url.blank?
