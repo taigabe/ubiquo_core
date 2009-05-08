@@ -45,12 +45,12 @@ module Ubiquo
 
           li_options = {}
           li_options[:id] = "#{link.id}" if link.id
-          li_options[:class] = "#{link.class}" if link.class
+          li_options[:class] = link.class ? "#{link.class}" : ""
 
           if link.is_highlighted?(params) && link.highlight_option_active
-            li_options[:class] = "#{link.highlighted_class}" if link.highlighted_class
+            li_options[:class] += " #{link.highlighted_class}" if link.highlighted_class
           elsif link.is_disabled?
-            li_options[:class] = "#{link.disabled_class}" if link.disabled_class
+            li_options[:class] += " #{link.disabled_class}" if link.disabled_class
           end 
 
           attach tag('li', li_options, true)
