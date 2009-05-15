@@ -300,6 +300,19 @@ table, th, td { border: none;}
 	font-weight: bold;
         margin-bottom: 1em;
 }
+
+/*--- handle ---*/
+.handle {
+ 	display: block;
+ 	position: static;
+ 	float: left;
+ 	width: 17px;
+ 	height: 17px;
+ 	text-indent: -5000px;
+ 	background: url(../images/ubiquo/updownarrows.gif) no-repeat 0 0;
+ 	cursor: move;
+}
+
 /*--- paginador ---*/
 .pagination {
 	position: relative;
@@ -452,6 +465,44 @@ table, th, td { border: none;}
             float:right;
         }
 
+/*--- taula dades per TinyMCE ---*/
+#content .mceLayout table {
+	clear: both;
+	margin: 0;
+}
+#content .mceLayout th, #content .mceLayout td  {
+	border-right: none;
+    border-bottom: none;
+}
+#content .mceLayout th:last-child, #content .mceLayout td:last-child {
+	border-right: none;
+    border-bottom: none;
+}
+#content .mceLayout th {
+	padding: 0;
+	text-align: left;
+	font-size: 1em;
+	font-weight: normal;
+	background: none;
+}
+	#content .mceLayout th a {
+		color: #000;
+	}
+
+#content .mceLayout td {
+	padding: 0;
+}
+#content .mceLayout tr.mceLast td { 
+    border-bottom: 1px solid #CCC;
+}
+
+#content .mceLayout tr:hover {
+	background: none;
+}
+	#content .mceLayout tr:hover td {
+		background: none;
+	}
+
 /*--- taula mapa web ---*/
 table#menu_items_list_titles {
 	margin: 1em 0 .5em;
@@ -463,8 +514,8 @@ table#menu_items_list_titles {
 		padding: .3em;
 	}
 	#menu_items_list td.handle {
-		width: 1.5em;
-		cursor: move;
+		float: none;
+		display: table-cell;
 	}
 	#menu_items_list ul {
 		padding-left: 2.5em;
@@ -542,6 +593,44 @@ form textarea {
 #content .form_buttons input {
 	display: inline;
 }
+
+
+/*--- llista elements multimedia relacionats ---*/
+.relations_list {}
+.relations_list li {
+	clear: both;
+	padding: 0 0 .7em;
+	border-bottom: 1px solid #D5D9C2;
+}
+.relations_list li h4 {
+	font-size: 1.2em;
+	font-weight: bold;
+	margin: 0 .4em .4em 0;
+}
+.relations_list li img {
+	margin-right: .4em;
+}
+.relations_list li a.view, .relations_list li a.delete {
+	margin-right: .2em;
+}
+.relations_list li dl {
+	clear: both;
+	margin: .7em 0 0;
+}
+.relations_list li dt, .relations_list li dd {
+	display: inline;
+	font-size: 1em;
+}
+.relations_list li dd input {
+	display: inline!important;
+}
+.relations_list li dd span {
+	font-style: italic;
+}
+.relations_list li a.change {
+	margin-left: .7em;
+}
+
 /*--- Maquetació ---*/
 .column_4, .column_3, .column_2, .column_1 {
 	margin: 0 1.5% 1.5% 0;
