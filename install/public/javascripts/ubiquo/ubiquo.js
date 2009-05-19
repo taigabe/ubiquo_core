@@ -43,17 +43,23 @@ function send_as_form(div_id, url, method){
 	f.remove();
 }
 
-function killeditor(){
-    if($('visual_editor')){
-        tinyMCE.triggerSave(true,true);
-        tinyMCE.execCommand( 'mceRemoveControl', true, 'visual_editor');
-    }
+function killeditor(reference){
+    reference = reference || 'visual_editor';
+    var first = true
+    $$("."+reference+", #"+reference).each(function(v) {
+        if(first){
+            tinyMCE.triggerSave(true,true);
+            first=false;
+        }
+        tinyMCE.execCommand('mceRemoveControl', true, $(v).id);
+    })
 }
 
-function reviveEditor(){
-	if($('visual_editor')){
-        tinyMCE.execCommand( 'mceAddControl', true, 'visual_editor');
-    }
+function reviveEditor(reference){
+    reference = reference || 'visual_editor';
+    $$("."+reference+", #"+reference).each(function(v) {
+        tinyMCE.execCommand('mceAddControl', true, $(v).id);
+    })
 }
 
 function blind_toggle(desired_elem, brother){

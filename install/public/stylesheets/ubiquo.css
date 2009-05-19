@@ -48,13 +48,13 @@ table, th, td { border: none;}
 			#controls li a, #controls li span {
 				font-size: 1.1em;
 			}
+			#controls li.ubiquo_user a {
+				padding-left: 14px;
+				background: url(../images/ubiquo/user.gif) no-repeat 0 50%;
+			}
 			#controls li.active a, #controls li.active span {
 				color: #000;
 				background-color: #FFF;
-			}
-			#controls li.ubiquo_user span {
-				padding-left: 14px;
-				background: url(../images/ubiquo/user.gif) no-repeat 0 50%;
 			}
 		#general_configuration {
 			float: left;
@@ -698,7 +698,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 		width: 14px;
 		height: 15px;
 		text-indent: -5000px;
-		background: url(../images/ubiquo/icona_paperera.jpg) no-repeat;
+		background: url(../images/ubiquo/trash_icon.jpg) no-repeat;
 	}
 	#central li.component a.edit {
 		right: 2.4em;
@@ -826,5 +826,5 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 		background: url(../images/ubiquo/bg_lightwindow.png) no-repeat left bottom;
 	}
 /*----------- --- Altres --------------*/
-#controls:after, #tabs:after, #central:after, #content:after, .submenu:after, form .page_templates:after, form#frm_calendar p:after, #template:after, .form_box:after { content: "."; display: block; height: 0; clear: both; visibility: hidden;}
-#controls, #tabs, #central, #content, .submenu, form .page_templates, form#frm_calendar p, #template, .form_box { height: 1%;}
+.box_list:after, #controls:after, #tabs:after, #central:after, #content:after, .submenu:after, form .page_templates:after, form#frm_calendar p:after, #template:after, .form_box:after { content: "."; display: block; height: 0; clear: both; visibility: hidden;}
+.box_list, #controls, #tabs, #central, #content, .submenu, form .page_templates, form#frm_calendar p, #template, .form_box { height: 1%;}
