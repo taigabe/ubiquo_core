@@ -21,6 +21,19 @@ namespace :ubiquo do
     overwrite = overwrite == 'true' || overwrite == 'yes'  ? true : false
     copy_dir(Dir.glob(File.join(RAILS_ROOT, 'vendor', 'plugins', 'ubiquo**', 'install')), "/", :force => overwrite)
   end
+
+  desc "Run given command inside each plugin directory."
+  task :foreach, [ :command ] do |t, args|
+    args.with_defaults(:command => 'git pull')
+    glob = File.join(RAILS_ROOT, 'vendor', 'plugins', "*/")
+    plugins = Dir[ glob ].each { |e| e unless File.file? e }
+    plugins.each do |plugin|
+      command = "cd #{plugin} && #{args.command}"
+      puts "\nRunning #{command}"
+      system(command)
+      exit 1 if $? != 0
+    end
+  end
   
   def copy_dir(from, path = "/", options = {})
     force = options[:force]
