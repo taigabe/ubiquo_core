@@ -5,4 +5,4 @@ module Ubiquo
   end
 end
 
-ActionController::Base.helper(Ubiquo::NavigationTabs::Helpers)
+Ubiquo::Extensions::UbiquoAreaController.append_helper(Ubiquo::NavigationTabs::Helpers)

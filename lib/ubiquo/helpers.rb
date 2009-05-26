@@ -4,4 +4,4 @@ module Ubiquo
   end
 end
 
-ActionController::Base.helper(Ubiquo::Helpers::CoreHelpers)
+Ubiquo::Extensions::UbiquoAreaController.append_helper(Ubiquo::Helpers::CoreHelpers)

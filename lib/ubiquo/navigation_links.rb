@@ -6,4 +6,4 @@ module Ubiquo
   end
 end
 
-ActionController::Base.helper(Ubiquo::NavigationLinks::Helpers)
+Ubiquo::Extensions::UbiquoAreaController.append_helper(Ubiquo::NavigationLinks::Helpers)

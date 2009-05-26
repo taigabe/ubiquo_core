@@ -20,8 +20,8 @@ module Ubiquo
 end
 
 ActionController::Routing::RouteSet::Mapper.send(:include, Ubiquo::Extensions::Routing)
-ActionController::Base.send(:include, Ubiquo::Extensions::DateParser)
-ActionController::Base.helper(Ubiquo::Extensions::FiltersHelper)
+Ubiquo::Extensions::UbiquoAreaController.append_include(Ubiquo::Extensions::DateParser)
+Ubiquo::Extensions::UbiquoAreaController.append_helper(Ubiquo::Extensions::FiltersHelper)
 ActionView::Base.field_error_proc = Ubiquo::Extensions::ActionView.ubiquo_field_error_proc
 ActiveRecord::Base.send(:extend, Ubiquo::Extensions::ActiveRecord)
 Array.send(:include, Ubiquo::Extensions::Array)
@@ -39,7 +39,7 @@ end
 
 ActiveRecord::Base.send(:include, Ubiquo::Extensions::ConfigCaller)
 ActiveRecord::Base.send(:extend, Ubiquo::Extensions::ConfigCaller)
-ActionController::Base.send(:extend, Ubiquo::Extensions::ConfigCaller)
-ActionController::Base.send(:include, Ubiquo::Extensions::ConfigCaller)
+Ubiquo::Extensions::UbiquoAreaController.append_extend(Ubiquo::Extensions::ConfigCaller)
+Ubiquo::Extensions::UbiquoAreaController.append_include(Ubiquo::Extensions::ConfigCaller)
 ActionView::Base.send(:include, Ubiquo::Extensions::ConfigCaller)
 ActionView::Base.send(:extend, Ubiquo::Extensions::ConfigCaller)
