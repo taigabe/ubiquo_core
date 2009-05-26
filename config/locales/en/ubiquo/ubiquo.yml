@@ -7,6 +7,7 @@ en:
     preview: "Preview"
     restore: "Restore"
     remove: "Remove"
+    remove_translation: "Remove translation"
     add: "Add"
     cancel: "Cancel"
     confirm_item_removal: "Are you sure that you want to remove that item?"
