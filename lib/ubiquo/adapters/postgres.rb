@@ -11,7 +11,9 @@ module Ubiquo
         end
         
         def drop_sequence(name)
-          self.execute("DROP SEQUENCE IF EXISTS %s;" % name)
+          if(list_sequences("").include?(name.to_s))
+            self.execute("DROP SEQUENCE %s;" % name)
+          end
         end
         
         def list_sequences(starts_with)
