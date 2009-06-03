@@ -80,8 +80,6 @@ require 'ostruct'
 #    validates_inclusion_of :target, :in => TARGET_OPTIONS.map { |name, key| key }
 #  end
 #
-#Note that we use the ''Nt('' gettext class method to include these literals on the
-#PO files. 
 #
 #  # On the controller
 #  @target_types = Link::TARGET_OPTIONS.collect do |name, value| 
@@ -165,7 +163,7 @@ require 'ostruct'
 #link:../images/date_filter_1.png
 #link:../images/date_filter_2.png
 #
-#Date filters employ the plugin [http://code.google.com/p/calendardateselect/ calendardateselect]. If you need to changes the stylesheets, edit <tt>public/stylesheets/calendar_date_select/ubiquo.css</tt>. To use the lateral filter on your listing, you have to indicate the caption and the start/end date field names:
+#Date filters employ the plugin [http://code.google.com/p/calendardateselect/ calendardateselect]. If you need to change the stylesheets, edit <tt>public/stylesheets/calendar_date_select/ubiquo.css</tt>. To use the lateral filter on your listing, you have to indicate the caption and the start/end date field names:
 #
 #  date_filter = render_filter(:date, {},
 #    :caption => t('creation'),

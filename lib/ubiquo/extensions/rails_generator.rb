@@ -2,6 +2,7 @@ module Ubiquo
   module Extensions
     module RailsGenerator
       module Create
+        # Modify routes.rb and include the namespaced resources
         def namespaced_route_resources(namespace, *resources)
           resource_list = resources.map { |r| r.to_sym.inspect }.join(', ')
           sentinel = "map.namespace :#{namespace} do |#{namespace}|"
@@ -15,6 +16,7 @@ module Ubiquo
         end
       end
       module Destroy
+        # Modify routes.rb deleting the namespaced resources
         def namespaced_route_resources(namespace, *resources)
           resource_list = resources.map { |r| r.to_sym.inspect }.join(', ')
           look_for = "\n    #{namespace}.resources #{resource_list}\n"

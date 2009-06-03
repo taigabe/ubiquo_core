@@ -3,6 +3,18 @@ module Ubiquo
   module Extensions
     module ActiveRecord
       
+      # Applies a limit and offset scope that allows to easily paginate model results
+      # options can be the following:
+      #   :page => current page (default 1)
+      #   :per_page => number of elements per page (default: :elements_per_page in Ubiquo Config)
+      #   
+      # Returns an array composed of
+      # [{
+      #   :previous => nil or the previous page number 
+      #   :next => nil or the next page number
+      #   },
+      #   requested items
+      # ]
       def paginate(options = {})
         options.delete_if{|o1,o2| o2.blank? }
         options.reverse_merge!({:page => 1, :per_page => Ubiquo::Config.get(:elements_per_page) }) 
@@ -19,10 +31,8 @@ module Ubiquo
       end
       
       
-      # Intermediate method customing paperclip has_attached_file
-      # Its send path how a lambda allowing change a media folder container
-      # Elsewhere, call paperclip with id_partition (folders style 000/000/001) in path and url params
-      
+      # Intermediate method customizing paperclip has_attached_file
+      # Calls paperclip with id_partition (folders style 000/000/001) in path and url params
       def file_attachment(field, options = {})
         options.reverse_merge!(Ubiquo::Config.get(:attachments))
         visibility = options[:visibility]
@@ -47,7 +57,6 @@ module Ubiquo
       
       # Function for apply an array of scopes.
       # see self.create_scopes documentation for an example
-      
       def apply_find_scopes(scopes, &initial)
         scopes.compact.inject(initial) do |block, value|
           Proc.new do
@@ -84,7 +93,6 @@ module Ubiquo
       # apply_find_scopes(scopes) do
       #   find(:all, :include => [:task_type, :owner, {:project => [:owner, :project_permissions]}])
       # end
-      
       def create_scopes(filters)
         filters.inject([]) do |acc, (key, value)|
           next acc if value.nil? || (value.respond_to?(:empty?) ? value.empty? : false)

@@ -30,6 +30,7 @@ module Ubiquo
       end
       
       module ClassMethods
+        # Loads the special set of ubiquo fixtures
         def use_ubiquo_fixtures
           fixture_set_path = File.join(RAILS_ROOT, "tmp", "ubiquo_fixtures")
           raise "Unable to find ubiquo fixtures [#{fixture_set_path}]" unless File.exists?(fixture_set_path)        

@@ -1,6 +1,7 @@
 module Ubiquo
   module Extensions
     module ActionView
+      # Return a proc that marks an html tag as an error
       def self.ubiquo_field_error_proc
         Proc.new do |html_tag, instance|
           msg = instance.error_message

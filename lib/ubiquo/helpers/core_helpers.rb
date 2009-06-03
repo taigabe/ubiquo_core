@@ -1,6 +1,8 @@
 module Ubiquo
   module Helpers
     module CoreHelpers
+
+      # Adds the default stylesheet tags needed for ubiquo
       def ubiquo_stylesheet_link_tags(files=['ubiquo','ubiquo_application','lightwindow'])
         files.delete 'lightwindow' unless File.exists?(File.join(RAILS_ROOT, "public/stylesheets", 'lightwindow.css'))
         files.collect do |css|
@@ -51,18 +53,22 @@ module Ubiquo
       
       # Include calendar_date_select javascript and stylesheets 
       # with a default theme, basedir and locale
-      
       def calendar_includes(options = {})
         iso639_locale = options[:locale] || I18n.locale.to_s
         CalendarDateSelect.format = options[:format] || :italian
         calendar_date_select_includes "ubiquo", :locale => iso639_locale
       end
-      
+
+      # Renders a message in a help block in the sidebar
       def help_block_sidebar(message)
         render :partial => '/shared/ubiquo/help_block_sidebar',
         :locals => {:message => message}
       end
       
+      # Return a url for a file_attachement
+      #   object => instance that owns the media
+      #   attribute => name of the file_attachment field
+      #   style => paperclip style
       def url_for_file_attachment(object, attribute, style = nil)
         if object.send("#{attribute}_is_public?")
           url_for(object.send(attribute).url(style))
@@ -79,6 +85,10 @@ module Ubiquo
         s
       end
       
+      # Renders a preview 
+      # A preview is usually used to show the values of an instance somewhere,
+      # in an unobtrusive way
+      # The instance to preview is taken from params[:preview_id]
       def show_preview(model_class, options = {}, &block)
         return unless params[:preview_id]
         previewed = model_class.find(params[:preview_id], options)
