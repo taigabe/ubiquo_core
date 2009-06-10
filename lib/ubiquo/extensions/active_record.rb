@@ -3,6 +3,11 @@ module Ubiquo
   module Extensions
     module ActiveRecord
       
+      def self.extended(klass)
+        # create a paginate alias for ubiquo_paginate unless already exists
+        alias_method :paginate, :ubiquo_paginate unless klass.respond_to?('paginate') 
+      end
+      
       # Applies a limit and offset scope that allows to easily paginate model results
       # options can be the following:
       #   :page => current page (default 1)
@@ -15,7 +20,7 @@ module Ubiquo
       #   },
       #   requested items
       # ]
-      def paginate(options = {})
+      def ubiquo_paginate(options = {})
         options.delete_if{|o1,o2| o2.blank? }
         options.reverse_merge!({:page => 1, :per_page => Ubiquo::Config.get(:elements_per_page) }) 
         items = self.with_scope(:find => {:limit => (options[:per_page].to_i + 1), :offset => (options[:per_page].to_i * (options[:page].to_i - 1))}) do
