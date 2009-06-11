@@ -110,9 +110,10 @@ module Ubiquo
               p @new_model.errors.inspect
             end
           end
-
+          
           p "Total of #{success[model.to_sym]} #{@new_model.class.to_s} records imported successfully"
         end
+        fix_sequence_consistency [model.tableize]
       end
       
       def join_table_names(table_names, model_names, group_names)
@@ -143,9 +144,19 @@ module Ubiquo
           tables.each do |table|
             yield table
           end if tables
+          fix_sequence_consistency tables
         end
       end
       
+      # If any of these "tables" has a sequence field, make sure that the next
+      # value that will be returned does not conflict with the imported fixtures
+      def fix_sequence_consistency(tables)
+        (tables || []).each do |table_name|
+          ActiveRecord::Base.connection.list_sequences(table_name.to_s + "_$").each do |sequence|
+            ActiveRecord::Base.connection.reset_sequence_value(sequence)
+          end
+        end
+      end
     end
   end
 end

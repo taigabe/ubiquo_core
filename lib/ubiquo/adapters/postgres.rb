@@ -6,7 +6,7 @@ module Ubiquo
       end
       module InstanceMethods
         
-        # Creates a sequence with name "name"
+        # Creates a sequence with name "name". Drops it before if it exists
         def create_sequence(name)
           drop_sequence(name)
           self.execute("CREATE SEQUENCE %s;" % name)
@@ -27,6 +27,17 @@ module Ubiquo
         # Returns the next value for the sequence "name"
         def next_val_sequence(name)
           self.execute("SELECT nextval('%s');" % name).entries.first['nextval'].to_i
+        end
+        
+        # Reset a sequence so that it will return the specified value as the next one
+        # If next_value is not specified, the sequence will be reset to the "most appropiate value",
+        # considering the values of existing records using this sequence
+        def reset_sequence_value(name, next_value = nil)
+          table, field = name.split('_$_')
+          unless next_value
+            next_value = self.execute('SELECT MAX(%s) as max FROM %s' % [field, table]).entries.first['max'].to_i + 1
+          end
+          self.execute("SELECT setval('%s', %s, false);" % [name, next_value])
         end
       end
     end

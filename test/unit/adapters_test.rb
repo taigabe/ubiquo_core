@@ -46,5 +46,23 @@ class Ubiquo::AdaptersTest < ActiveSupport::TestCase
     
   end
   
+  def test_reset_sequence_value
+    ActiveRecord::Base.connection.create_table(:test, :force => true){|table|
+      table.sequence :test, :content_id
+    }
+    
+    ActiveRecord::Base.connection.reset_sequence_value('test_$_content_id', 5)
+    assert_equal 5, ActiveRecord::Base.connection.next_val_sequence('test_$_content_id')
+    
+    ActiveRecord::Base.connection.reset_sequence_value('test_$_content_id')
+    assert_equal 1, ActiveRecord::Base.connection.next_val_sequence('test_$_content_id')
+    
+    ActiveRecord::Base.connection.execute("INSERT INTO test (content_id) VALUES (10)")
+    ActiveRecord::Base.connection.reset_sequence_value('test_$_content_id')
+    assert_equal 11, ActiveRecord::Base.connection.next_val_sequence('test_$_content_id')
+    
+    ActiveRecord::Base.connection.drop_table(:test)
+  end
+  
   
 end

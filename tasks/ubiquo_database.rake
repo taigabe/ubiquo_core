@@ -70,6 +70,8 @@ namespace :ubiquo do
 
           # Create fixtures and print result summary
           fixtures = Fixtures.create_fixtures(fixture_path, tables || [])
+          
+          # Print results
           # if there is only one kind of fixtures created, create_fixtures returns an array with a missing dimension
           fixtures = [fixtures] unless fixtures[0]
           results = fixtures.map do |group| 
@@ -98,6 +100,7 @@ namespace :ubiquo do
             import_table_fixture(table)
           end
         end
+        fix_sequence_consistency tables
       end
         
     end
