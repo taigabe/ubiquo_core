@@ -11,6 +11,8 @@ module Ubiquo
             "#{RAILS_ROOT}/test/fixtures"
           when "production"
             "#{RAILS_ROOT}/db/bootstrap"
+          when "preproduction"
+            "#{RAILS_ROOT}/db/pre_bootstrap"
           else
             "#{RAILS_ROOT}/db/dev_bootstrap"
           end
