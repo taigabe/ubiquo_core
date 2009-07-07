@@ -75,7 +75,17 @@ form {
 	}
 		.form_buttons input {
 			padding: 0;
-			border: none;
+			border: none; 
+		}   
+		
+		.form_buttons input.buttons {
+			background: url(/images/ubiquo/bg_button.png) no-repeat;
+			text-align: center;
+			width: 100px;
+			height: 29px;
+			font-size:14px;
+			color: #717171;
+		   
 		}
 /* corners */
 .form_box .corner_tl, .form_box .corner_tr, .form_box .corner_bl, .form_box .corner_br {
