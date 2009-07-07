@@ -155,15 +155,22 @@ table, th, td { border: none;}
 		width: 24em;
 	}
 		#sidebar .sidebar_box {
-			position: relative;
 			margin-bottom: 2em;
-		}
+		} 
+		
+		#sidebar .sidebar_title {
+			   	margin-top: .5em;
+				border-bottom: 1px solid #000; 
+				position: relative; 
+				margin-bottom: 1em;   
+		} 
+			
 		#sidebar h3 {
-			margin-bottom: .5em;
-			padding-bottom: .2em;
+		    padding-bottom: .2em;
 			font-size: 1.8em;
-			border-bottom: 1px solid #000;
-		}
+			width: 69%; 
+		}    
+		
 		#sidebar h4 {
 			margin-bottom: .4em;
 			font-size: 1.4em;
@@ -171,11 +178,14 @@ table, th, td { border: none;}
 		}
 		#sidebar p {
 			margin-bottom: .4em;
-		}	
+		}  
+		
+	   
+		  
 	/*--- sidebar: filtres ---*/
 	a.bot_filters {
 		position: absolute;
-		top: .5em;
+		bottom: .5em;
 		right: 0;
 		font-size: 1.2em;
 	}

@@ -1,6 +1,7 @@
 <div class="sidebar_box">
-
-  <h3><%= title %></h3>
+  <div class="sidebar_title">
+    <h3><%= title %></h3>
+  </div>
   <% if fields.map{|f|params[f].blank?}.include?(false) %>
 		  <% 
 		    without_filters = params.dup 
