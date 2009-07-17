@@ -13,6 +13,7 @@
 
 <% 
      navigator_right = create_tab_navigator(:id => "general_tabnav") do |navigator|
+       activity_info_tab(navigator) if respond_to?(:activity_info_tab)
        media_tab(navigator) if respond_to?(:media_tab)
        design_tab(navigator) if respond_to?(:design_tab)
        sitemap_tab(navigator) if respond_to?(:sitemap_tab)
