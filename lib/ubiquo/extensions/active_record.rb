@@ -54,7 +54,7 @@ module Ubiquo
           visibility.to_sym == :public
         end
         styles = options[:styles] || {}
-        processors = options[:processors] || []
+        processors = options[:processors] || [:thumbnail]
         has_attached_file field, :path => path, 
                                  :url => "/media/:class/:attachment/:id_partition/:style/:filename",
                                  :styles => styles,
