@@ -1,6 +1,6 @@
 module Ubiquo
   module Helpers
-    module CoreHelpers
+    module CoreUbiquoHelpers
 
       # Adds the default stylesheet tags needed for ubiquo
       def ubiquo_stylesheet_link_tags(files=['ubiquo','ubiquo_application','lightwindow'])
@@ -64,27 +64,7 @@ module Ubiquo
         render :partial => '/shared/ubiquo/help_block_sidebar',
         :locals => {:message => message}
       end
-      
-      # Return a url for a file_attachement
-      #   object => instance that owns the media
-      #   attribute => name of the file_attachment field
-      #   style => paperclip style
-      def url_for_file_attachment(object, attribute, style = nil)
-        if object.send("#{attribute}_is_public?")
-          url_for(object.send(attribute).url(style))
-        else
-          url_for(ubiquo_attachment_url(:path => object.send(attribute).url(style)))
-        end
-      end
-      
-      def html_unescape(s)
-        s = s.to_s
-        ERB::Util::HTML_ESCAPE.each do |special, value|
-          s.gsub!(value, special)
-        end
-        s
-      end
-      
+          
       # Renders a preview 
       # A preview is usually used to show the values of an instance somewhere,
       # in an unobtrusive way
