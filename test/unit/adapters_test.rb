@@ -64,5 +64,26 @@ class Ubiquo::AdaptersTest < ActiveSupport::TestCase
     ActiveRecord::Base.connection.drop_table(:test)
   end
   
+  def test_should_exist_sequences_after_create
+    ActiveRecord::Base.connection.create_table(:test, :force => true){|table|
+      table.sequence :test, :content_id
+    }
+    assert ActiveRecord::Base.connection.list_sequences("test_").include?("test_$_content_id")
+  end
+
+  def test_should_same_create_table_options_that_drop_table_options
+    options = { :force => true, :test => "test" }
+    ActiveRecord::Base.connection.create_table(:test, options) { }
+    ActiveRecord::Base.connection.expects(:drop_table).with(:test, options)
+    ActiveRecord::Base.connection.expects(:execute).at_least_once
+    ActiveRecord::Base.connection.create_table(:test, options) { }
+  end
+
+  def test_drop_table_doesnt_use_force_option
+    options = stub
+    options.expects("[]").with(:force).never
+    ActiveRecord::Base.connection.create_table(:test, { :force => true }) { }
+    ActiveRecord::Base.connection.drop_table(:test, options) { }
+  end
   
 end
