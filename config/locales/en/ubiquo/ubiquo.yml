@@ -14,8 +14,6 @@ en:
     save: "Save changes"
     search: "Search"
     empty: "There are no results for {{thing}}"
-    filter: "Filtered by {{thing}}"
-    drop_filter: "Remove filter"
     help: "Help"
     back_to_list: "Back to list"
     back_to_index: "Back to index"
@@ -26,7 +24,18 @@ en:
     related_links: "Related links"
     add_new_link: "Add new link"
     # Filters
-    text: "text"
+    filter: "Filter by {{thing}}"
+    filters:
+      remove_filter: "Remove filter"
+      remove_all_filters:
+        one: "Remove filter"
+        other: "Remove all filters"
+      text: "Text"
+      filter_text: "text '{{string}}'"
+      filtered_by: "Filtered by: {{field}}"
+      filter_between: "between {{date_start}} and {{date_end}}"
+      filter_from: "from {{date_start}}"
+      filter_until: "to {{date_end}}"
     base:
       actions: "Actions"
       from: "From"

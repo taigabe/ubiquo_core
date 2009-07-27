@@ -13,10 +13,7 @@ ca:
     confirm_item_removal: "Estàs segur de voler eliminar aquest ítem?"
     save: "Guardar canvis"
     search: "Buscar"
-    sidebar: "Aquí pots consultar el llistat d'usuaris així como crear, editar borrar o modificar usuaris i els seus permisos."
     empty: "No hi ha resultats per {{thing}}"
-    filter: "Filtrar per {{thing}}"
-    drop_filter: "Eliminar filtre"
     help: "Ajuda"
     back_to_list: "Tornar al llistat"
     back_to_index: "Tornar a l'índex"
@@ -27,7 +24,18 @@ ca:
     related_links: "Enllaços relacionats"
     add_new_link: "Afegir nou enllaç"
     # Filters
-    text: "text"
+    filter: "Filtrar per {{thing}}"
+    filters:
+      remove_filter: "Treure filtre"
+      remove_all_filters:
+        one: "Treure filtre"
+        other: "Treure tots els filtres"
+      text: "Text"
+      filter_text: "text '{{string}}'"
+      filtered_by: "Filtrant per: {{field}}"
+      filter_between: "entre {{date_start}} i {{date_end}}"
+      filter_from: "des de {{date_start}}"
+      filter_until: "fins a {{date_end}}"
     base:
       actions: "Accions"
       from: "Des de"

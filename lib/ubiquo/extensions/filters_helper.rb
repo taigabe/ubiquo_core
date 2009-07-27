@@ -256,8 +256,8 @@ module Ubiquo
         remove_fields = fields + [:commit, :page]
         new_params = params.clone
         remove_fields.each { |field| new_params[field] = nil }
-        link_text = "[" + t('ubiquo.auth.users_remove_filter', :count => fields.size) + "]"
-        message = [ t('ubiquo.auth.filtered_by', :field => info), link_to(link_text, new_params)]
+        link_text = "[" + t('ubiquo.filters.remove_all_filters', :count => fields.size) + "]"
+        message = [ t('ubiquo.filters.filtered_by', :field => info), link_to(link_text, new_params)]
         content_tag(:p, message.join(" "), :class => 'search_info')
       end
       
@@ -287,11 +287,11 @@ module Ubiquo
         date_end = process_date.call(date_end_field)
         return unless date_start or date_end
         info = if date_start and date_end
-                 t('ubiquo.media.filter_between', :date_start => date_start, :date_end => date_end)
+                 t('ubiquo.filters.filter_between', :date_start => date_start, :date_end => date_end)
                elsif date_start
-                 t('ubiquo.media.filter_from', :date_start => date_start)
+                 t('ubiquo.filters.filter_from', :date_start => date_start)
                elsif date_end
-                 t('ubiquo.media.filter_until', :date_end => date_end)
+                 t('ubiquo.filters.filter_until', :date_end => date_end)
                end
         info2 = options_for_filter[:caption] + " " + info if options_for_filter[:caption] 
         [info2, [date_start_field, date_end_field]]
@@ -307,7 +307,7 @@ module Ubiquo
         field = options_for_filter[:field].to_s
         string = !filters[field].blank? && filters[field]
         return unless string
-        info = t('ubiquo.media.filter_text', :string => string)
+        info = t('ubiquo.filters.filter_text', :string => string)
         [info, [field]]
       end
 
@@ -345,7 +345,7 @@ module Ubiquo
                    record.send(name_field)
                  else
                    prefix = options_for_filter[:translate_prefix]
-                   prefix ? t("#{prefix}.#{filters[field_key]}") : filters[field_key]
+                   prefix ? t("#{prefix}.filters.#{filters[field_key]}") : filters[field_key]
                  end
                end
         info = "#{options_for_filter[:caption]} '#{name}'"

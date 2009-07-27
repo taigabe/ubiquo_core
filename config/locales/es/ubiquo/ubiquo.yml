@@ -13,10 +13,7 @@ es:
     confirm_item_removal: "Estás seguro de querer borrar este item?"
     save: "Guardar cambios"
     search: "Buscar"
-    sidebar: "Aquí puedes consultar el listado de usuarios así como crear, editar borrar o modificar usuarios y sus permisos."
     empty: "No hay resultados para {{thing}}"
-    filter: "Filtrar por {{thing}}"
-    drop_filter: "Eliminar filtro"
     help: "Ayuda"
     back_to_list: "Volver al listado"
     back_to_index: "Volver al índice"
@@ -27,7 +24,18 @@ es:
     related_links: "Enlaces relacionados"
     add_new_link: "Añadir nuevo enlace"
     # Filters
-    text: "texto"
+    filter: "Filtrar por {{thing}}"
+    filters:
+      remove_filter: "Quitar filtro"
+      remove_all_filters:
+        one: "Quitar filtro"
+        other: "Quitar todos los filtros"
+      text: "Texto"
+      filter_text: "texto '{{string}}'"
+      filtered_by: "Filtrando por: {{field}}"
+      filter_between: "entre {{date_start}} y {{date_end}}"
+      filter_from: "desde {{date_start}}"
+      filter_until: "hasta {{date_end}}"
     base:
       actions: "Acciones"
       from: "Desde"
