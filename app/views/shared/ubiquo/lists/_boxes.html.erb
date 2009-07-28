@@ -36,9 +36,9 @@ actions_width ||= 100
 hide_actions ||= false
 %>
 <% if rows.size > 0 %>
-  <div class="box_list">
+  <ul class="box_list">
     <% rows.each do |row| %>
-      <div id="<%= name %>_<%= row[:id] %>" class="box <%= cycle('even', 'odd') %>">
+      <li id="<%= name %>_<%= row[:id] %>" class="box <%= cycle('even', 'odd') %>">
         <%= row[:content] %>
         
         <% unless hide_actions %>
@@ -46,9 +46,9 @@ hide_actions ||= false
             <%= row[:actions].delete_if{|r|r.blank?}.join(" | ") %>       
           </div>
         <% end %>
-      </div>
+      </li>
     <% end %>
-  </div>
+  </ul>
   <% if !pages.nil? %>
     <%= render :partial => "shared/ubiquo/pagination", :locals => { :item_pages => pages } %>
   <% end %>

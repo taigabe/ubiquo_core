@@ -446,35 +446,59 @@ table, th, td { border: none;}
 	#content tr:hover td {
 		background: none;
 	}
-/*--- taula caixes usuaris ---*/
-.box_list{
-    
-}
-        .box_list .box{
-            background-color:#F1F1F1;
-            float:left;
-            height:90px;
-            margin-bottom:18px;
-            margin-right:19px;
-            min-width:318px;
-            padding:0;
-            position:relative;
-            width:300px;
-        }
-        .box_list .login{   
-            font-size: 1.7em;
-            float: left;
-            padding: 10px 0 20px 10px;
-        }
-        .box_list .photo{
-            float: left;
-            width:66px;  
-            
-        }
-        .box_list .actions{ 
-            float:right;
-        }
 
+/*--- llistat de caixes (llistat usuaris..) ---*/
+.box_list {
+	clear: both;
+}
+        .box_list .box {
+			font-size: 1em;
+			position: relative;
+			height: 10.8em;
+			width: 31.6em;
+            float:left;
+			padding: 1.6em;
+			margin: 0 1.3em 1.3em 0;
+			background-color: #F1F1F1;
+        }
+		.box_list .box h3 {
+			font-size: 1.8em;
+			width: 15em;
+        }
+			.box_list .box h3 .user-status {
+				font-size: .78em;
+			}
+			.box_list .box h3 .status-active {
+				color: #2eb135;
+			}
+			.box_list .box h3 .status-inactive {
+				color: #b12808;
+			}
+		.box_list .box .user-role {
+			font-size: 1.4em;
+			margin-bottom: 1.43em;
+		}
+		.box_list .box .user-mail {
+			font-size: 1.4em;
+			color: #696969;
+		}
+        .box_list .box .user-icon {
+            position: absolute;
+			top: .8em;
+			right: .8em;
+			padding: .2em;
+			border: 1px solid #b1b1b1;
+        }
+		.box_list .box .user-icon img {
+			display: block;
+        }
+		.box_list .box .actions {
+            position: absolute;
+			bottom: .8em;
+			right: .8em;
+			font-size: 1.3em;
+        }
+		
 /*--- taula dades per TinyMCE ---*/
 #content .mceLayout table {
 	clear: both;
@@ -835,6 +859,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 		height: 4em;
 		background: url(../images/ubiquo/bg_lightwindow.png) no-repeat left bottom;
 	}
-/*----------- --- Altres --------------*/
-.box_list:after, #controls:after, #tabs:after, #central:after, #content:after, .submenu:after, form .page_templates:after, form#frm_calendar p:after, #template:after, .form_box:after { content: "."; display: block; height: 0; clear: both; visibility: hidden;}
-.box_list, #controls, #tabs, #central, #content, .submenu, form .page_templates, form#frm_calendar p, #template, .form_box { height: 1%;}
+
+/*-------------- Clearfix --------------*/
+#controls:after, #tabs:after, #central:after, #content:after, .submenu:after, form .page_templates:after, form#frm_calendar p:after, #template:after, .form_box:after, .box_list:after { content: "."; display: block; height: 0; clear: both; visibility: hidden;}
+#controls, #tabs, #central, #content, .submenu, form .page_templates, form#frm_calendar p, #template, .form_box, .box_list { height: 1%;}
