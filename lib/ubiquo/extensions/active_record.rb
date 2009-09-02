@@ -49,6 +49,9 @@ module Ubiquo
         #   v_path = options["#{v}_path".to_sym]
         #   ":rails_root/#{v_path}/media/:attachment/:id_partition/:style/:basename.:extension"
         # }
+        Paperclip::Interpolations[:visibility_prefix] = lambda do |attachment, style|
+          '/ubiquo/attachment' if attachment.instance.is_protected
+        end
         path = ":rails_root/#{visibility}/media/:class/:attachment/:id_partition/:style/:filename"
         define_method("#{field}_is_public?") do 
           visibility.to_sym == :public
@@ -56,7 +59,7 @@ module Ubiquo
         styles = options[:styles] || {}
         processors = options[:processors] || [:thumbnail]
         has_attached_file field, :path => path, 
-                                 :url => "/media/:class/:attachment/:id_partition/:style/:filename",
+                                 :url => ":visibility_prefix/media/:class/:attachment/:id_partition/:style/:filename",
                                  :styles => styles,
                                  :processors => processors,
                                  :whiny => false
