@@ -114,8 +114,9 @@ table, th, td { border: none;}
 }
 	/*--- content ---*/
 	#content {
-		position: relative;
-		margin-right: 26em;
+        position: relative;
+        float: left;
+        width: 72%;
 		background: #FFF url(../images/ubiquo/bg_content_right.gif) repeat-y right;
 		border-top: 1px solid #CCC;
 		border-left: 2px solid #CCC;
@@ -149,26 +150,20 @@ table, th, td { border: none;}
 			}
 	/*--- sidebar ---*/
 	#sidebar {
-		position: absolute;
-		top: 2em;
-		right: 1em;
-		width: 24em;
+		float: left;
+		margin-left: 15px;
+		width: 25%;	
 	}
 		#sidebar .sidebar_box {
+            position: relative;
 			margin-bottom: 2em;
-		} 
-		
-		#sidebar .sidebar_title {
-			   	margin-top: .5em;
-				border-bottom: 1px solid #000; 
-				position: relative; 
-				margin-bottom: 1em;   
 		} 
 			
 		#sidebar h3 {
-		    padding-bottom: .2em;
+			margin-bottom: .5em;
+			padding-bottom: .2em;
 			font-size: 1.8em;
-			width: 69%; 
+			border-bottom: 1px solid #000;
 		}    
 		
 		#sidebar h4 {
@@ -185,7 +180,7 @@ table, th, td { border: none;}
 	/*--- sidebar: filtres ---*/
 	a.bot_filters {
 		position: absolute;
-		bottom: .5em;
+		top: .5em;
 		right: 0;
 		font-size: 1.2em;
 	}
