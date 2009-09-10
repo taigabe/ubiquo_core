@@ -72,7 +72,5 @@ hide_actions ||= false
     <%= render :partial => "shared/ubiquo/pagination", :locals => { :item_pages => pages } %>
   <% end %>
 <% else %>
-  <p id="empty">
-    <%= t 'ubiquo.empty', :thing => name.classify.constantize.human_name.downcase %>
-  </p>
+  <%= render :partial => "shared/ubiquo/lists/empty", :locals => {:name => name} %>
 <% end %>

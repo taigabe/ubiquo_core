@@ -1,0 +1,45 @@
+/* Pàgina principal llistat */
+
+img.mostra_llistat {
+	float: left;
+	height: 264px;
+	margin-right: 10px;
+}
+
+#entrepa_llistat {
+	position: relative;
+	float: left;
+	width: 318px;	
+	height: 198px;
+	background-color: #ecf5f4;
+	padding: 20px;
+}
+
+#entrepa_llistat h4 {
+	font-size: 30px;
+	font-weight: bold;
+}
+
+#entrepa_llistat p {
+	font-size: 24px;
+}
+
+#entrepa_llistat img.triangle {
+	position: absolute;
+	width: 29px;
+	height: 28px;
+	bottom: -28px;
+	left: 20px;
+	background: url("triangle.gif") top left no-repeat;
+}
+
+div.a_gran {
+	text-align: center;	
+	margin-top: 50px;
+	margin-bottom: 50px;	
+}
+
+div.a_gran a {
+	font-size: 24px;
+	font-weight: bold;
+}
