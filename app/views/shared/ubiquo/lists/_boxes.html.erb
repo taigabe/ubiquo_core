@@ -25,17 +25,21 @@ parameters:
  :pages        - Pagination for this list.
 
 optionals:
-
+ :model        - A Model name constant or string. 
  :actions_width   - Width (in pixels) of the Actions column (default 100)
  :hide_actions - Set to true to hide actions (default: false)
+ :link_to_new  - A new action link 
  
 =end
 %>
 <%
 actions_width ||= 100
 hide_actions ||= false
+model ||= name.classify
+model = model.to_s.constantize
+link_to_new ||= ""
 %>
-<% if rows.size > 0 %>
+<% if rows.size < 0 %>
   <ul class="box_list">
     <% rows.each do |row| %>
       <li id="<%= name %>_<%= row[:id] %>" class="box <%= cycle('even', 'odd') %>">
@@ -54,5 +58,8 @@ hide_actions ||= false
   <% end %>
 
 <% else %>
-  <%= render :partial => "shared/ubiquo/lists/empty", :locals => {:name => name} %>
-<% end %>
+  <%= render :partial => "shared/ubiquo/lists/empty", 
+             :locals => { :name => name,
+                          :link_to_new => link_to_new,
+                          :model => model } %>
+ <% end %>

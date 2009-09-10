@@ -1,12 +1,12 @@
 /* Pàgina principal llistat */
 
-img.mostra_llistat {
+img.list_example {
 	float: left;
 	height: 264px;
 	margin-right: 10px;
 }
 
-#entrepa_llistat {
+#balloon_list {
 	position: relative;
 	float: left;
 	width: 318px;	
@@ -15,31 +15,38 @@ img.mostra_llistat {
 	padding: 20px;
 }
 
-#entrepa_llistat h4 {
+#balloon_list h4 {
 	font-size: 30px;
 	font-weight: bold;
 }
 
-#entrepa_llistat p {
+#balloon_list p {
 	font-size: 24px;
 }
 
-#entrepa_llistat img.triangle {
+#balloon_list img.balloon_triangle {
 	position: absolute;
 	width: 29px;
-	height: 28px;
+	min-height: 28px;
 	bottom: -28px;
 	left: 20px;
 	background: url("triangle.gif") top left no-repeat;
 }
 
-div.a_gran {
+.empty_list { 
+    margin: 0 auto 20px auto;
+    text-align: center;
+    width: 70%;
+}
+
+#balloon_actions {
 	text-align: center;	
 	margin-top: 50px;
 	margin-bottom: 50px;	
 }
 
-div.a_gran a {
+#balloon_actions a.new {
 	font-size: 24px;
 	font-weight: bold;
+    float: none;
 }
