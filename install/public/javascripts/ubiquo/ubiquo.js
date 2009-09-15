@@ -9,6 +9,13 @@ document.observe("dom:loaded", function() {
             f.insert({bottom: '<span class="corner_tl"></span><span class="corner_tr"></span><span class="corner_bl"></span><span class="corner_br"></span>'});
         });
     }
+
+    //version box corners
+    if ($$('#sidebar .version, #sidebar .version_selected').first()){
+	$$('#sidebar .version, #sidebar .version_selected').each(function(f){
+            f.insert({bottom: '<span class="se"></span><span class="sd"></span><span class="ie"></span><span class="id"></span>'});
+        });
+    }
     
     if($('send_confirm_creation') && $("welcome_message_block")){
         $('send_confirm_creation').observe("change", function(){

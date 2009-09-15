@@ -757,6 +757,284 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 	#central li.component form input {
 		display: inline;
 	}
+
+
+/*--- Translation sidebar box ---*/
+#sidebar .translation {
+	height: 18px;
+	padding-top: 2px;
+	padding-left: 4px;
+}
+
+#sidebar .translation span.name {
+	float: left;
+	font-size: 14px;	
+}
+
+#sidebar .translation .options {
+	float: right;
+	font-size: 12px;
+	color: #881b20;
+	width: 45%;
+	text-align: center;
+}
+
+#sidebar .translation .options a.preview {
+	float: right;
+}
+
+#sidebar .translation .options a.edit {
+	float: left;
+}
+
+#sidebar .translation .options a.translate {
+	float: left;
+}
+
+#sidebar .selected {
+	background: #881b20;
+}
+
+#sidebar .selected, 
+#sidebar .selected .options,
+#sidebar .selected a {
+	color: #fff;
+}
+
+/*--- Versions sidebar box ---*/
+
+
+/* Versions pàgina */
+#sidebar .version,
+#sidebar .version_selected {
+	background-color: #D6D6D6;
+	margin-bottom: 6px;
+	overflow: hidden;
+	position: relative;
+	width: 240px;
+	padding: 3px;
+}
+
+#sidebar .version_selected {
+	background: #aaa;
+}
+
+#sidebar .version .se {
+	background: transparent url("../images/ubiquo/corner_pt_se.gif") no-repeat scroll 0 0;
+}
+#sidebar .version_selected .se {
+	background: transparent url("../images/ubiquo/corner_pt_se2.gif") no-repeat scroll 0 0;
+}
+
+#sidebar .version .sd {
+	background: transparent url("../images/ubiquo/corner_pt_sd.gif") no-repeat scroll 0 0;
+}
+#sidebar .version_selected .sd {
+	background: transparent url("../images/ubiquo/corner_pt_sd2.gif") no-repeat scroll 0 0;
+}
+
+#sidebar .version .ie {
+	background: transparent url("../images/ubiquo/corner_pt_ie.gif") no-repeat scroll 0 0;
+}
+#sidebar .version_selected .ie {
+	background: transparent url("../images/ubiquo/corner_pt_ie2.gif") no-repeat scroll 0 0;
+}
+
+#sidebar .version .id {
+	background: url("../images/ubiquo/corner_pt_id.gif") no-repeat scroll 0 0;
+}
+
+#sidebar .version_selected .id {
+	background: url("../images/ubiquo/corner_pt_id2.gif") no-repeat scroll 0 0;
+}
+
+#sidebar .version p.name,
+#sidebar .version_selected p.name {
+	background:transparent url("../images/ubiquo/icona_wiki.gif") no-repeat scroll left top;
+	clear: both;
+	font-size: 14px;
+	font-weight: bold;
+	height: 17px;
+	margin: 4px 0 0 7px;
+	padding-left: 17px;
+	position: relative;
+}
+#sidebar .version p.name span.data,
+#sidebar .version_selected p.name span.data {
+	font-weight: normal;
+        padding-left: 10px;
+}
+
+#sidebar .version p.author,
+#sidebar .version_selected p.author {
+	clear:both;
+	color:#616161;
+	font-size:12px;
+	margin:0;
+	padding-left:21px;
+	position: relative;
+}
+
+#sidebar .version .options,
+#sidebar .version_selected .options {
+	line-height: 1em;
+	margin-bottom: 2px;
+	margin-right: 4px;
+	padding-left: 21px;
+	position: relative;
+}
+
+#sidebar .version .options ul,
+#sidebar .version_selected .options ul {
+	margin: 0;
+	padding: 0;
+}
+
+#sidebar .version .options li,
+#sidebar .version_selected .options li {
+	display:inline;
+}
+
+#sidebar .version .options li a,
+#sidebar .version_selected .options li a {
+	background: transparent none repeat scroll 0 0;
+	color: #AF2229;
+	margin-right: 0.4em;
+	text-decoration: underline;
+}
+
+.se, .sd, .ie, .id {
+	height: 5px;
+	overflow: hidden; 
+	position: absolute;
+	width: 5px;
+}
+
+.se {
+	left: 0;
+	top: 0;
+}
+
+.sd {
+	right: 0;
+	top: 0;
+}
+
+.ie {
+	bottom: 0;
+	left: 0;
+}
+
+.id {
+	bottom: 0;
+	right: 0;
+}
+
+/*--- Preview ---*/
+
+
+.preview p.notice {
+	font-size: 14px;
+	padding: 13px;
+	background-color: #ecf5f4;
+	border: 1px solid #c2d2d1;
+	margin-bottom: 35px;
+}
+
+.preview p.notice em {
+	font-weight: bold;
+	font-style: normal;
+}
+
+.preview dl,
+.preview ul, 
+.preview dd.text {
+	font-size: 12px;
+}
+
+.preview dt {
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
+.preview dd {
+	color: #778180;
+	margin-bottom: 20px;	
+}
+
+.preview ul {
+	list-style-type: disc;
+	margin-left: 14px;
+}
+
+.preview ul li {	
+	margin-bottom: 2px;
+}
+
+.preview dd.images {
+	margin-top: 10px;
+}
+
+
+.preview dd.images ul {
+	list-style-type: none;
+	margin: 0;
+}
+
+.preview dd.images li {
+	float: left;
+	width: 100px;
+	margin-right: 20px;
+}
+
+.preview dd.images span {
+	width: 100px;
+	height: 82px;
+	background-color: #ecf5f4; 
+	float: left;
+/*	border: 1px solid red; */
+	text-align: center;
+	padding-top: 18px;
+	margin-bottom: 5px;
+}
+
+.preview dd.images p {
+	text-align: center;
+	font-size: 12.5px;
+	line-height: 1.1em;
+}
+
+.preview dd.text {
+	background-color: #ecf5f4; 
+	padding: 12px;
+	margin-top: 10px;
+}
+
+.preview dd.text p {
+	margin-bottom: 10px;
+}
+
+.preview dd.text em {
+	font-weight: bold;
+	font-style: normal;
+}
+
+.preview dd.text h6 {
+	font-size: 14px;
+}
+
+.preview ul.attachment {
+	margin-left: 0;
+}
+
+.preview ul.attachment li {
+	list-style-type: none;
+	background: url("../images/ubiquo/attachment.gif") left center no-repeat;
+	padding-left: 17px;
+}
+
+
+
 /*--- Lightwindow ---*/
 #lightwindow_stage {
 	width: 67.9em;
