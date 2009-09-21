@@ -40,6 +40,7 @@ model = model.to_s.constantize
 link_to_new ||= ""
 %>
 <% if rows.size > 0 %>
+  <%= link_to_new %>
   <ul class="box_list">
     <% rows.each do |row| %>
       <li id="<%= name %>_<%= row[:id] %>" class="box <%= cycle('even', 'odd') %>">
