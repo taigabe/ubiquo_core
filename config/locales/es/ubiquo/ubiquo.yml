@@ -36,7 +36,9 @@ es:
       filter_between: "entre {{date_start}} y {{date_end}}"
       filter_from: "desde {{date_start}}"
       filter_until: "hasta {{date_end}}"
+      filter_simple_date: "fecha {{date}}"
     base:
       actions: "Acciones"
       from: "Desde"
       to: "Hasta"
+      date: "Fecha"

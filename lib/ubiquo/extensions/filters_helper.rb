@@ -174,6 +174,20 @@ require 'ostruct'
 #    :field => [:date_start, :date_end])
 #  
 #  build_filter_info(date_filter)
+#
+#== Single Date filter
+# Used to filter with only one date. It's like last filter but with just one date field:
+#
+#  date_filter = render_filter(:single_date, {},
+#    :caption => t('creation'),
+#    :field => :filter_date)
+#  ---
+#  date_filter = filter_info(:single_date, params,
+#    :caption => t('creation'),
+#    :field => :filter_date)
+#  
+#  build_filter_info(date_filter)
+
 module Ubiquo
   module Extensions
     module FiltersHelper
@@ -274,6 +288,20 @@ module Ubiquo
       end
 
       private
+
+      # Return info to show a informative string about a date search
+      #
+      # Return an array [text_info, array_of_fields_used_on_that_filter]
+      def single_date_filter_info(filters, options_for_filter)
+        date_field = options_for_filter[:field].to_sym
+        date = filters[date_field]
+        
+        return unless date
+        info = t('ubiquo.filters.filter_simple_date', :date => date)
+        
+        info = options_for_filter[:caption] + " " + info if options_for_filter[:caption] 
+        [info, [date_field]]
+      end
 
       # Return info to show a informative string about a date search
       #
