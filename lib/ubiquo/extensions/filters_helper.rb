@@ -373,6 +373,10 @@ module Ubiquo
                    return unless record
                    name_field = options_for_filter[:name_field] || raise("options_for_filter: missing 'name_field' key")
                    record.send(name_field)
+                 elsif options_for_filter[:collection]
+                   value = options_for_filter[:collection].find do |value| 
+                     value.send(options_for_filter[:id_field]).to_s == filters[field_key]
+                   end.send(options_for_filter[:name_field]) rescue filters[field_key]
                  else
                    prefix = options_for_filter[:translate_prefix]
                    prefix ? t("#{prefix}.filters.#{filters[field_key]}") : filters[field_key]
