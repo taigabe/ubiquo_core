@@ -335,7 +335,9 @@ module Ubiquo
         field = options_for_filter[:field].to_s
         string = !filters[field].blank? && filters[field]
         return unless string
-        info = t('ubiquo.filters.filter_text', :string => string)
+        info = options_for_filter[:caption].blank? ? 
+          t('ubiquo.filters.filter_text', :string => string) : 
+          "#{options_for_filter[:caption]} '#{string}'"
         [info, [field]]
       end
 
