@@ -10,7 +10,7 @@ namespace :ubiquo do
     t.libs << "test"
     target_plugin = ENV.delete("PLUGIN") || "ubiquo**"
     t.pattern = File.join('vendor', 'plugins', target_plugin, 'test', '**', '*_test.rb')
-    t.verbose = true
+    t.verbose = false
   end
 
   Rake::Task['ubiquo:test'].comment = "Run all ubiquo plugins tests"
@@ -46,7 +46,7 @@ namespace :ubiquo do
         if File.directory?(file)
           copy_dir(file, File.join(path, file_name), options)
         else
-          FileUtils.cp(file, rails_target, :verbose => true) if force || !File.exists?(File.join(rails_target, file_name))
+          FileUtils.cp(file, rails_target, :verbose => false) if force || !File.exists?(File.join(rails_target, file_name))
         end
       end
     end
