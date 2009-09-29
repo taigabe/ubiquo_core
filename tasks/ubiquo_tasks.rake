@@ -37,8 +37,9 @@ namespace :ubiquo do
   
   def copy_dir(from, path = "/", options = {})
     force = options[:force]
+    verbose = false || options[:verbose]
     rails_target = File.join(RAILS_ROOT, path)
-    FileUtils.mkdir_p(rails_target, :verbose => true) unless File.exists?(rails_target)
+    FileUtils.mkdir_p(rails_target, :verbose => verbose) unless File.exists?(rails_target)
     [from].flatten.each do |f|
       files = Dir.glob(File.join(f, "*"))
       files.each do |file|
@@ -46,7 +47,7 @@ namespace :ubiquo do
         if File.directory?(file)
           copy_dir(file, File.join(path, file_name), options)
         else
-          FileUtils.cp(file, rails_target, :verbose => false) if force || !File.exists?(File.join(rails_target, file_name))
+          FileUtils.cp(file, rails_target, :verbose => verbose) if force || !File.exists?(File.join(rails_target, file_name))
         end
       end
     end
