@@ -35,7 +35,7 @@ img.list_example {
 .empty_list { 
     margin: 0 auto 20px auto;
     text-align: center;
-    width: 70%;
+    width: 100%;
 }
 
 #balloon_actions {
@@ -48,4 +48,16 @@ img.list_example {
 	font-size: 24px;
 	font-weight: bold;
     float: none;
+}
+
+.balloon_wrapper { 
+    float: left;
+    position: relative;
+    left: 50%;
+}
+
+.balloon_content {
+    float: left;
+    position: relative;
+    left: -50%;
 }

@@ -3,14 +3,18 @@
     <div id="balloon_actions">
       <%= link_to_new %>
     </div>
-    <%= ubiquo_image_tag "example_list.jpg", :class => "list_example" %>
-    <div id="balloon_list">
-      <h4><%= t("ubiquo.#{name}.empty_list_title") %></h4>
-      <p><%= t("ubiquo.#{name}.empty_list_message") %></p>
-      <%= ubiquo_image_tag "balloon-triangle.gif", :class => "balloon_triangle" %>
+    <div class="balloon_wrapper">
+      <div class="balloon_content">
+        <%= ubiquo_image_tag "example_list.jpg", :class => "list_example" %>
+        <div id="balloon_list">
+          <h4><%= t("ubiquo.#{name}.empty_list_title") %></h4>
+          <p><%= t("ubiquo.#{name}.empty_list_message") %></p>
+          <%= ubiquo_image_tag "balloon-triangle.gif", :class => "balloon_triangle" %>
+        </div>
+      </div>
     </div>
-    <br style="clear: both;"/>
   </div>
+  <br style="clear: both;"/>
 <% else %>
   <%= link_to_new %>
   <p id="empty">
