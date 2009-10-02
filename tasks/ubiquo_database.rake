@@ -30,6 +30,9 @@ namespace :ubiquo do
         p "This task should only be run in a development environment."
       end
     end
+    
+    desc "Alias task for ubiquo:db:reset"
+    task :init => "ubiquo:db:reset"
         
     namespace :fixtures do
       desc "use export [TABLES=foos[,bars,lands]] [MODELS=Foo[,Bar,Land]] [GROUPS=Group1[,Group2,Group3]] to create YAML fixtures from data in an existing database.\n" +
