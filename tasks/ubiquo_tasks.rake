@@ -29,7 +29,7 @@ namespace :ubiquo do
     plugins = Dir[ glob ].each { |e| e unless File.file? e }
     plugins.each do |plugin|
       command = "cd #{plugin} && #{args.command}"
-      puts "\nRunning #{command}"
+      $stdout.puts "\nRunning #{command}"
       system(command)
       exit 1 if $? != 0
     end
