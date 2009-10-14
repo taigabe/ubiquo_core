@@ -23,6 +23,7 @@ en:
     link_target_blank: "New window"
     related_links: "Related links"
     add_new_link: "Add new link"
+    text: "text"
     # Filters
     filter: "Filter by {{thing}}"
     filters:

@@ -23,6 +23,7 @@ ca:
     link_target_blank: "Finestra nova"
     related_links: "Enllaços relacionats"
     add_new_link: "Afegir nou enllaç"
+    text: "text"
     # Filters
     filter: "Filtrar per {{thing}}"
     filters:
