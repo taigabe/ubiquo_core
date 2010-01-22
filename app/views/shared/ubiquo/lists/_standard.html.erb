@@ -13,46 +13,48 @@ parameters:
 
 optionals:
  :model        - A Model name constant or string. 
- :actions_width   - Width (in pixels) of the Actions column (default 100)
  :hide_actions - Set to true to hide actions (default: false)
  :link_to_new  - A new action link 
+ :table_id     - An html id for list table
  
 =end
 
-actions_width ||= 100
-hide_actions ||= false
 model ||= name.classify
 model = model.to_s.constantize
+hide_actions ||= false
 link_to_new ||= ""
+table_id ||= name.pluralize + "-list"
 
 %>
 <% if rows.size > 0 %>
   <%= link_to_new %>
-  <table width="100%" border="1" cellspacing="0" cellpadding="3">
+  <table id="<%= table_id %>" width="100%" border="1" cellspacing="0" cellpadding="3">
     <tr>
       <% headers.each do |column| %>
         <th>
           <%= 
           case column
-              when Symbol
-                link=params.clone
-                if link[:order_by] == "#{name.to_s.pluralize}.#{column.to_s}"
-                  link[:sort_order]=link[:sort_order]=="asc" ? "desc" : "asc"
-                else
-                  link[:order_by]="#{name.pluralize}.#{column.to_s}"
-                  link[:sort_order]="asc"
-                end
-                  #name.classify.human_attribute_name(column.to_s.humanize)
-                  #t("#{name.classify}|#{column.to_s.humanize}").humanize
-                  link_to name.classify.constantize.human_attribute_name(column.to_s), link, {:class => (params[:order_by]=="#{name.pluralize}.#{column.to_s}" ? (params[:sort_order]=="asc" ? "order_desc" : "order_asc") : "order" )}
-              when String
-                column.humanize
+            when Symbol
+              link = params.clone
+              if link[:order_by] == "#{name.to_s.pluralize}.#{column.to_s}"
+                link[:sort_order] = link[:sort_order] == "asc" ? "desc" : "asc"
+              else
+                link[:order_by] = "#{name.pluralize}.#{column.to_s}"
+                link[:sort_order] = "asc"
+              end
+              #name.classify.human_attribute_name(column.to_s.humanize)
+              #t("#{name.classify}|#{column.to_s.humanize}").humanize
+              link_to name.classify.constantize.human_attribute_name(column.to_s), 
+                      link, 
+                      { :class => (params[:order_by] == "#{name.pluralize}.#{column.to_s}" ? (params[:sort_order] == "asc" ? "order_desc" : "order_asc") : "order" )}
+            when String
+              column.humanize
           end
           %>
         </th>
       <% end %>
       <% unless hide_actions %>
-        <th width="<%= actions_width %>px" class="actions"><%= t('ubiquo.base.actions') %></th>
+        <th class="actions"><%= t('ubiquo.base.actions') %></th>
       <% end %>
       </tr>
       <% rows.each do |row| %>

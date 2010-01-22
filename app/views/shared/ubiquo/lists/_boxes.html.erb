@@ -26,22 +26,22 @@ parameters:
 
 optionals:
  :model        - A Model name constant or string. 
- :actions_width   - Width (in pixels) of the Actions column (default 100)
  :hide_actions - Set to true to hide actions (default: false)
- :link_to_new  - A new action link 
+ :link_to_new  - A new action link
+ :table_id     - An html id for list table
  
 =end
 %>
 <%
-actions_width ||= 100
 hide_actions ||= false
 model ||= name.classify
 model = model.to_s.constantize
 link_to_new ||= ""
+table_id ||= name.pluralize + "-list"
 %>
 <% if rows.size > 0 %>
   <%= link_to_new %>
-  <ul class="box_list">
+  <ul id="<%= table_id %>" class="box_list">
     <% rows.each do |row| %>
       <li id="<%= name %>_<%= row[:id] %>" class="box <%= cycle('even', 'odd') %>">
         <%= row[:content] %>
