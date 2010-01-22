@@ -17,13 +17,17 @@ module Ubiquo
             html_tag
           else
             # There are 3 special type input (checkbox, radio, file) for which
-            # setting the class on the element won't work. In this case, create a
-            # surrounding span.
+            # setting the class on the element won't work. In this case, create
+            # a surrounding span.
             case html_tag
               when /type=\"file\"/
                 "<div class=\"file_#{error_class}\">" + html_tag + "</div>"
+              when /type=\"checkbox\"/
+                "<span class=\"checkbox_#{error_class}\">" + html_tag + "</span>"
+              when /type=\"radio\"/
+                "<span class=\"radio_#{error_class}\">" + html_tag + "</span>"
               else
-                "<div class=\"#{error_class}\">" + html_tag + "</div>"
+                "<span class=\"#{error_class}\">" + html_tag + "</span>"
             end
           end
         end

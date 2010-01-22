@@ -583,7 +583,17 @@ table#menu_items_list_titles {
 }
 .file_error_field {
 	padding: .2em;
-        width: 30em;
+    width: 28em;
+	border: 1px solid #FF0000;
+}
+.checkbox_error_field {
+	padding: 0.5em 0.1em 0 0.2em;
+    width: 1.4em;
+	border: 1px solid #FF0000;
+}
+.radio_error_field {
+	padding: 0.5em 0.1em 0 0.2em;
+    width: 1.4em;
 	border: 1px solid #FF0000;
 }
 .form_box {
@@ -620,7 +630,7 @@ form label {
 #content form p.datetime select {
 	display: inline;
 }
-#content form input[type="checkbox"], #content form input[type="hidden"] {
+#content form input[type="checkbox"],#content form input[type="radio"], #content form input[type="hidden"] {
 	display: inline;
 }
 form .page_templates li {
