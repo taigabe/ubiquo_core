@@ -1035,6 +1035,11 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 	margin-bottom: 5px;
 }
 
+.preview dd.images img {
+  width: 50px;
+  height: 64px;
+}
+
 .preview dd.images p {
 	text-align: center;
 	font-size: 12.5px;
