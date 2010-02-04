@@ -55,10 +55,14 @@
       </div>
       <hr />
       <div id="footer">
-		<%= link_to 'Ubiquo', 'http://www.ubiquo.me', :class => 'logo_ubiquo' %>
-		® 2009 ubiquo <br/>
-        <%= link_to 'MIT license', 'http://www.opensource.org/licenses/mit-license.php' %>
-        <%= link_to 'ubiquo website', 'http://www.ubiquo.me' %>
+        <div class="links_ubiquo">
+          ® 2009 ubiquo <br/>
+          <%= link_to 'MIT license', 'http://www.opensource.org/licenses/mit-license.php' %>
+          <%= link_to 'ubiquo website', 'http://www.ubiquo.me' %>
+        </div>
+        <div class="logo_ubiquo">
+          <%= link_to 'Ubiquo', 'http://www.ubiquo.me', :class => 'logo_ubiquo' %>
+        </div>
 	  </div>
       <iframe id='upload_frame' name="upload_frame" src="about:blank"></iframe>
     </div>
