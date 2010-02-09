@@ -76,6 +76,30 @@ module Ubiquo
         locals = {:body=>capture(previewed, &block)}
         concat(render(:partial => "shared/ubiquo/preview_box", :locals => locals))
       end
+
+      # converts symbol to ubiquo standard table head with order_by and sort_order strings 
+      def ubiquo_table_headerfy(column, klass = nil)
+        name = klass.nil? ? params[:controller].split("/").last.tableize : klass
+
+        case column
+          when Symbol
+            link = params.clone
+            if link[:order_by] == "#{name.to_s.pluralize}.#{column.to_s}"
+              link[:sort_order] = link[:sort_order] == "asc" ? "desc" : "asc"
+            else
+              link[:order_by] = "#{name.pluralize}.#{column.to_s}"
+              link[:sort_order] = "asc"
+            end
+            #name.classify.human_attribute_name(column.to_s.humanize)
+            #t("#{name.classify}|#{column.to_s.humanize}").humanize
+            link_to name.classify.constantize.human_attribute_name(column.to_s), 
+                    link, 
+                    { :class => (params[:order_by] == "#{name.pluralize}.#{column.to_s}" ? 
+                                (params[:sort_order] == "asc" ? "order_desc" : "order_asc") : "order" )}
+          when String
+            column.humanize
+        end
+      end
     end
   end
 end
