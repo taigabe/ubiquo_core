@@ -12,7 +12,6 @@ class UbiquoAreaController < ApplicationController
   def self.default_tiny_mce_options
     { 
       :theme => 'advanced',
-      :browsers => %w{msie gecko},
       :theme_advanced_toolbar_location => "top",
       :theme_advanced_toolbar_align => "left",
       :theme_advanced_resizing => true,
