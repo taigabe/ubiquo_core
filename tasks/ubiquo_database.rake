@@ -25,6 +25,9 @@ namespace :ubiquo do
         p "Importing fixtures into development database... "
         ENV['DELETE'] = 'yes'
         Rake::Task['ubiquo:db:fixtures:import'].invoke
+
+        # Call seeds
+        Rake::Task['db:seed'].invoke
         p "Done :-)"
       else
         p "This task should only be run in a development environment."
