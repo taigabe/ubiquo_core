@@ -1,4 +1,16 @@
 module Ubiquo
+
+  def self.tab_template(name)
+    "end
+    navigator.add_tab do |tab|
+      tab.text = t('ubiquo.#{name.singularize}.title')
+      tab.title = t('application.goto', :place => '#{name}')
+      tab.link = ubiquo_#{name}_path
+      tab.highlights_on({:controller => 'ubiquo/#{name}'})
+      tab.highlighted_class = 'active'
+    end # Last tab"
+  end
+  
   module Extensions
     module RailsGenerator
       module Create
@@ -16,18 +28,10 @@ module Ubiquo
         end
         # Add ubiquo tab
         def ubiquo_tab(name)
-          sentinel = 'navigator_left = create_tab_navigator(:id => "contents_tabnav", :tab_options => {}) do |navigator|'
+          sentinel = 'end # Last tab'
           unless options[:pretend]
-            gsub_file 'app/views/navigators/_main_navtabs.html.erb', /(#{Regexp.escape(sentinel)})/mi do |match|
-    "#{match}\n # Begin #{name} tab
-     navigator.add_tab do |tab|
-       tab.text = t('application.#{name}')
-       tab.title = t('application.goto', :place => '#{name}')
-       tab.link = ubiquo_#{name}_path
-       tab.highlights_on({:controller => 'ubiquo/#{name}')
-       tab.highlighted_class = 'active'
-     end
-     # End #{name} tab"
+            gsub_file 'app/views/navigators/_main_navtabs.html.erb', /(#{Regexp.escape(sentinel)})/mi do
+              Ubiquo::tab_template(name)
             end
           end
         end
@@ -39,6 +43,11 @@ module Ubiquo
           look_for = "\n    #{namespace}.resources #{resource_list}\n"
           logger.route "#{namespace}.resources #{resource_list}"
           gsub_file 'config/routes.rb', /(#{look_for})/mi, ''
+        end
+        # Remove ubiquo tab only if unmodified
+        def ubiquo_tab(name)
+          look_for = Ubiquo::tab_template(name)
+          gsub_file 'app/views/navigators/_main_navtabs.html.erb', /#{Regexp.escape(look_for)}/mi, 'end # Last tab'
         end
       end
       module List
