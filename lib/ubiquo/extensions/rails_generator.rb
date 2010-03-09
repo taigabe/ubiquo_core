@@ -14,6 +14,23 @@ module Ubiquo
             end
           end
         end
+        # Add ubiquo tab
+        def ubiquo_tab(name)
+          sentinel = 'navigator_left = create_tab_navigator(:id => "contents_tabnav", :tab_options => {}) do |navigator|'
+          unless options[:pretend]
+            gsub_file 'app/views/navigators/_main_navtabs.html.erb', /(#{Regexp.escape(sentinel)})/mi do |match|
+    "#{match}\n # Begin #{name} tab
+     navigator.add_tab do |tab|
+       tab.text = t('application.#{name}')
+       tab.title = t('application.goto', :place => '#{name}')
+       tab.link = ubiquo_#{name}_path
+       tab.highlights_on({:controller => 'ubiquo/#{name}')
+       tab.highlighted_class = 'active'
+     end
+     # End #{name} tab"
+            end
+          end
+        end
       end
       module Destroy
         # Modify routes.rb deleting the namespaced resources
