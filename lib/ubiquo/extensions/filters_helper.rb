@@ -403,7 +403,11 @@ module Ubiquo
       
       def build_hidden_field_tags(hash)
         hash.map do |field, value| 
-          hidden_field_tag field, value, :id => nil
+          if value.is_a? Array
+            value.map {|val| hidden_field_tag field+"[]", val}.flatten
+          else
+            hidden_field_tag field, value, :id => nil
+          end
         end.join("\n")
       end 
       
