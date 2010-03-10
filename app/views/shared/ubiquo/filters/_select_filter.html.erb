@@ -6,12 +6,13 @@
 	  <%= build_hidden_field_tags(link) %>
 	  <% header_option = options[:all_caption] ? "<option value=''>" + options[:all_caption] + "</option>" : "" %>
 	  <% field_value = (params[filter_field] =~ /^\d+/)? params[filter_field].to_i : params[filter_field] %>
+	  <% field_value = params[filter_field].map(&:to_i) if params[filter_field].is_a?(Array) %>
 	  <%= select_tag(filter_field, 
 	        header_option + options_from_collection_for_select(options[:collection], 
             options[:id_field], 
             options[:name_field], 
             (params[filter_field].blank? ? options[:default_selected] : field_value)), 
-          :id => nil) %>
+          {:id => nil}.merge(options[:html_options] || {})) %>
 	  <%= submit_tag(t("ubiquo.search"), :class => "select_filter") %>
     </p>
   <% end %>
