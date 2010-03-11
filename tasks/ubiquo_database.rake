@@ -22,12 +22,12 @@ namespace :ubiquo do
         # preparing test database
         Rake::Task["db:test:prepare"].execute(nil)
 
-        p "Importing fixtures into development database... "
+        puts "Importing fixtures into development database... "
         ENV['DELETE'] = 'yes'
         Rake::Task['ubiquo:db:fixtures:import'].invoke
-        p "Done :-)"
+        puts "Done :-)"
       else
-        p "This task should only be run in a development environment."
+        puts "This task should only be run in a development environment."
       end
     end
     
