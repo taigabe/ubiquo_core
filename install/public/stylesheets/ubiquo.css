@@ -291,7 +291,7 @@ table, th, td { border: none;}
         clear: both;
 }
 #feedback_error, #feedback_notice {
-	margin: 0 0 .67em;
+	margin: .67em 0;
 	padding: .67em;
 }
 #feedback_error, #feedback_notice {
@@ -341,7 +341,6 @@ table, th, td { border: none;}
 	float: right;
 	font-size: 1.3em;
 	font-weight: bold;
-        margin-bottom: 1em;
 }
 
 /*--- handle ---*/
@@ -435,7 +434,7 @@ table, th, td { border: none;}
 /*--- taula dades genèrica ---*/
 #content table {
 	clear: both;
-	margin: 0 0 2em;
+	margin: 2em 0;
 }
 #content th, #content td {
 	border-right: 2px solid #FFF;
