@@ -24,11 +24,14 @@ namespace :ubiquo do
 
   desc "Run given command inside each plugin directory."
   task :foreach, [ :command ] do |t, args|
+    ubiquo_dependencies = %w[ calendar_date_select exception_notification paperclip responds_to_parent tiny_mce ]
+    plugin_directory = File.join(RAILS_ROOT, 'vendor', 'plugins')
+    ubiquo_plugins = Dir.glob(File.join(plugin_directory,"ubiquo_*")).map { |file| file.split("/").last }
+    plugins = ubiquo_dependencies + ubiquo_plugins
     args.with_defaults(:command => 'git pull')
-    glob = File.join(RAILS_ROOT, 'vendor', 'plugins', "*/")
-    plugins = Dir[ glob ].each { |e| e unless File.file? e }
     plugins.each do |plugin|
-      command = "cd #{plugin} && #{args.command}"
+      plugin_path = File.join(plugin_directory, plugin)
+      command = "cd #{plugin_path} && #{args.command}"
       $stdout.puts "\nRunning #{command}"
       system(command)
       exit 1 if $? != 0
