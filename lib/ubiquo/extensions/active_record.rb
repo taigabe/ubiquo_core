@@ -56,7 +56,7 @@ module Ubiquo
         define_method("#{field}_is_public?") do 
           visibility.to_sym == :public
         end
-        styles = options[:styles] || {}
+        styles = Marshal.load(Marshal.dump(options[:styles])) || {}
         processors = options[:processors] || [:thumbnail]
         has_attached_file field, :path => path, 
                                  :url => ":visibility_prefix/media/:class/:attachment/:id_partition/:style/:filename",
