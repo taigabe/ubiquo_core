@@ -6,7 +6,7 @@ class Ubiquo::AttachmentController < UbiquoAreaController
   protected 
   
   def send_multimedia(requested_path, options = {})
-    protected_path = File.join(RAILS_ROOT, Ubiquo::Config.get(:attachments)[:private_path])
+    protected_path = Rails.root.join(Ubiquo::Config.get(:attachments)[:private_path])
     absolute_path = File.expand_path(File.join(protected_path, requested_path))
     # TODO: Look for a better way to do this. Here we need to make sure that we only serve assets that belong to the protected_path
     # to avoid security issues (using a regexp against the expanded path).
