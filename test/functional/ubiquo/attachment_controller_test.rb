@@ -1,19 +1,29 @@
 require File.dirname(__FILE__) + "/../../test_helper.rb"
 class Ubiquo::AttachmentControllerTest < ActionController::TestCase
-  def test_should_not_be_able_to_request_attachements_outside_the_private_path
+
+  def setup
+    # We setup tmp as private_path to avoid errors when the real
+    # directory doesn't exit.
+    @private_path = Ubiquo::Config.get(:attachments)[:private_path]
+    @tmp_path = 'tmp'
+    Ubiquo::Config.get(:attachments)[:private_path] = @tmp_path
+  end
+
+  def teardown
+    Ubiquo::Config.get(:attachments)[:private_path] = @private_path
+  end
+  
+  def test_should_not_be_able_to_request_attachments_outside_the_private_path
     assert_raises ActiveRecord::RecordNotFound do
       get(:show, { :path => '../config/routes.rb'})
     end
   end
   
-  def test_should_be_able_to_obtain_attachements_inside_private_path_when_logged_in
-    protected_path = File.join(RAILS_ROOT, Ubiquo::Config.get(:attachments)[:private_path])
-    dummy_file = File.join(protected_path, 'dummy.html')
-    File.open(dummy_file, 'w')
-    get(:show, { :path => 'dummy.html' })
+  def test_should_be_able_to_obtain_attachments_inside_private_path_when_logged_in
+    dummy_file = Tempfile.new('dummy', Rails.root.join(@tmp_path))
+    dummy_file.flush
+    get(:show, { :path => File.basename(dummy_file.path) })
     assert_response :success
-  ensure
-    File.delete(dummy_file)
   end
   
   def test_should_not_be_able_to_obtain_attachment_when_not_logged_in
