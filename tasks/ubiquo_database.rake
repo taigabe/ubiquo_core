@@ -9,8 +9,9 @@ namespace :ubiquo do
         exit 1
       end
       if RAILS_ENV == "development"
-        # Drops and recreates database from schema.rb
-        Rake::Task["db:reset"].execute(nil)
+        # Drops and recreates database
+        Rake::Task["db:drop"].execute(nil)
+        Rake::Task["db:create"].execute(nil)        
 
         # forward, comrades, to the future!
         ENV.delete('VERSION')
