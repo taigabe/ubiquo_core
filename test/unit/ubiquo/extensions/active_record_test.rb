@@ -30,4 +30,26 @@ class Ubiquo::Extensions::ActiveRecordTest < ActiveSupport::TestCase
     # cleanup
     Object.send(:remove_const, 'TestFileAttachmentClass')
   end
+
+  def test_file_attachment_should_not_lose_processors_when_defining_paperclip_styles
+    styles = {
+        :style_name => {
+          :processors => [:example_processor],
+        }
+    }
+
+    # setup a test model with the required configuration
+    Object.const_set('TestFileAttachmentClass', Class.new(ActiveRecord::Base))
+    TestFileAttachmentClass.class_eval do
+      def self.columns; @columns ||= []; end
+      file_attachment :file, :styles => styles
+    end
+
+    # test that definition is the same with two different instances
+    retrieve_styles = lambda{TestFileAttachmentClass.new.file.styles[:style_name]}
+    assert_equal retrieve_styles.call.processors, retrieve_styles.call.processors
+
+    # cleanup
+    Object.send(:remove_const, 'TestFileAttachmentClass')
+  end
 end
