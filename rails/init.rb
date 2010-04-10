@@ -16,3 +16,5 @@ Ubiquo::Config.add(:attachments, {
 })
 
 Ubiquo::Config.add(:required_field_class, 'required_field')
+
+Ubiquo::Config.add(:error_field_class, 'error_field')
