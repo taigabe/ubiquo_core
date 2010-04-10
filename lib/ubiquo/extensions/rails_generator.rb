@@ -1,3 +1,8 @@
+require 'rake'
+require 'rake/testtask'
+require 'rake/rdoctask'
+require 'tasks/rails'
+
 module Ubiquo
 
   def self.tab_template(name)
@@ -35,6 +40,10 @@ module Ubiquo
             end
           end
         end
+
+        def ubiquo_migration
+          Rake::Task['db:migrate'].execute(nil)
+        end
       end
       module Destroy
         # Modify routes.rb deleting the namespaced resources
@@ -48,6 +57,10 @@ module Ubiquo
         def ubiquo_tab(name)
           look_for = Ubiquo::tab_template(name)
           gsub_file 'app/views/navigators/_main_navtabs.html.erb', /#{Regexp.escape(look_for)}/mi, 'end # Last tab'
+        end
+
+        def ubiquo_migration
+          Rake::Task['db:rollback'].execute(nil)
         end
       end
       module List
