@@ -11,7 +11,10 @@ module Ubiquo
         
         # appends an asterisk to the text if needed
         def label_tag_with_asterisk(name, text = nil, options = {})
-          text += " *" if !text.nil? && options["append_asterisk"] == true
+          if !text.nil? && options["append_asterisk"] == true
+            span_class = Ubiquo::Config.get(:required_field_class)
+            text += "<span class= #{span_class} > * </span>"
+          end
           label_tag_without_asterisk(name, text, options)
         end
       end
