@@ -8,13 +8,13 @@ module Ubiquo
         else
           pathdir= case ENV["RAILS_ENV"]
           when "test"
-            "#{RAILS_ROOT}/test/fixtures"
+            "#{Rails.root}/test/fixtures"
           when "production"
-            "#{RAILS_ROOT}/db/bootstrap"
+            "#{Rails.root}/db/bootstrap"
           when "preproduction"
-            "#{RAILS_ROOT}/db/pre_bootstrap"
+            "#{Rails.root}/db/pre_bootstrap"
           else
-            "#{RAILS_ROOT}/db/dev_bootstrap"
+            "#{Rails.root}/db/dev_bootstrap"
           end
         end
         path = pathdir

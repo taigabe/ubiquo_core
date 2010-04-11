@@ -7,7 +7,7 @@ class Ubiquo::AttachmentControllerTest < ActionController::TestCase
   end
   
   def test_should_be_able_to_obtain_attachements_inside_private_path_when_logged_in
-    protected_path = File.join(RAILS_ROOT, Ubiquo::Config.get(:attachments)[:private_path])
+    protected_path = File.join(Rails.root, Ubiquo::Config.get(:attachments)[:private_path])
     dummy_file = File.join(protected_path, 'dummy.html')
     File.open(dummy_file, 'w')
     get(:show, { :path => 'dummy.html' })

@@ -4,7 +4,7 @@ module Ubiquo
 
       # Adds the default stylesheet tags needed for ubiquo
       def ubiquo_stylesheet_link_tags(files=['ubiquo','ubiquo_application','lightwindow'])
-        files.delete 'lightwindow' unless File.exists?(File.join(RAILS_ROOT, "public/stylesheets", 'lightwindow.css'))
+        files.delete 'lightwindow' unless File.exists?(File.join(Rails.root, "public/stylesheets", 'lightwindow.css'))
         files.collect do |css|
           stylesheet_link_tag "#{css}", :media => "all"
         end.join "\n"
@@ -12,7 +12,7 @@ module Ubiquo
 
       # return javascripts with ubiquo path.
       def ubiquo_javascript_include_tags(files=['ubiquo', 'lightwindow'])
-        files.delete 'lightwindow' unless File.exists?(File.join(RAILS_ROOT, "public/javascripts", 'ubiquo/lightwindow.js'))
+        files.delete 'lightwindow' unless File.exists?(File.join(Rails.root, "public/javascripts", 'ubiquo/lightwindow.js'))
         files.collect do |js|
           javascript_include_tag "ubiquo/#{js}"
         end.join "\n"

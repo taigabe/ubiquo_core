@@ -2,12 +2,12 @@ module Ubiquo
   module Tasks
     module AnnotateModels
 
-      MODEL_DIR   = File.join(RAILS_ROOT, "app/models")
-      PLUGIN_DIR = File.join(RAILS_ROOT, "vendor/plugins")
+      MODEL_DIR   = File.join(Rails.root, "app/models")
+      PLUGIN_DIR = File.join(Rails.root, "vendor/plugins")
       MODEL_REL_DIR = File.join('app', 'models')
-      FIXTURE_DIR = File.join(RAILS_ROOT, "test/fixtures")
-      RSPEC_DIR   = File.join(RAILS_ROOT, "spec/models")
-      RSPEC_FIXTURES = File.join(RAILS_ROOT, "spec/fixtures")
+      FIXTURE_DIR = File.join(Rails.root, "test/fixtures")
+      RSPEC_DIR   = File.join(Rails.root, "spec/models")
+      RSPEC_FIXTURES = File.join(Rails.root, "spec/fixtures")
 
 
       PREFIX = "== Schema Information"
@@ -81,7 +81,7 @@ module Ubiquo
         model_file_name = File.join(path, klass.name.underscore + ".rb")
         annotate_one_file(model_file_name, info)
     
-        if File.join(RAILS_ROOT, "spec")
+        if File.join(Rails.root, "spec")
           rspec_file_name = File.join(RSPEC_DIR, klass.name.underscore + "_spec.rb")
           annotate_one_file(rspec_file_name, info)
       
