@@ -2,7 +2,7 @@ namespace :ubiquo do
   namespace :test do
     desc "Preparation for ubiquo testing"
     task :prepare => "db:test:prepare" do
-      copy_dir(Dir[File.join(RAILS_ROOT, "vendor/plugins/ubiquo**/test/fixtures")], "/tmp/ubiquo_fixtures", :force => true)
+      copy_dir(Dir[File.join(Rails.root, "vendor/plugins/ubiquo**/test/fixtures")], "/tmp/ubiquo_fixtures", :force => true)
     end
   end
   
@@ -19,13 +19,13 @@ namespace :ubiquo do
   task :install do
     overwrite = ENV.delete("OVERWRITE")
     overwrite = overwrite == 'true' || overwrite == 'yes'  ? true : false
-    copy_dir(Dir.glob(File.join(RAILS_ROOT, 'vendor', 'plugins', 'ubiquo**', 'install')), "/", :force => overwrite)
+    copy_dir(Dir.glob(File.join(Rails.root, 'vendor', 'plugins', 'ubiquo**', 'install')), "/", :force => overwrite)
   end
 
   desc "Run given command inside each plugin directory."
   task :foreach, [ :command ] do |t, args|
     args.with_defaults(:command => 'git pull')
-    glob = File.join(RAILS_ROOT, 'vendor', 'plugins', "*/")
+    glob = File.join(Rails.root, 'vendor', 'plugins', "*/")
     plugins = Dir[ glob ].each { |e| e unless File.file? e }
     plugins.each do |plugin|
       command = "cd #{plugin} && #{args.command}"
@@ -38,7 +38,7 @@ namespace :ubiquo do
   def copy_dir(from, path = "/", options = {})
     force = options[:force]
     verbose = false || options[:verbose]
-    rails_target = File.join(RAILS_ROOT, path)
+    rails_target = File.join(Rails.root, path)
     FileUtils.mkdir_p(rails_target, :verbose => verbose) unless File.exists?(rails_target)
     [from].flatten.each do |f|
       files = Dir.glob(File.join(f, "*"))
