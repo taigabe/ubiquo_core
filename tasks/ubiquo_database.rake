@@ -11,7 +11,7 @@ namespace :ubiquo do
       if RAILS_ENV == "development"
         # Drops and recreates database
         Rake::Task["db:drop"].execute(nil)
-        Rake::Task["db:create:all"].execute(nil)        
+        Rake::Task["db:create"].execute(nil)        
 
         # forward, comrades, to the future!
         ENV.delete('VERSION')
