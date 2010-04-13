@@ -4,7 +4,6 @@ require 'mocha'
 class Ubiquo::AdaptersTest < ActiveSupport::TestCase
   def test_sequences
     ActiveRecord::Base.connection.create_sequence(:test)
-    
     (1..10).each do |i|
       assert_equal i, ActiveRecord::Base.connection.next_val_sequence(:test)
     end
