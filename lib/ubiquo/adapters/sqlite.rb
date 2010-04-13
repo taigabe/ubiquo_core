@@ -9,12 +9,12 @@ module Ubiquo
         # Creates a sequence with name "name". Drops it before if it exists
         def create_sequence(name)
           drop_sequence(name)
-          self.execute("CREATE TABLE %s_sequence (id INTEGER PRIMARY KEY);" % name)
+          self.execute("CREATE TABLE %s_sequence (id INTEGER PRIMARY KEY AUTOINCREMENT)" % name)
         end
         
         # Drops a sequence with name "name" if exists 
         def drop_sequence(name)
-          self.execute("DROP TABLE IF EXISTS %s_sequence;" % name)
+          self.execute("DROP TABLE IF EXISTS %s_sequence" % name)
         end
         
         # Returns an array containing a list of the existing sequences that start with the given string
@@ -24,7 +24,9 @@ module Ubiquo
         
         # Returns the next value for the sequence "name"
         def next_val_sequence(name)
-          self.insert_sql("INSERT INTO %s_sequence VALUES(NULL);" % name)
+          val = self.insert_sql("INSERT INTO %s_sequence VALUES(NULL)" % name)
+          # In jdbcsqlite, insert_sql is not implemented 
+          val ||= last_insert_id("#{name}_sequence", nil) if respond_to? :last_insert_id
         end
         
         # Reset a sequence so that it will return the specified value as the next one
@@ -36,7 +38,7 @@ module Ubiquo
             table, field = name.split('_$_')
             next_value = self.execute('SELECT MAX(%s) as max FROM %s' % [field, table]).first['max'].to_i + 1
           end
-          self.execute("INSERT INTO %s_sequence VALUES(%s);" % [name, (next_value || 1) - 1])
+          self.execute("INSERT INTO %s_sequence VALUES(%s)" % [name, (next_value || 1) - 1])
         end
       end
     end
