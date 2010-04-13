@@ -25,8 +25,8 @@ module Ubiquo
         # Returns the next value for the sequence "name"
         def next_val_sequence(name)
           val = self.insert_sql("INSERT INTO %s_sequence VALUES(NULL)" % name)
-          # In jdbcsqlite, insert_sql is not implemented 
-          val ||= last_insert_id("#{name}_sequence", nil) if respond_to? :last_insert_id
+          # In jdbcsqlite, insert_sql is not implemented
+          val ||= last_insert_id("#{name}_sequence", nil) rescue nil
         end
         
         # Reset a sequence so that it will return the specified value as the next one
