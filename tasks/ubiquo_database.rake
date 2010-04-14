@@ -1,7 +1,7 @@
 namespace :ubiquo do  
   namespace :db do
     desc "Reset the current database schema and imports devel data fixtures (only in development mode)"
-    task :reset => :environment do
+    task :reset do
       begin
         gem 'rake', '>0.8'
       rescue Gem::LoadError => load_error
@@ -10,18 +10,29 @@ namespace :ubiquo do
       end
       if RAILS_ENV == "development"
         # Drops and recreates database
-        Rake::Task["db:drop"].execute(nil)
-        Rake::Task["db:create"].execute(nil)        
+        Rake::Task['ubiquo:db:recreate'].invoke
 
+        # Create the db structure and fill it
+        Rake::Task['ubiquo:db:prepare'].invoke
+
+        puts "Done :-)"
+      else
+        puts "This task should only be run in a development environment."
+      end
+    end
+
+    task :recreate => ['db:drop', 'db:create']
+
+    task :prepare => :environment do
         # forward, comrades, to the future!
         ENV.delete('VERSION')
-        Rake::Task["db:migrate"].execute(nil)
+        Rake::Task["db:migrate"].execute
 
         # Dump schema.rb (some devs like it)
-        Rake::Task["db:schema:dump"].execute(nil)
+        Rake::Task["db:schema:dump"].execute
 
         # preparing test database
-        Rake::Task["db:test:prepare"].execute(nil)
+        Rake::Task["db:test:prepare"].execute
 
         puts "Importing fixtures into development database... "
         ENV['DELETE'] = 'yes'
@@ -30,10 +41,6 @@ namespace :ubiquo do
         # Call seeds
         puts "Invoking db:seed task... "
         Rake::Task['db:seed'].invoke
-        puts "Done :-)"
-      else
-        puts "This task should only be run in a development environment."
-      end
     end
     
     desc "Alias task for ubiquo:db:reset"
