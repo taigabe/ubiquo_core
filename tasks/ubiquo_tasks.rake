@@ -41,9 +41,9 @@ namespace :ubiquo do
   def copy_dir(from, path = "/", options = {})
     force = options[:force]
     verbose = false || options[:verbose]
-    rails_target = Rails.root.join(path)
+    rails_target = File.join(Rails.root, path)
     FileUtils.mkdir_p(rails_target, :verbose => verbose) unless File.exists?(rails_target)
-    [from.to_s].flatten.each do |f|
+    [from].flatten.each do |f|
       files = Dir.glob(File.join(f, "*"))
       files.each do |file|
         file_name = File.basename(file)
