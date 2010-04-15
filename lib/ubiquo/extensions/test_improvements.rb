@@ -32,7 +32,7 @@ module Ubiquo
       module ClassMethods
         # Loads the special set of ubiquo fixtures
         def use_ubiquo_fixtures
-          fixture_set_path = File.join(RAILS_ROOT, "tmp", "ubiquo_fixtures")
+          fixture_set_path = Rails.root.join('tmp', 'ubiquo_fixtures')
           raise "Unable to find ubiquo fixtures [#{fixture_set_path}]" unless File.exists?(fixture_set_path)        
           fixture_files = Dir.entries(fixture_set_path).reject {|e| e =~ /^\./ || e !~ /\.yml$/}
           raise "No fixtures found in #{fixture_set_path}, have you run rake test:fixture_sets:scan?" if fixture_files.empty?

@@ -12,7 +12,7 @@ Ubiquo::Config.add(:attachments, {
   :visibility => :public,
   :public_path => "public",
   :private_path => "protected",
-  :use_x_send_file => RAILS_ENV == "development" ? false : true,
+  :use_x_send_file => !Rails.env.development?,
 })
 
 Ubiquo::Config.add(:required_field_class, 'required_field')

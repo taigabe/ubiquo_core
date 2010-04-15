@@ -1,23 +1,23 @@
 module Ubiquo
   module Tasks
     module Database
-      
+
       def fixture_path(fixture_name=nil)
         if ENV["FIXTURES_DIR"]
           pathdir = File.dirname(ENV["FIXTURES_DIR"])
         else
           pathdir= case ENV["RAILS_ENV"]
-          when "test"
-            "#{RAILS_ROOT}/test/fixtures"
-          when "production"
-            "#{RAILS_ROOT}/db/bootstrap"
-          when "preproduction"
-            "#{RAILS_ROOT}/db/pre_bootstrap"
-          else
-            "#{RAILS_ROOT}/db/dev_bootstrap"
-          end
+                   when "test"
+                     Rails.root.join('test','fixtures')
+                   when "production"
+                     Rails.root.join('db','bootstrap')
+                   when "preproduction"
+                     Rails.root.join('db','pre_bootstrap')
+                   else
+                     Rails.root.join('db','dev_bootstrap')
+                   end
         end
-        path = pathdir
+        path = pathdir.to_s
         path += "/#{fixture_name}.yml" if fixture_name
         if File.exists?(pathdir)
           raise StandardError.new("Path %s exists and is a file." % pathdir) if File.file?(pathdir)
@@ -37,7 +37,7 @@ module Ubiquo
         File.open(fixture_path(table_name), 'w' ) do |file|
           data = ActiveRecord::Base.connection.select_all("SELECT * FROM #{table_name}")
           file.write ordered_yaml(data.inject({}) { |hash, record|
-            hash["#{table_name}_#{"%0.3i" % fixture_id.call(record)}"] = record 
+            hash["#{table_name}_#{"%0.3i" % fixture_id.call(record)}"] = record
             hash
           })
         end
@@ -112,12 +112,12 @@ module Ubiquo
               p @new_model.errors.inspect
             end
           end
-          
+
           p "Total of #{success[model.to_sym]} #{@new_model.class.to_s} records imported successfully"
         end
         fix_sequence_consistency [model.tableize]
       end
-      
+
       def join_table_names(table_names, model_names, group_names)
         tables = table_names.to_s.split(',')
         model_names.to_s.split(',').each do |model|
@@ -128,7 +128,7 @@ module Ubiquo
         end
         tables.uniq
       end
-      
+
       # This is like Hash.to_yaml except that it sorts by key before converting
       def ordered_yaml(data)
         YAML::quick_emit( data.object_id, {} ) do |out|
@@ -149,7 +149,7 @@ module Ubiquo
           fix_sequence_consistency tables
         end
       end
-      
+
       # If any of these "tables" has a sequence field, make sure that the next
       # value that will be returned does not conflict with the imported fixtures
       def fix_sequence_consistency(tables)

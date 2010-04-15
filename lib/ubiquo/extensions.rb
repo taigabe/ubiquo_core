@@ -31,7 +31,7 @@ Rails::Generator::Commands::Create.send(:include, Ubiquo::Extensions::RailsGener
 Rails::Generator::Commands::Destroy.send(:include, Ubiquo::Extensions::RailsGenerator::Destroy)
 Rails::Generator::Commands::List.send(:include, Ubiquo::Extensions::RailsGenerator::List)
 
-if RAILS_ENV == 'test'
+if Rails.env.test?
   ActiveSupport::TestCase.send(:include, Ubiquo::Extensions::TestImprovements)
   ActionController::TestCase.send(:include, Ubiquo::Extensions::TestImprovements)
 end

@@ -9,8 +9,7 @@ module Ubiquo
         # At the point in which routing is loaded, we cannot guarantee that all
         # plugins are in Rails.plugins, so instead we need to use find_plugin_path
         self.with_options(options) do |map|
-          path = "#{RAILS_ROOT}/vendor/plugins/"
-          routes_path = File.join(path, name.to_s, "config", "plugin_routes.rb")
+          routes_path = Rails.root.join('vendor', 'plugins', name.to_s, 'config', 'plugin_routes.rb')
           # logger.debug "loading routes from #{routes_path}"
           eval(IO.read(routes_path), binding, routes_path) if File.file?(routes_path)
         end

@@ -4,7 +4,7 @@ module Ubiquo
 
       # Adds the default stylesheet tags needed for ubiquo
       def ubiquo_stylesheet_link_tags(files=['ubiquo','ubiquo_application','lightwindow'])
-        files.delete 'lightwindow' unless File.exists?(File.join(RAILS_ROOT, "public/stylesheets", 'lightwindow.css'))
+        files.delete 'lightwindow' unless File.exists?(Rails.root.join('public', 'stylesheets', 'lightwindow.css'))
         files.collect do |css|
           stylesheet_link_tag "#{css}", :media => "all"
         end.join "\n"
@@ -12,7 +12,7 @@ module Ubiquo
 
       # return javascripts with ubiquo path.
       def ubiquo_javascript_include_tags(files=['ubiquo', 'lightwindow'])
-        files.delete 'lightwindow' unless File.exists?(File.join(RAILS_ROOT, "public/javascripts", 'ubiquo/lightwindow.js'))
+         files.delete 'lightwindow' unless File.exists?(Rails.root.join('public', 'javascripts', 'ubiquo', 'lightwindow.js'))
         files.collect do |js|
           javascript_include_tag "ubiquo/#{js}"
         end.join "\n"
@@ -35,23 +35,23 @@ module Ubiquo
       def ubiquo_image_path(name)
         "/images/ubiquo/#{name}"
       end
-      
+
       def ubiquo_boolean_image(value)
         ubiquo_image_tag(value ? 'ok.gif' : 'ko.gif')
       end
 
-      # Return true if string_date is a valid date representation with a 
+      # Return true if string_date is a valid date representation with a
       # given format (the so-called italian format by default: %d/%m/%Y)
       def is_valid_date?(string_date, format="%d/%m/%Y")
         begin
           time = Date.strptime(string_date, format)
         rescue ArgumentError
-          return false      
+          return false
         end
         true
       end
-      
-      # Include calendar_date_select javascript and stylesheets 
+
+      # Include calendar_date_select javascript and stylesheets
       # with a default theme, basedir and locale
       def calendar_includes(options = {})
         iso639_locale = options[:locale] || I18n.locale.to_s
@@ -64,8 +64,8 @@ module Ubiquo
         render :partial => '/shared/ubiquo/help_block_sidebar',
         :locals => {:message => message}
       end
-          
-      # Renders a preview 
+
+      # Renders a preview
       # A preview is usually used to show the values of an instance somewhere,
       # in an unobtrusive way
       # The instance to preview is taken from params[:preview_id]

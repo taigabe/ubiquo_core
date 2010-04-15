@@ -1,4 +1,4 @@
-namespace :ubiquo do  
+namespace :ubiquo do
   namespace :db do
     desc "Reset the current database schema and imports devel data fixtures (only in development mode)"
     task :reset do
@@ -8,7 +8,7 @@ namespace :ubiquo do
         $stderr.puts "Please update the rake gem to at least 0.8.1 version."
         exit 1
       end
-      if RAILS_ENV == "development"
+      if Rails.env.development?
         # Drops and recreates database
         Rake::Task['ubiquo:db:recreate'].invoke
 
@@ -42,14 +42,14 @@ namespace :ubiquo do
         puts "Invoking db:seed task... "
         Rake::Task['db:seed'].invoke
     end
-    
+
     desc "Alias task for ubiquo:db:reset"
     task :init => "ubiquo:db:reset"
-        
+
     namespace :fixtures do
       desc "use export [TABLES=foos[,bars,lands]] [MODELS=Foo[,Bar,Land]] [GROUPS=Group1[,Group2,Group3]] to create YAML fixtures from data in an existing database.\n" +
         "Defaults to development database. Set RAILS_ENV to override. "
-      
+
       task :export => :environment do
         include Ubiquo::Tasks::Database
 
@@ -59,18 +59,18 @@ namespace :ubiquo do
         tables = join_table_names(ENV['TABLES'], ENV['MODELS'], ENV['GROUPS'])
         if tables.blank?
           # No specific tables means that we'll export everything
-          write_all_yaml_fixtures_to_file 
+          write_all_yaml_fixtures_to_file
         else
           tables.each do |table_name|
             write_yaml_fixtures_to_file(table_name)
           end
         end
       end
-      
+
       desc "use import [TABLES=foos[,bars,lands]] [MODELS=Foo[,Bar,Land]] [GROUPS=group1[,group2,group3]] to import YAML fixtures into an existing database.\n" +
         "Add DELETE=yes to clear previously existing db fixtures. \n" +
-        "Defaults to development database. Set RAILS_ENV to override. " 
-      
+        "Defaults to development database. Set RAILS_ENV to override. "
+
       task :import => :environment do
         require 'active_record/fixtures'
         include Ubiquo::Tasks::Database
@@ -81,15 +81,15 @@ namespace :ubiquo do
           # Collect table names to import
           tables = join_table_names(ENV['TABLES'], ENV['MODELS'], ENV['GROUPS'])
           # No specific tables means that we'll import everything
-          tables = Dir.glob(fixture_path('*')).map{ |file| File.basename(file, '.*') } if tables.blank? 
+          tables = Dir.glob(fixture_path('*')).map{ |file| File.basename(file, '.*') } if tables.blank?
 
           # Create fixtures and print result summary
           fixtures = Fixtures.create_fixtures(fixture_path, tables || [])
-          
+
           # Print results
           # if there is only one kind of fixtures created, create_fixtures returns an array with a missing dimension
           fixtures = [fixtures] unless fixtures[0]
-          results = fixtures.map do |group| 
+          results = fixtures.map do |group|
             "#{group.size} #{group.flatten.last.model_class.to_s.tableize}" if group.flatten.last
           end
           if fixtures
@@ -117,7 +117,7 @@ namespace :ubiquo do
         end
         fix_sequence_consistency tables
       end
-        
+
     end
   end
 

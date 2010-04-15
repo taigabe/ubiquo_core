@@ -2,16 +2,15 @@ module Ubiquo
   module Tasks
     module AnnotateModels
 
-      MODEL_DIR   = File.join(RAILS_ROOT, "app/models")
-      PLUGIN_DIR = File.join(RAILS_ROOT, "vendor/plugins")
-      MODEL_REL_DIR = File.join('app', 'models')
-      FIXTURE_DIR = File.join(RAILS_ROOT, "test/fixtures")
-      RSPEC_DIR   = File.join(RAILS_ROOT, "spec/models")
-      RSPEC_FIXTURES = File.join(RAILS_ROOT, "spec/fixtures")
-
+      MODEL_DIR      = Rails.root.join('app', 'models')
+      PLUGIN_DIR     = Rails.root.join('vendor', 'plugins')
+      MODEL_REL_DIR  = Rails.root.join('app', 'models')
+      FIXTURE_DIR    = Rails.root.join('test', 'fixtures')
+      RSPEC_DIR      = Rails.root.join('spec', 'models')
+      RSPEC_FIXTURES = Rails.root.join('spec', 'fixtures')
 
       PREFIX = "== Schema Information"
-  
+
       # Simple quoting for the default column value
       def quote(value)
         case value
@@ -33,7 +32,7 @@ module Ubiquo
       def get_schema_info(klass, header)
         info = "# #{header}\n#\n"
         info << "# Table name: #{klass.table_name}\n#\n"
-    
+
         max_size = klass.column_names.collect{|name| name.size}.max + 1
         klass.columns.each do |col|
           attrs = []
@@ -46,7 +45,7 @@ module Ubiquo
             col_type << "(#{col.precision}, #{col.scale})"
           else
             col_type << "(#{col.limit})" if col.limit
-          end 
+          end
           info << sprintf("#  %-#{max_size}.#{max_size}s:%-15.15s %s", col.name, col_type, attrs.join(", ")).rstrip
           info << "\n"
         end
@@ -69,7 +68,7 @@ module Ubiquo
           File.open(file_name, "w") { |f| f.puts info_block + content }
         end
       end
-  
+
       # Given the name of an ActiveRecord class, create a schema
       # info block (basically a comment containing information
       # on the columns and their types) and put it at the front
@@ -77,14 +76,14 @@ module Ubiquo
 
       def annotate(path, klass, header)
         info = get_schema_info(klass, header)
-    
+
         model_file_name = File.join(path, klass.name.underscore + ".rb")
         annotate_one_file(model_file_name, info)
-    
-        if File.join(RAILS_ROOT, "spec")
+
+        if Rails.root.join('spec')
           rspec_file_name = File.join(RSPEC_DIR, klass.name.underscore + "_spec.rb")
           annotate_one_file(rspec_file_name, info)
-      
+
           rspec_fixture = File.join(RSPEC_FIXTURES, klass.table_name + ".yml")
           annotate_one_file(rspec_fixture, info)
         end
@@ -94,23 +93,23 @@ module Ubiquo
         end
       end
 
-      # Return a list of the model files to annotate. If we have 
+      # Return a list of the model files to annotate. If we have
       # command line arguments, they're assumed to be either
       # the underscore or CamelCase versions of model names.
-      # Otherwise we take all the model files in the 
+      # Otherwise we take all the model files in the
       # app/models and vendor/plugins/xxxx/app/models directory.
       def get_model_names
         models = ARGV.dup
         models.shift
-    
+
         if models.empty?
-          Dir.chdir(MODEL_DIR) do 
+          Dir.chdir(MODEL_DIR) do
             models = {MODEL_DIR => Dir["**/*.rb"]}
           end
           Dir.chdir(PLUGIN_DIR) do
             Dir["*"].each do |plugin|
               if plugin =~ /ubiquo/ && File.exists?(File.join(plugin, MODEL_REL_DIR))
-                Dir.chdir(File.join(plugin, MODEL_REL_DIR)) do 
+                Dir.chdir(File.join(plugin, MODEL_REL_DIR)) do
                   models[File.join(PLUGIN_DIR, plugin, MODEL_REL_DIR)] = Dir["**/*.rb"]
                 end
               end
@@ -120,7 +119,7 @@ module Ubiquo
         models
       end
 
-      # We're passed a name of things that might be 
+      # We're passed a name of things that might be
       # ActiveRecord models. If we can find the class, and
       # if its a subclass of ActiveRecord::Base,
       # then pas it to the associated block
@@ -130,8 +129,8 @@ module Ubiquo
         version = ActiveRecord::Migrator.current_version rescue 0
         if version > 0
           header << "\n# Schema version: #{version}"
-        end 
-        
+        end
+
         get_model_names.each_pair do |path, models|
           models.each do |model|
             class_name = model.sub(/\.rb$/,'').camelize
@@ -147,7 +146,7 @@ module Ubiquo
               puts "Unable to annotate #{class_name}: #{e.message}"
             end
           end
-      
+
         end
       end
     end
