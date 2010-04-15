@@ -43,7 +43,7 @@ namespace :ubiquo do
     verbose = false || options[:verbose]
     rails_target = Rails.root.join(path)
     FileUtils.mkdir_p(rails_target, :verbose => verbose) unless File.exists?(rails_target)
-    [from].flatten.each do |f|
+    [from.to_s].flatten.each do |f|
       files = Dir.glob(File.join(f, "*"))
       files.each do |file|
         file_name = File.basename(file)
