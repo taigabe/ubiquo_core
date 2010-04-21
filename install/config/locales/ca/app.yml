@@ -1,5 +1,0 @@
-ca:
-  application:
-    welcome: "Benvingut a {{name}}"
-    home: "Inici"
-    goto: "Anar a {{place}}"
