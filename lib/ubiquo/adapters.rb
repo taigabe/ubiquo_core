@@ -1,7 +1,3 @@
-#
-# Comment sqlite statements until we implement it completely
-#
-
 module Ubiquo
   module Adapters
     autoload :Postgres, "ubiquo/adapters/postgres"
@@ -11,11 +7,8 @@ module Ubiquo
     autoload :SchemaStatements, "ubiquo/adapters/schema_statements"
   end
 end
-connection = begin
-  ActiveRecord::Base.connection
-rescue MissingSourceFile
-  false
-end
+
+connection = ActiveRecord::Base.connection rescue false
 if connection
   
   included_module = case connection.class.to_s
