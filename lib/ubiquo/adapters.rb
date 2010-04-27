@@ -8,7 +8,11 @@ module Ubiquo
   end
 end
 
-connection = ActiveRecord::Base.connection rescue false
+connection = begin
+  ActiveRecord::Base.connection
+rescue MissingSourceFile, StandardError
+  false
+end
 if connection
   
   included_module = case connection.class.to_s
