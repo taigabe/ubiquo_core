@@ -23,11 +23,11 @@ if connection
   end
 
   included_module ||= case connection.config[:adapter]
-    when "jdbcmysql"
+    when "mysql"
       Ubiquo::Adapters::Mysql
-    when "jdbcpostgresql"
+    when "postgresql"
       Ubiquo::Adapters::Postgres
-    when "jdbcsqlite3"
+    when "sqlite3"
       Ubiquo::Adapters::Sqlite
     else nil
   end rescue nil
