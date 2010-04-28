@@ -1,3 +1,8 @@
+require 'rake'
+require 'rake/testtask'
+require 'rake/rdoctask'
+require 'tasks/rails'
+
 module Ubiquo
   module Adapters
     autoload :Postgres, "ubiquo/adapters/postgres"
