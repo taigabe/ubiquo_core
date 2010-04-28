@@ -9,12 +9,12 @@ module Ubiquo
         # Creates a sequence with name "name". Drops it before if it exists
         def create_sequence(name)
           drop_sequence(name)
-          self.execute("CREATE TABLE %s_sequence (id INTEGER PRIMARY KEY auto_increment);" % name)
+          self.execute("CREATE TABLE %s_sequence (id INTEGER PRIMARY KEY auto_increment)" % name)
         end
         
         # Drops a sequence with name "name" if exists 
         def drop_sequence(name)
-          self.execute("DROP TABLE IF EXISTS %s_sequence;" % name)
+          self.execute("DROP TABLE IF EXISTS %s_sequence" % name)
         end
         
         # Returns an array containing a list of the existing sequences that start with the given string
@@ -24,7 +24,12 @@ module Ubiquo
         
         # Returns the next value for the sequence "name"
         def next_val_sequence(name)
-          self.insert_sql("INSERT INTO %s_sequence VALUES(NULL);" % name)
+          if self.class.equal? ActiveRecord::ConnectionAdapters::MysqlAdapter
+            self.insert_sql("INSERT INTO %s_sequence VALUES(NULL)" % name)
+          else
+            # the default insert_sql is nonsense, but jdbc_mysql doesn't override it
+            self.execute("INSERT INTO %s_sequence VALUES(NULL)" % name)
+          end
         end
         
         # Reset a sequence so that it will return the specified value as the next one
