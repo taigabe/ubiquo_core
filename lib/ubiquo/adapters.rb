@@ -8,7 +8,7 @@ module Ubiquo
     autoload :Postgres, "ubiquo/adapters/postgres"
     autoload :Sqlite, "ubiquo/adapters/sqlite"
     autoload :Mysql, "ubiquo/adapters/mysql"
-    autoload :TableDefinition, "ubiquo/adapters/table_definition"
+    autoload :SequenceDefinition, "ubiquo/adapters/sequence_definition"
     autoload :SchemaStatements, "ubiquo/adapters/schema_statements"
   end
 end
@@ -45,6 +45,7 @@ if connection
   raise "Only PostgreSQL, MySQL and SQLite supported" if  included_module == nil
   
   ActiveRecord::Base.connection.class.send(:include, included_module)
-  ActiveRecord::ConnectionAdapters::TableDefinition.send(:include, Ubiquo::Adapters::TableDefinition)
+  ActiveRecord::ConnectionAdapters::TableDefinition.send(:include, Ubiquo::Adapters::SequenceDefinition)
+  ActiveRecord::ConnectionAdapters::Table.send(:include, Ubiquo::Adapters::SequenceDefinition)
   ActiveRecord::ConnectionAdapters::SchemaStatements.send(:include, Ubiquo::Adapters::SchemaStatements)
 end

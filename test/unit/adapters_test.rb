@@ -9,7 +9,7 @@ class Ubiquo::AdaptersTest < ActiveSupport::TestCase
     end
     
     ActiveRecord::Base.connection.drop_sequence(:test)
-    assert_raises ActiveRecord::StatementInvalid do
+    assert_raise ActiveRecord::StatementInvalid do
       ActiveRecord::Base.connection.next_val_sequence(:test)
     end
   end
@@ -26,6 +26,15 @@ class Ubiquo::AdaptersTest < ActiveSupport::TestCase
     assert_not_nil definition[:content_id]
   end
   
+  def test_create_sequence_in_change_table
+    ActiveRecord::Base.connection.expects(:create_sequence).with("test_$_content_id").once
+    ActiveRecord::Base.connection.create_table(:test, :force => true){}
+    ActiveRecord::Base.connection.change_table(:test) do |table|
+      table.sequence :test, :content_id
+    end
+    ActiveRecord::Base.connection.drop_table(:test)
+  end
+
   def test_gets_sequences_list
     ActiveRecord::Base.connection.create_table(:test, :force => true){|table|
       table.sequence :test, :content_id
