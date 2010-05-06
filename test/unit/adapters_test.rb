@@ -93,7 +93,7 @@ class Ubiquo::AdaptersTest < ActiveSupport::TestCase
     ActiveRecord::Base.connection.create_table(:test, :force => true){|table|
       table.sequence :test, :content_id
     }
-    ActiveRecord::Base.connection.change_table(:test, :force => true){|table|
+    ActiveRecord::Base.connection.change_table(:test){|table|
       table.remove_sequence :test, :content_id
     }
     assert !ActiveRecord::Base.connection.list_sequences("test_").include?("test_$_content_id")
