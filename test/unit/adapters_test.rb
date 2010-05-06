@@ -84,7 +84,7 @@ class Ubiquo::AdaptersTest < ActiveSupport::TestCase
     connection.create_table(:test, :force => true){}
     connection.add_sequence_field :test, :content_id
     assert connection.list_sequences("test_").include?("test_$_content_id")
-    column_names = connection.columns(:test).map(&:name).map(&:to_s)
+    column_names = connection.columns('test').map(&:name).map(&:to_s)
     assert column_names.include? 'content_id'
     connection.drop_table(:test)
   end
