@@ -79,6 +79,36 @@ class Ubiquo::AdaptersTest < ActiveSupport::TestCase
     assert ActiveRecord::Base.connection.list_sequences("test_").include?("test_$_content_id")
   end
 
+  def test_should_exist_sequence_and_field_after_add_sequence_field
+    connection = ActiveRecord::Base.connection
+    connection.create_table(:test, :force => true){}
+    connection.add_sequence_field :test, :content_id
+    assert connection.list_sequences("test_").include?("test_$_content_id")
+    column_names = connection.columns(:test).map(&:name).map(&:to_s)
+    assert column_names.include? 'content_id'
+    connection.drop_table(:test)
+  end
+
+  def test_should_not_exist_sequences_after_remove_sequence_in_change_table
+    ActiveRecord::Base.connection.create_table(:test, :force => true){|table|
+      table.sequence :test, :content_id
+    }
+    ActiveRecord::Base.connection.change_table(:test, :force => true){|table|
+      table.remove_sequence :test, :content_id
+    }
+    assert !ActiveRecord::Base.connection.list_sequences("test_").include?("test_$_content_id")
+    ActiveRecord::Base.connection.drop_table(:test)
+  end
+
+  def test_should_not_exist_sequences_after_remove_sequence_field
+    ActiveRecord::Base.connection.create_table(:test, :force => true){|table|
+      table.sequence :test, :content_id
+    }
+    ActiveRecord::Base.connection.remove_sequence_field :test, :content_id
+    assert !ActiveRecord::Base.connection.list_sequences("test_").include?("test_$_content_id")
+    ActiveRecord::Base.connection.drop_table(:test)
+  end
+
   def test_should_same_create_table_options_that_drop_table_options
     options = { :force => true, :test => "test" }
     ActiveRecord::Base.connection.expects(:table_exists?).with(:table_name).returns(true)

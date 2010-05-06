@@ -47,5 +47,5 @@ if connection
   ActiveRecord::Base.connection.class.send(:include, included_module)
   ActiveRecord::ConnectionAdapters::TableDefinition.send(:include, Ubiquo::Adapters::SequenceDefinition)
   ActiveRecord::ConnectionAdapters::Table.send(:include, Ubiquo::Adapters::SequenceDefinition)
-  ActiveRecord::ConnectionAdapters::SchemaStatements.send(:include, Ubiquo::Adapters::SchemaStatements)
+  ActiveRecord::ConnectionAdapters::AbstractAdapter.send(:include, Ubiquo::Adapters::SchemaStatements)
 end

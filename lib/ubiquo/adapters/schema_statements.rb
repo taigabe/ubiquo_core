@@ -16,6 +16,20 @@ module Ubiquo
           end
         end
       end
+
+      # Undoes the field and sequence created by the add_sequence_field method
+      def remove_sequence_field(table_name, field_name)
+        change_table(table_name) do |t|
+          t.remove_sequence table_name, field_name
+        end
+      end
+
+      # Undoes the field and sequence created by the SchemaStatements#sequence method
+      def add_sequence_field(table_name, field_name)
+        change_table(table_name) do |t|
+          t.sequence table_name, field_name
+        end
+      end
     end
   end
 end
