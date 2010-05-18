@@ -51,7 +51,7 @@ ca:
   # Used in distance_of_time_in_words(), distance_of_time_in_words_to_now(), time_ago_in_words()
   datetime:
     distance_in_words:
-      half_a_minute: "mitg minut"
+      half_a_minute: "mig minut"
       less_than_x_seconds:
         one: "menys d'un segon"
         other: "menys de {{count}} segons"
@@ -87,8 +87,8 @@ ca:
     errors:
       template:
         header:
-          one: "no s'ha pogut guardar l'entitat {{model}} perqué s'ha trobat 1 error"
-          other: "no s'ha pogut guardar l'entitat {{model}} perqué s'han trobat {{count}} errors"
+          one: "no s'ha pogut guardar l'entitat {{model}} perquè s'ha trobat 1 error"
+          other: "no s'ha pogut guardar l'entitat {{model}} perquè s'han trobat {{count}} errors"
         # The variable :count is also available
         body: "S'han trobat problemes amb els següents camps:"
  
@@ -104,9 +104,9 @@ ca:
         blank: "no pot estar en blanc"
         too_long: "és massa llarg ({{count}} caràcters màxim)"
         too_short: "és massa curt ({{count}} caràcters mínim)"
-        wrong_length: "no te la longitut correcta ({{count}} caràcters exactes)"
+        wrong_length: "no té la longitut correcta ({{count}} caràcters exactes)"
         taken: "ja està en ús"
-        not_a_number: "no es un nombre"
+        not_a_number: "no és un nombre"
         greater_than: "ha de ser més gran que {{count}}"
         greater_than_or_equal_to: "ha de ser més gran que o igual a {{count}}"
         equal_to: "ha de ser igual a {{count}}"
