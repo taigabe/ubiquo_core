@@ -10,12 +10,13 @@
     <meta name="DC.subject" content="" />
     <link rel="shortcut icon" type="image/ico" href="/images/ubiquo/favicon.ico" />
     <%= yield :rss_meta %>
-    <%= ubiquo_stylesheet_link_tags(['ubiquo', 'red', 'lightwindow', 'listings', 'ubiquo_application']) %>
+    <%= ubiquo_stylesheet_link_tags(['ubiquo', 'red', 'lightwindow',
+    'listings', 'ubiquo_application', 'ubiquo_categories', 'ubiquo_categories_red']) %>
     <!--[if lte IE 6]>
       <%= ubiquo_stylesheet_link_tags(['ubiquo_ie6']) %>
     <![endif]-->
     <!-- Rails Defaults -->
-    <%= javascript_include_tag :defaults %>
+    <%= javascript_include_tag :defaults, 'ubiquo/category_selector.js' %>
     <%= yield :head %>
     </head>
   <body>
