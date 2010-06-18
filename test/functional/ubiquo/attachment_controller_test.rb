@@ -27,7 +27,8 @@ class Ubiquo::AttachmentControllerTest < ActionController::TestCase
   end
   
   def test_should_not_be_able_to_obtain_attachment_when_not_logged_in
-    session[:ubiquo_user_id] = nil
+    session[:ubiquo] ||= {}
+    session[:ubiquo][:ubiquo_user_id] = nil
     get(:show, { :path => 'dummy' })
     assert_redirected_to :ubiquo_login
   end
