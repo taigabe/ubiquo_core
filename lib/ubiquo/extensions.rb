@@ -12,7 +12,7 @@ module Ubiquo
     autoload :FiltersHelper,         'ubiquo/extensions/filters_helper'
     autoload :ActionView,            'ubiquo/extensions/action_view'
     autoload :ConfigCaller,          'ubiquo/extensions/config_caller'
-    
+
     module RailsGenerator
       [ :Create, :Destroy, :List ].each { |m| autoload m, 'ubiquo/extensions/rails_generator' }
     end
@@ -35,7 +35,6 @@ if Rails.env.test?
   ActiveSupport::TestCase.send(:include, Ubiquo::Extensions::TestImprovements)
   ActionController::TestCase.send(:include, Ubiquo::Extensions::TestImprovements)
 end
-
 
 ActiveRecord::Base.send(:include, Ubiquo::Extensions::ConfigCaller)
 ActiveRecord::Base.send(:extend, Ubiquo::Extensions::ConfigCaller)

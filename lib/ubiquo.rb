@@ -4,6 +4,7 @@ require 'ubiquo/helpers'
 require 'ubiquo/navigation_tabs'
 require 'ubiquo/navigation_links'
 require 'ubiquo/required_fields'
+require 'ubiquo/filtered_search'
 require 'ubiquo/adapters'
 
 Ubiquo::Config.add(:supported_locales, [ :ca, :es, :en ])
