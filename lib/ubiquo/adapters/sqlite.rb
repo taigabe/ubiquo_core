@@ -14,8 +14,8 @@ module Ubiquo
 
       module InstanceMethods
 
-        def initialize_with_regexp(connection, logger, config)
-          initialize_without_regexp
+        def initialize_with_regexp connection, logger, config
+          initialize_without_regexp connection, logger, config
           create_regexp_method
         end
 
