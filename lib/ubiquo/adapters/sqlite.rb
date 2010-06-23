@@ -3,9 +3,30 @@ module Ubiquo
     module Sqlite
       def self.included(klass)
         klass.send :include, InstanceMethods
+
+        klass.alias_method_chain :initialize, :regexp
+
+        if ActiveRecord::Base.connection
+          # initialize regexp for the already established connection
+          ActiveRecord::Base.connection.create_regexp_method
+        end
       end
+
       module InstanceMethods
-        
+
+        def initialize_with_regexp(connection, logger, config)
+          initialize_without_regexp
+          create_regexp_method
+        end
+
+        # creates a regexp method to allow use the REGEXP operator
+        def create_regexp_method
+          @connection.create_function('regexp', 2) do |func, pattern, expression|
+            regexp = Regexp.new(pattern.to_s, Regexp::IGNORECASE)
+            func.result = expression.to_s.match(regexp) ? 1 : 0
+          end
+        end
+
         # Creates a sequence with name "name". Drops it before if it exists
         def create_sequence(name)
           drop_sequence(name)
