@@ -4,7 +4,6 @@ require File.dirname(__FILE__) + "/../../test_helper.rb"
 class FilteredSearchTest < ActiveSupport::TestCase
 
   def setup
-    create_test_tables
     load_test_data
     @m = SearchTestModel
   end
@@ -58,7 +57,7 @@ class FilteredSearchTest < ActiveSupport::TestCase
 
   private
 
-  def create_test_tables
+  def self.create_test_tables
     table = 'search_test_models'
     conn = ActiveRecord::Base.connection
     conn.drop_table(table) if conn.tables.include?(table)
@@ -92,5 +91,7 @@ class FilteredSearchTest < ActiveSupport::TestCase
      }
     ].each { |attrs| SearchTestModel.create(attrs) }
   end
+
+  create_test_tables
 
 end
