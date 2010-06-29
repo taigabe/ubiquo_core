@@ -35,6 +35,7 @@ class FilteredSearchTest < ActiveSupport::TestCase
       end
       assert_equal [@m.find_by_title('Tíred')], @m.filtered_search({'filter_text' => 'TIred'})
       assert_equal [@m.find_by_description('òuch réally?')], @m.filtered_search({'filter_text' => 'òuch réally?'})
+      assert_equal [@m.find_by_description('bah loot')], @m.filtered_search({'filter_text' => 'niña'})
     end
   end
 
@@ -91,7 +92,7 @@ class FilteredSearchTest < ActiveSupport::TestCase
        :published_at => Date.today,
        :private => true
      },
-     { :title => 'Today is the new yesterday',
+     { :title => 'Today is the new yesterday. NIÑA',
        :description => 'bah loot',
        :published_at => Date.today,
        :private => false
