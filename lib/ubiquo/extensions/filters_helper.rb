@@ -10,12 +10,12 @@ require 'ostruct'
 #  end
 #
 #* The filter itself, containing the HTML that displays the filter on the lateral panel. It contains a header and a link to disable the filter when it is active.
-#
+# 
 #* The info filter that appears on top of the index listing. It displays textual info about all the active filters and contains a link to disable them all.
 #
 # Filters are automatically added to the index view, you only have to fill the helper (example for controller _example_controller_):
 #
-#  # app/helpers/ubiquo/example_helper.rb
+#  # app/helpers/ubiquo/example_helper.rb 
 #  module Ubiquo::UbiquoUsersHelper
 #    def ubiquo_users_filters_info(params)
 #       # Put your filters info here (filter_info)
@@ -43,8 +43,8 @@ require 'ostruct'
 #  string_filter = filter_info(:string, params,
 #    :field => :filter_text,
 #    :caption => t('text'))
-#
-#  build_filter_info(string_filter)
+#    
+#  build_filter_info(string_filter)                                
 #
 #== Links filter
 #
@@ -61,9 +61,9 @@ require 'ostruct'
 #      :collection => @asset_types,
 #      :id_field => :id,
 #      :name_field => :name)
-#
+#    
 #    build_filter_info(asset_types_filter)
-#    ---
+#    ---  
 #    asset_types_filter = filter_info(:links, params,
 #      :caption => t('type'),
 #      :all_caption => t('-- All --'),
@@ -82,7 +82,7 @@ require 'ostruct'
 #
 #
 #  # On the controller
-#  @target_types = Link::TARGET_OPTIONS.collect do |name, value|
+#  @target_types = Link::TARGET_OPTIONS.collect do |name, value| 
 #    OpenStruct.new(:name => name, :value => value)
 #  end
 #
@@ -90,16 +90,16 @@ require 'ostruct'
 #  asset_types_filter = render_filter(:links, {},
 #    :caption => t('type'),
 #    :field => :filter_type,
-#    :collection => @target_types,
+#    :collection => @target_types, 
 #    :id_field => :value,
-#    :name_field => :name)
+#    :name_field => :name)  
 #
 #  asset_types_filter = filter_info(:links, params,
 #    :caption => t('target'),
 #    :field => :filter_type,
 #    :translate_prefix => 'Link')
-#
-#  build_filter_info(asset_types_filter)
+#    
+#  build_filter_info(asset_types_filter)  
 #
 #== Select filter
 #
@@ -107,7 +107,7 @@ require 'ostruct'
 #
 #link:../images/filter_select_2.png
 #
-#Generate a select tag given an array of items.
+#Generate a select tag given an array of items. 
 #
 #It works exactly on the same way than the links filter, only that an extra option (options[:all_caption]) is needed to add a "all" option that disables the filter:
 #
@@ -118,8 +118,8 @@ require 'ostruct'
 #    :collection => @asset_types,
 #    :id_field => :id,
 #    :name_field => :name)
-#
-#  build_filter_info(asset_types_filter)
+#    
+#  build_filter_info(asset_types_filter)  
 #
 #== Links or Select filter
 #
@@ -133,8 +133,8 @@ require 'ostruct'
 #    :id_field => :id,
 #    :name_field => :name,
 #    :max_size_for_links => 2)
-#
-#  build_filter_info(asset_types_filter)
+#    
+#  build_filter_info(asset_types_filter)  
 #
 #== Boolean Filter
 #
@@ -155,7 +155,7 @@ require 'ostruct'
 #    :caption_true => t('Admin'),
 #    :caption_false => t('Non-admin'),
 #    :field => :filter_admin)
-#
+#    
 #  build_filter_info(admin_filter)
 #
 #== Date filter
@@ -172,7 +172,7 @@ require 'ostruct'
 #  date_filter = filter_info(:date, params,
 #    :caption => t('creation'),
 #    :field => [:date_start, :date_end])
-#
+#  
 #  build_filter_info(date_filter)
 #
 #== Single Date filter
@@ -185,7 +185,7 @@ require 'ostruct'
 #  date_filter = filter_info(:single_date, params,
 #    :caption => t('creation'),
 #    :field => :filter_date)
-#
+#  
 #  build_filter_info(date_filter)
 
 module Ubiquo
@@ -193,59 +193,12 @@ module Ubiquo
     module FiltersHelper
       def lateral_filter(title, fields=[], &block)
         content = capture(&block)
-        concat(render(:partial => "shared/ubiquo/lateral_filter",
-                      :locals => {:title => title,
-                        :content => content,
+        concat(render(:partial => "shared/ubiquo/lateral_filter", 
+                      :locals => {:title => title, 
+                        :content => content, 
                         :fields => [fields].flatten}))
       end
-
-      class UbiquoFilter
-        def initialize(url_for_options, options, params, view)
-          # TODO: Render <sidebar_box dir>
-          # TODO: Render title (caption and field are used for title)
-          # t("ubiquo.filter", :thing =>
-          # partial_locals[:options][:caption]),
-          # partial_locals[:options][:field])
-          @params = params
-          @title = t('ubiquo.filter', :thing => options[:caption])
-          @link  = build_link(options[:field])
-        end
-
-        private
-
-        def build_link(fields)
-          if fields.map { |f| @params[f].blank? }.include?(false)
-            without_filters = @params.dup
-            fields.each { |f| without_filters[f] = nil}
-            without_filters.delete(:page)
-            without_filters.delete(:commit)
-          end
-          link_to(t('ubiquo.filters.remove_filter'), without_filters, :class => 'bot_filters')
-        end
-
-        def extract_keepable_params(fields)
-          @params.reject do |key, values|
-            filter_fields = [fields].flatten.map(&:to_s)
-            toremove = %w{commit controller action page} + filter_fields
-            toremove.include?(key)
-          end.to_hash
-        end
-      end
-
-      def text_filter(url_for_options = {}, options = {})
-        link = params.reject do |key, values|
-          filter_fields = [options[:field]].flatten.map(&:to_s)
-          toremove = %w{commit controller action page} + filter_fields
-          toremove.include?(key)
-        end.to_hash
-        locals = {
-          :options => options,
-          :url_for_options => url_for_options,
-          :link => link
-        }
-        render :partial => 'shared/ubiquo/filters/string_filter', :locals => locals
-      end
-
+      
       # Render a lateral filter
       #
       # filter_name (symbol): currently implemented: :date_filter, :string_filter, :select_filter
@@ -256,40 +209,40 @@ module Ubiquo
           # Build a mock :collection object (use OpenStruct for simplicity)
           options_for_filter[:collection] = [
                                              OpenStruct.new(:option_id => 0, :name => options_for_filter[:caption_false]),
-                                             OpenStruct.new(:option_id => 1, :name => options_for_filter[:caption_true]),
+                                             OpenStruct.new(:option_id => 1, :name => options_for_filter[:caption_true]),        
                                             ]
           # Don't use :id as :id_field but, as :id is internally used by Ruby and will fail
           options_for_filter.update(:id_field => :option_id, :name_field => :name)
         end
-
-        partial_template = case filter_name.to_sym
+        
+        partial_template = case filter_name.to_sym 
                            when :links_or_select
                              if options_for_filter[:collection].size <= (options_for_filter[:max_size_for_links] || Ubiquo::Config.get(:max_size_for_links_filter))
-                               "shared/ubiquo/filters/links_filter"
-                             else
-                               "shared/ubiquo/filters/select_filter"
+                               "shared/ubiquo/filters/links_filter" 
+                             else 
+                               "shared/ubiquo/filters/select_filter" 
                              end
                            else
-                             "shared/ubiquo/filters/#{filter_name}_filter"
-                           end
-
+                             "shared/ubiquo/filters/#{filter_name}_filter" 
+                           end    
+        
         link = params.reject do |key, values|
           filter_fields = [options_for_filter[:field]].flatten.map(&:to_s)
           toremove = %w{commit controller action page} + filter_fields
           toremove.include?(key)
         end.to_hash
-
+        
         locals = {
           :partial_locals => {
             :options => options_for_filter,
-            :url_for_options => url_for_options,
+            :url_for_options => url_for_options, 
             :link => link,
           },
           :partial => partial_template,
         }
-        render :partial => "shared/ubiquo/filters/filter", :locals => locals
+        render :partial => "shared/ubiquo/filters/filter", :locals => locals  
       end
-
+      
       # Return the informative string about a filter process
       #
       # filter_name (symbol). Currently implemented: :date_filter, :string_filter, :select_filter
@@ -299,11 +252,11 @@ module Ubiquo
       # Return array [info_string, fields_used_by_this_filter]
       def filter_info(filter_name, params, options_for_filter = {})
         helper_method = "#{filter_name}_filter_info".to_sym
-        raise "Filter helper not found: #{helper_method}" unless self.respond_to?(helper_method, true)
+        raise "Filter helper not found: #{helper_method}" unless self.respond_to?(helper_method, true) 
         info_string, fields0 = send(helper_method, params, options_for_filter)
-        return unless info_string && fields0
+        return unless info_string && fields0 
         fields = fields0.flatten.uniq
-        [info_string, fields]
+        [info_string, fields] 
       end
 
       # Return the pretty filter info string
@@ -321,7 +274,7 @@ module Ubiquo
         message = [ t('ubiquo.filters.filtered_by', :field => info), link_to(link_text, new_params)]
         content_tag(:p, message.join(" "), :class => 'search_info')
       end
-
+      
       # Return the pretty filter info string
       #
       # info_and_fields: array of [info_string, fields_for_that_filter]
@@ -342,11 +295,11 @@ module Ubiquo
       def single_date_filter_info(filters, options_for_filter)
         date_field = options_for_filter[:field].to_sym
         date = filters[date_field]
-
+        
         return unless date
         info = t('ubiquo.filters.filter_simple_date', :date => date)
-
-        info = options_for_filter[:caption] + " " + info if options_for_filter[:caption]
+        
+        info = options_for_filter[:caption] + " " + info if options_for_filter[:caption] 
         [info, [date_field]]
       end
 
@@ -368,7 +321,7 @@ module Ubiquo
                elsif date_end
                  t('ubiquo.filters.filter_until', :date_end => date_end)
                end
-        info2 = options_for_filter[:caption] + " " + info if options_for_filter[:caption]
+        info2 = options_for_filter[:caption] + " " + info if options_for_filter[:caption] 
         [info2, [date_start_field, date_end_field]]
       end
 
@@ -377,13 +330,13 @@ module Ubiquo
       # filters: hash containing
       #   :filter_string
       #
-      # Return an array [text_info, array_of_fields_used_on_that_filter]
+      # Return an array [text_info, array_of_fields_used_on_that_filter]  
       def string_filter_info(filters, options_for_filter)
         field = options_for_filter[:field].to_s
         string = !filters[field].blank? && filters[field]
         return unless string
-        info = options_for_filter[:caption].blank? ?
-          t('ubiquo.filters.filter_text', :string => string) :
+        info = options_for_filter[:caption].blank? ? 
+          t('ubiquo.filters.filter_text', :string => string) : 
           "#{options_for_filter[:caption]} '#{string}'"
         [info, [field]]
       end
@@ -402,8 +355,8 @@ module Ubiquo
       #   boolean: true
       #   caption_true: message when selection is true
       #   caption_false: message when selection is false
-      #
-      # Return an array [text_info, array_of_fields_used_on_that_filter]
+      #   
+      # Return an array [text_info, array_of_fields_used_on_that_filter]  
       def select_filter_info(filters, options_for_filter)
         field_key = options_for_filter[:field] || raise("options_for_filter: missing 'field' key")
         field = !filters[field_key].blank? && filters[field_key]
@@ -411,7 +364,7 @@ module Ubiquo
         name = if options_for_filter[:boolean]
                  caption_true = options_for_filter[:caption_true] || raise("options_for_filter: missing 'caption_true' key")
                  caption_false = options_for_filter[:caption_false] || raise("options_for_filter: missing 'caption_false' key")
-                 (filters[field_key] == "1") ? caption_true : caption_false
+                 (filters[field_key] == "1") ? caption_true : caption_false  
                else
                  if options_for_filter[:model]
                    id_field = options_for_filter[:id_field] || raise("options_for_filter: missing 'id_field' key")
@@ -421,7 +374,7 @@ module Ubiquo
                    name_field = options_for_filter[:name_field] || raise("options_for_filter: missing 'name_field' key")
                    record.send(name_field)
                  elsif options_for_filter[:collection]
-                   value = options_for_filter[:collection].find do |value|
+                   value = options_for_filter[:collection].find do |value| 
                      value.send(options_for_filter[:id_field]).to_s == filters[field_key]
                    end.send(options_for_filter[:name_field]) rescue filters[field_key]
                  else
@@ -430,7 +383,7 @@ module Ubiquo
                  end
                end
         info = "#{options_for_filter[:caption]} '#{name}'"
-        [info, [field_key]]
+        [info, [field_key]]    
       end
 
       # Return info to show a informative string about a link filter
@@ -442,22 +395,22 @@ module Ubiquo
       def links_or_select_filter_info(filters, options_for_filter)
         select_filter_info(filters, options_for_filter)
       end
-
+      
       # From an array of strings, return a human-language enumeration
       def string_enumeration(strings)
         strings.reject(&:empty?).to_sentence()
       end
-
+      
       def build_hidden_field_tags(hash)
-        hash.map do |field, value|
+        hash.map do |field, value| 
           if value.is_a? Array
             value.map {|val| hidden_field_tag field+"[]", val}.flatten
           else
             hidden_field_tag field, value, :id => nil
           end
         end.join("\n")
-      end
-
+      end 
+      
     end
   end
 end
