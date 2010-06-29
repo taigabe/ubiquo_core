@@ -9,6 +9,7 @@ module Ubiquo
       def parse_date(string_date, options = {})
         return if string_date.blank?
         return string_date if string_date.instance_of?(Time)
+        return string_date if string_date.instance_of?(ActiveSupport::TimeWithZone)
 
         format = options.delete(:format) || "%d/%m/%Y"
         time_offset = options.delete(:time_offset)
