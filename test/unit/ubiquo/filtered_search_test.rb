@@ -55,6 +55,18 @@ class FilteredSearchTest < ActiveSupport::TestCase
     end
   end
 
+  test "Should be able to use the locale scope" do
+    # i18n plugin adds this scope and it should be usable by default.
+    assert_nothing_raised do
+      @m.class_eval do
+        filtered_search_scopes
+
+        named_scope :locale
+      end
+      @m.filtered_search({"filter_locale" => "es"})
+    end
+  end
+
   private
 
   def self.create_test_tables

@@ -37,7 +37,10 @@ module Ubiquo
         options.reverse_merge!({:defaults => true})
         @@enabled_scopes = options[:enable] || []
         text_scope(options[:text]) if (options[:defaults] || options[:text])
-        published_at_scopes if options[:defaults]
+        if options[:defaults]
+          published_at_scopes
+          @@enabled_scopes << :locale
+        end
       end
 
       # Returns a paginated and filtered result set. You can use
