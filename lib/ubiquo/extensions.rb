@@ -22,7 +22,7 @@ end
 
 ActionController::Routing::RouteSet::Mapper.send(:include, Ubiquo::Extensions::Routing)
 Ubiquo::Extensions::UbiquoAreaController.append_include(Ubiquo::Extensions::DateParser)
-Ubiquo::Extensions::UbiquoAreaController.append_helper(Ubiquo::Extensions::FiltersHelper)
+Ubiquo::Extensions::UbiquoAreaController.append_helper(Ubiquo::Extensions::FilterHelpers)
 ActionView::Base.field_error_proc = Ubiquo::Extensions::ActionView.ubiquo_field_error_proc
 ActiveRecord::Base.send(:extend, Ubiquo::Extensions::ActiveRecord)
 Array.send(:include, Ubiquo::Extensions::Array)

@@ -1,5 +1,6 @@
 es:
   ubiquo:
+    language: "Idioma"
     create: "Crear"
     edit: "Editar"
     view: "Ver"
@@ -40,6 +41,8 @@ es:
       filter_from: "desde %{date_start}"
       filter_until: "hasta %{date_end}"
       filter_simple_date: "fecha %{date}"
+      boolean_false: "Inactivo"
+      boolean_true: "Activo"
     base:
       actions: "Acciones"
       from: "Desde"

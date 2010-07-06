@@ -2,27 +2,32 @@
 module Ubiquo
   module Extensions
     module ActiveRecord
-      
+
       def self.extended(klass)
         # create a paginate alias for ubiquo_paginate unless already exists
-        alias_method :paginate, :ubiquo_paginate unless klass.respond_to?('paginate') 
+        alias_method :paginate, :ubiquo_paginate unless klass.respond_to?('paginate')
       end
-      
+
+      # TODO: Make use of alias and add test for it
+      def han(args)
+        human_attribute_name(args)
+      end
+
       # Applies a limit and offset scope that allows to easily paginate model results
       # options can be the following:
       #   :page => current page (default 1)
       #   :per_page => number of elements per page (default: :elements_per_page in Ubiquo Config)
-      #   
+      #
       # Returns an array composed of
       # [{
-      #   :previous => nil or the previous page number 
+      #   :previous => nil or the previous page number
       #   :next => nil or the next page number
       #   },
       #   requested items
       # ]
       def ubiquo_paginate(options = {})
         options.delete_if{|o1,o2| o2.blank? }
-        options.reverse_merge!({:page => 1, :per_page => Ubiquo::Config.get(:elements_per_page) }) 
+        options.reverse_merge!({:page => 1, :per_page => Ubiquo::Config.get(:elements_per_page) })
         items = self.with_scope(:find => {:limit => (options[:per_page].to_i + 1), :offset => (options[:per_page].to_i * (options[:page].to_i - 1))}) do
           yield
         end
@@ -34,15 +39,15 @@ module Ubiquo
          items
         ]
       end
-      
-      
+
+
       # Intermediate method customizing paperclip has_attached_file
       # Calls paperclip with id_partition (folders style 000/000/001) in path and url params
       def file_attachment(field, options = {})
         options.reverse_merge!(Ubiquo::Config.get(:attachments))
         visibility = options[:visibility]
-        
-        # Comment it because we didn't achieved run path with lambda        
+
+        # Comment it because we didn't achieved run path with lambda
         # v = nil
         # path = lambda { |obj|
         #   v = visibility.is_a?(Proc) ? visibility.call(obj.instance) : visibility
@@ -53,7 +58,7 @@ module Ubiquo
           '/ubiquo/attachment' if attachment.instance.respond_to?(:is_protected) && attachment.instance.is_protected
         end
         path = ":rails_root/#{visibility}/media/:class/:attachment/:id_partition/:style/:filename"
-        define_method("#{field}_is_public?") do 
+        define_method("#{field}_is_public?") do
           visibility.to_sym == :public
         end
         styles = Marshal.load(Marshal.dump(options[:styles])) || {}
@@ -72,7 +77,7 @@ module Ubiquo
         else
           url = ":visibility_prefix/media/:class/:attachment/:id_partition/:style/:filename"
         end
-        
+
         has_attached_file field,
           :url => url,
           :path => path,
@@ -86,7 +91,7 @@ module Ubiquo
             :bucket => s3[:bucket]
           }
       end
-      
+
       # Function for apply an array of scopes.
       # see self.create_scopes documentation for an example
       def apply_find_scopes(scopes, &initial)
@@ -96,7 +101,7 @@ module Ubiquo
           end
         end.call
       end
-      
+
       # iterate over filters and stores each returned value in an array.
       # returns an array with all returned values of each iteration.
       # example of usage:

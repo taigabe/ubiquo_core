@@ -1,5 +1,6 @@
 en:
   ubiquo:
+    language: "Language"
     create: "Create"
     edit: "Edit"
     view: "View"
@@ -39,6 +40,8 @@ en:
       filter_between: "between %{date_start} and %{date_end}"
       filter_from: "from %{date_start}"
       filter_until: "to %{date_end}"
+      boolean_false: "Inactive"
+      boolean_true: "Active"
     base:
       actions: "Actions"
       from: "From"
