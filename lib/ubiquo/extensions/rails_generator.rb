@@ -26,9 +26,11 @@ module Ubiquo
 
           logger.route "#{namespace}.resources #{resource_list}"
           unless options[:pretend]
-            gsub_file 'config/routes.rb', /(#{Regexp.escape(sentinel)})/mi do |match|
-              "#{match}\n    #{namespace}.resources #{resource_list}\n"
-            end
+            gsub_file(
+              'config/routes.rb', 
+              /(\s*)(#{Regexp.escape(sentinel)})/mi,
+              "\\1\\2\\1  #{namespace}.resources #{resource_list}\n"
+              )
           end
         end
         # Add ubiquo tab
