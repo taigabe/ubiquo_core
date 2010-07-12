@@ -28,8 +28,8 @@ module Ubiquo
           unless options[:pretend]
             gsub_file(
               'config/routes.rb', 
-              /(\s*)(#{Regexp.escape(sentinel)})/mi,
-              "\\1\\2\\1  #{namespace}.resources #{resource_list}\n"
+              /([\t| ]*)(#{Regexp.escape(sentinel)})/mi,
+              "\\1\\2\n\\1  #{namespace}.resources #{resource_list}\n"
               )
           end
         end
@@ -51,9 +51,9 @@ module Ubiquo
         # Modify routes.rb deleting the namespaced resources
         def namespaced_route_resources(namespace, *resources)
           resource_list = resources.map { |r| r.to_sym.inspect }.join(', ')
-          look_for = "\n    #{namespace}.resources #{resource_list}\n"
+          look_for = "#{namespace}.resources #{resource_list}\n"
           logger.route "#{namespace}.resources #{resource_list}"
-          gsub_file 'config/routes.rb', /(#{look_for})/mi, ''
+          gsub_file 'config/routes.rb', /(\n\s*#{look_for})/mi, "\n"
         end
         # Remove ubiquo tab only if unmodified
         def ubiquo_tab(name)
