@@ -1,5 +1,6 @@
 require 'action_controller/test_case'
 require "rails_generator"
+require "ubiquo/extensions/rails_238_string_concat_fix" if Rails.version == '2.3.8'
 
 module Ubiquo
   module Extensions
