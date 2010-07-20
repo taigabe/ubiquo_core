@@ -21,7 +21,7 @@ h1, h2, h3, h4, h5, p { line-height: 1.2em;}
 table, th, td { border: none;}
 
 /*-------------- Apartats generals --------------*/
-#wrapper { 
+#wrapper {
 	width: 100%;
 }
 /*--- header ---*/
@@ -152,20 +152,20 @@ table, th, td { border: none;}
 	#sidebar {
 		float: left;
 		margin-left: 15px;
-		width: 25%;	
+		width: 25%;
 	}
 		#sidebar .sidebar_box {
             position: relative;
 			margin-bottom: 2em;
-		} 
-			
+		}
+
 		#sidebar h3 {
 			margin-bottom: .5em;
 			padding-bottom: .2em;
 			font-size: 1.8em;
 			border-bottom: 1px solid #000;
-		}    
-		
+		}
+
 		#sidebar h4 {
 			margin-bottom: .4em;
 			font-size: 1.4em;
@@ -173,10 +173,10 @@ table, th, td { border: none;}
 		}
 		#sidebar p {
 			margin-bottom: .4em;
-		}  
-		
-	   
-		  
+		}
+
+
+
 	/*--- sidebar: filtres ---*/
 	a.bot_filters {
 		position: absolute;
@@ -531,7 +531,7 @@ table, th, td { border: none;}
 			right: .8em;
 			font-size: 1.3em;
         }
-		
+
 /*--- taula dades per TinyMCE ---*/
 #content .mceLayout table {
 	clear: both;
@@ -559,7 +559,7 @@ table, th, td { border: none;}
 #content .mceLayout td {
 	padding: 0;
 }
-#content .mceLayout tr.mceLast td { 
+#content .mceLayout tr.mceLast td {
     border-bottom: 1px solid #CCC;
 }
 
@@ -816,7 +816,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 
 #sidebar .translation span.name {
 	float: left;
-	font-size: 14px;	
+	font-size: 14px;
 }
 
 #sidebar .translation .options {
@@ -843,7 +843,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 	background: #881b20;
 }
 
-#sidebar .selected, 
+#sidebar .selected,
 #sidebar .selected .options,
 #sidebar .selected a {
 	color: #fff;
@@ -859,7 +859,6 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 	margin-bottom: 6px;
 	overflow: hidden;
 	position: relative;
-	width: 240px;
 	padding: 3px;
 }
 
@@ -953,7 +952,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 
 .se, .sd, .ie, .id {
 	height: 5px;
-	overflow: hidden; 
+	overflow: hidden;
 	position: absolute;
 	width: 5px;
 }
@@ -995,7 +994,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 }
 
 .preview dl,
-.preview ul, 
+.preview ul,
 .preview dd.text {
 	font-size: 12px;
 }
@@ -1007,7 +1006,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 
 .preview dd {
 	color: #778180;
-	margin-bottom: 20px;	
+	margin-bottom: 20px;
 }
 
 .preview ul {
@@ -1015,7 +1014,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 	margin-left: 14px;
 }
 
-.preview ul li {	
+.preview ul li {
 	margin-bottom: 2px;
 }
 
@@ -1038,7 +1037,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 .preview dd.images span {
 	width: 100px;
 	height: 82px;
-	background-color: #ecf5f4; 
+	background-color: #ecf5f4;
 	float: left;
 /*	border: 1px solid red; */
 	text-align: center;
@@ -1058,7 +1057,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 }
 
 .preview dd.text {
-	background-color: #ecf5f4; 
+	background-color: #ecf5f4;
 	padding: 12px;
 	margin-top: 10px;
 }
@@ -1118,7 +1117,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 			}
 			#lightwindow_contents input {
 				display: block;
-				width: 26em;	
+				width: 26em;
 			}
 			#lightwindow_contents h4, #lightwindow_contents p {
 				font-size: 1.1em;
@@ -1179,7 +1178,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 				margin-top: 1.5em;
 			}
 				#lightwindow_contents .form_buttons input {
-					width: 6em;	
+					width: 6em;
 				}
 	#lightwindow_stage .inferior {
 		height: 4em;
