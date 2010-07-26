@@ -641,6 +641,19 @@ form label {
 #content form p.datetime select {
 	display: inline;
 }
+
+#content form input[type="text"],
+#content form textarea,
+#content form select {
+	border:1px solid #CCCCCC;
+	font-size:1.2em;
+	padding:3px;
+}
+
+#content form input[type="text"] {
+    min-width:300px;
+}
+
 #content form input[type="checkbox"],#content form input[type="radio"], #content form input[type="hidden"] {
 	display: inline;
 }
