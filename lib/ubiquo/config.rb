@@ -163,7 +163,7 @@ class Ubiquo::Config
   
   def self.get(name)
     raise InvalidOptionName if !check_valid_name(name)
-    raise OptionNotFound if !self.option_exists?(name)
+    raise OptionNotFound.new(name) if !self.option_exists?(name)
     name = name.to_sym
 
     if configuration[self.current_context][:values].include?(name)
