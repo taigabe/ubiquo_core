@@ -17,6 +17,9 @@
     <![endif]-->
     <!-- Rails Defaults -->
     <%= javascript_include_tag :defaults, 'ubiquo/category_selector.js' %>
+    <% if Ubiquo::Plugin.registered[:ubiquo_design] %>
+      <%= javascript_include_tag 'ubiquo/ubiquo_design.js' %>
+    <% end %>
     <%= yield :head %>
     </head>
   <body>
