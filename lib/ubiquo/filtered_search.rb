@@ -52,7 +52,7 @@ module Ubiquo
         order_by =  params[:order_by] || options[:order_by] || "#{table_name}.id"
         sort_order = params[:sort_order] || options[:sort_order] || 'desc'
         options[:order] = "#{order_by} #{sort_order}"
-        paginate(:page => params[:page]) do
+        ubiquo_paginate(:page => params[:page]) do
           filtered_search params, options.except(:order_by, :sort_order)
         end
       end

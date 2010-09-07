@@ -68,6 +68,12 @@ class FilteredSearchTest < ActiveSupport::TestCase
     end
   end
 
+  test 'Should use ubiquo_paginate in paginated_filtered_search' do
+    page_param = 'test'
+    @m.expects(:ubiquo_paginate).with(:page => page_param)
+    @m.paginated_filtered_search(:page => page_param) {}
+  end
+
   private
 
   def self.create_test_tables
