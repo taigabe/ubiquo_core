@@ -58,11 +58,33 @@ module Ubiquo
         end
         styles = Marshal.load(Marshal.dump(options[:styles])) || {}
         processors = options[:processors] || [:thumbnail]
-        has_attached_file field, :path => path, 
-                                 :url => ":visibility_prefix/media/:class/:attachment/:id_partition/:style/:filename",
-                                 :styles => styles,
-                                 :processors => processors,
-                                 :whiny => false
+        s3 = {:key => '', :secret =>'', :bucket => ''}
+        if File.exists?("#{Rails.root}/config/s3.yml")
+          s3_config = YAML.load_file("#{Rails.root}/config/s3.yml")
+          s3[:key] = s3_config[Rails.env]['access_key_id']
+          s3[:secret] = s3_config[Rails.env]['secret_access_key']
+          s3[:bucket] = s3_config[Rails.env]['bucket']
+        end
+
+        if options[:storage] == :s3
+          url = ':s3_domain_url'
+          path = "media/:class/:attachment/:id_partition/:style/:filename"
+        else
+          url = ":visibility_prefix/media/:class/:attachment/:id_partition/:style/:filename"
+        end
+        
+        has_attached_file field,
+          :url => url,
+          :path => path,
+          :styles => styles,
+          :processors => processors,
+          :whiny => false,
+          :storage => options[:storage],
+          :s3_credentials => {
+            :access_key_id => s3[:key],
+            :secret_access_key => s3[:secret],
+            :bucket => s3[:bucket]
+          }
       end
       
       # Function for apply an array of scopes.
