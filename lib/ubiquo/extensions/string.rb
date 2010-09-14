@@ -21,6 +21,59 @@ module Ubiquo
           s.gsub(pattern, replacement)
         end      
       end
+      
+      def truncate_words(options = {})
+        stripped = ActionController::Base.helpers.strip_tags(self)
+        
+        max_length = options[:length] || 100
+        omission = options[:omission] || "..."
+        center = options[:center]
+        highlight = [options[:highlight]].flatten.compact
+        highlight_class = options[:highlight_class] || "highlight"
+        
+        if max_length < stripped.length
+          if center
+            r_limit = stripped.index(center) + center.length + ((max_length - center.length) / 2) - 1 - omission.length
+            l_limit = stripped.index(center) - ((max_length - center.length) / 2) + omission.length
+            
+            if l_limit < 0
+              r_limit -= l_limit
+              r_limit += omission.length
+              l_limit = 0
+            end
+            if r_limit > stripped.length
+              l_limit -= r_limit - stripped.length
+              l_limit -= omission.length
+              r_limit = stripped.length
+            end
+            result = stripped[l_limit..r_limit]
+            if l_limit >0 && stripped[l_limit-1,1] != " "
+              result = result[result.index(" ")+1..-1]
+            end
+            if r_limit < stripped.length && stripped[r_limit + 1,1] != " "
+              result = result[0..(result.rindex(" ")-1)]
+            end
+            
+            result = omission + result + omission
+          else
+            limit = max_length - 1 - omission.length
+            result = stripped[0..limit]
+            if stripped[limit + 1,1] != " "
+              result = result[0..(result.rindex(" ")-1)]
+            end
+            result += omission
+          end
+        else
+          result = stripped
+        end
+        
+        highlight.each do |h|
+          result = result.gsub(h, "<span class=\"#{highlight_class}\">#{h}</span>")
+        end
+        result
+        
+        
+      end
     end
   end
 end
