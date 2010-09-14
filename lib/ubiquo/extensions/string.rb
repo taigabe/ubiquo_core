@@ -22,6 +22,14 @@ module Ubiquo
         end      
       end
       
+      # allowed options:
+      # :length - the maximum length of the result. Includes the omissions
+      # :omission - the string to show when the text is truncated. Default "..."
+      # :center - A piece of text where the truncate will be centered.
+      # :highlight - some words or pieces of text that will be highlighted with an span
+      # :highlight_class - The CSS class to include in the highlighing span.
+      #
+      # Look the StringTest file to see examples of use.
       def truncate_words(options = {})
         stripped = ActionController::Base.helpers.strip_tags(self)
         
