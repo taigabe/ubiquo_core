@@ -36,13 +36,13 @@ require 'ostruct'
 class Ubiquo::Config
 
   cattr_accessor :configuration
-  
+
   #Adds an option to the current context (default :BASE). Default value is optional.
   #Example:
   # >> Ubiquo::Config.add(:new_option, 1)
   # >> Ubiquo::Config.get(:new_option)
   # => 1
-  # 
+  #
   #Can be used with a block.
   #Example:
   # >> Ubiquo::Config.add do |configurator|
@@ -54,7 +54,7 @@ class Ubiquo::Config
   # => 1
   # >> Ubiquo::Config.get(:option_2)
   # => 2
-  
+
   def self.add(name = nil, default_value = nil, &block)
     if block_given?
       block_assignment(&block).each do |name, default_value|
@@ -68,22 +68,22 @@ class Ubiquo::Config
       configuration[self.current_context][:allowed_options] << name
     end
   end
-  
+
   def self.add_inheritance(name, inherited_value)
     raise InvalidOptionName if !check_valid_name(name)
     raise OptionNotFound if !self.option_exists?(name)
     name = name.to_sym
-  
+
     proc = case inherited_value
            when Hash
              lambda{ Ubiquo::Config.context(inherited_value.keys.first).get(inherited_value.values.first)}
            when String, Symbol
              lambda{ Ubiquo::Config.context(:BASE).get(inherited_value)}
            end
-    
+
     configuration[self.current_context][:inherited_values][name] = proc
   end
-  
+
   #Set a default value to an existent option of the current context( default :BASE).
   #Example:
   #  >> Ubiquo::Config.add(:a)
@@ -104,7 +104,7 @@ class Ubiquo::Config
   #     end
   #  >> Ubiquo::Config.get(:c)
   #  => 3
-  
+
   def self.set_default(name = nil, default_value = nil, &block)
     if block_given?
       block_assignment(&block).each do |name, default_value|
@@ -138,7 +138,7 @@ class Ubiquo::Config
   #     end
   #  >> Ubiquo::Config.get(:c)
   #  => 3
-  
+
   def self.set(name = nil, value = nil, &block)
     if block_given?
       block_assignment(&block).each do |name, default_value|
@@ -151,7 +151,7 @@ class Ubiquo::Config
       configuration[self.current_context][:values][name] = value
     end
   end
-  
+
   #Get the value of a given option name in the current context(default :BASE). Will return the standard value if setted or default value. If no default value or standard value defined, raises Ubiquo::Config::ValueNeverSetted
   #Example:
   #  >> Ubiquo::Config.add(:a, 1)
@@ -160,7 +160,7 @@ class Ubiquo::Config
   #  >> Ubiquo::Config.set(:a, 2)
   #  >> Ubiquo::Config.get(:a)
   #  => 2
-  
+
   def self.get(name)
     raise InvalidOptionName if !check_valid_name(name)
     raise OptionNotFound.new(name) if !self.option_exists?(name)
@@ -176,7 +176,7 @@ class Ubiquo::Config
       raise ValueNeverSetted
     end
   end
-  
+
   def self.call(name, run_in, options = {})
     case option = self.get(name)
     when Proc
@@ -185,7 +185,7 @@ class Ubiquo::Config
         method_name = "_" + method_name
       end
       run_in.class.send(:define_method, method_name, &option)
-      returning run_in.send(method_name, options) do
+      run_in.send(method_name, options).tap do
         run_in.class.send(:remove_method, method_name)
       end
     when String, Symbol
@@ -200,7 +200,7 @@ class Ubiquo::Config
   #  >> Ubiquo::Config.context(:context).add(:a, 2)
   #  >> Ubiquo::Config.context(:context).get(:a)
   #  => 2
-  
+
   def self.create_context(name)
     raise InvalidContextName if !check_valid_context_name(name)
     raise AlreadyExistingContext if configuration.include?(name)
@@ -208,7 +208,7 @@ class Ubiquo::Config
     configuration.merge!(self.new_context_options(name))
     true
   end
-  
+
   #Allow to work in the desired context. Can be used inline or as block.
   #Example:
   #  >> Ubiquo::Config.add(:a, 1)  # Context :BASE
@@ -251,13 +251,13 @@ class Ubiquo::Config
       Proxy.new
     end
   end
-  
+
   def self.option_exists?(name)
     configuration[self.current_context][:allowed_options].include?(name)
   end
-  
+
   #Returns true only if the context exists
-  
+
   def self.context_exists?(name)
     configuration.include?(name)
   end
