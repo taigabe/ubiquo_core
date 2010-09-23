@@ -24,6 +24,7 @@ ca:
     related_links: "Enllaços relacionats"
     add_new_link: "Afegir nou enllaç"
     text: "text"
+    or: "o"
     # Filters
     filter: "Filtrar per {{thing}}"
     filters:

@@ -135,7 +135,7 @@ ca:
     abbr_day_names: [Dg., Dl., Dt., Dc., Dj., Dv., Ds.]
  
     # Don't forget the nil at the beginning; there's no such thing as a 0th month
-    month_names: [~, Gener, Febrer, Març, Abril, Maig, Juny, Juliol, Agost, Septembre, Octubre, Novembre, Desembre]
+    month_names: [~, Gener, Febrer, Març, Abril, Maig, Juny, Juliol, Agost, Setembre, Octubre, Novembre, Desembre]
     abbr_month_names: [~, Gen, Febr, Març, Abr, Maig, Juny, Jul, Ag, Set, Oct, Nov, Des]
     # Used in date_select and datime_select.
     order: [ :day, :month, :year ]

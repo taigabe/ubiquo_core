@@ -24,6 +24,7 @@ es:
     related_links: "Enlaces relacionados"
     add_new_link: "Añadir nuevo enlace"
     text: "texto"
+    or: "o"
     # Filters
     filter: "Filtrar por {{thing}}"
     filters:
