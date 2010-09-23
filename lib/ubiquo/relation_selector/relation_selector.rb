@@ -16,33 +16,31 @@ module Ubiquo
       #     add_callback(:callback_string)
       #     remove_callback(:callback_string)
       #     related_object_id_field(:id_field)
-      
       # options will have an additional parameter giving the
       # related_object field human-readable identifier(s)
 
-
-      
       def relation_selector(object_name, key, options = {}, html_options = {})
         object = options[:object]
 
         if object.respond_to?(key)
           # This part checks reflections
-          relation_type, object_class_name = discover_relation_by_reflections object, key, options
-
+          relation_type,
+          object_class_name = discover_relation_by_reflections(object,
+            key,
+            options)
           # This part is setting needed vars for url-craft and populates
           # array of possible values
           related_objects = url_craft_settings object_class_name, options
-
           # This part populate needed vars for all selectors
           humanized_field,
           selector_type,
-          relation_type = define_needed_controls(object_class_name,
+          relation_type = define_needed_controls(
+            object_class_name,
             related_objects,
             relation_type,
             key,
             object_name,
             options)
-
 
           # Finally, output is generated
           if selector_type.to_sym == :select
@@ -67,84 +65,90 @@ module Ubiquo
           raise RelationSelector::RelationNotFound.new
         end
       end
-      
+
       protected
 
-      def define_needed_controls object_class_name, related_objects, relation_type, key, object_name, options = {}
+      def define_needed_controls class_name, related_objects, relation_type, key, object_name, options = {}
         if options[:name_field].blank?
-          if object_class_name.constantize.respond_to?(:name)
+          if class_name.constantize.respond_to?(:name)
             humanized_field = :name
-          elsif object_class_name.constantize.respond_to?(:title)
+          elsif class_name.constantize.respond_to?(:title)
             humanized_field = :title
           else
-            raise RelationSelector::NeedNameField.new("Need a name_field for #{object_class_name} because no one convention name found")
+            raise RelationSelector::NeedNameField.new("Need a name_field for #{class_name} because no one convention name found")
           end
         else
           humanized_field = options[:name_field]
         end
-        
+
         if options[:type].blank?
           selector_type = :autocomplete
         else
           selector_type = options[:type]
         end
-        
+
         if relation_type == :has_many
           options[:key_field] = "#{key.to_s.singularize}_ids"
           options[:limited_elements] = nil
           options[:initial_text_field_tag_name] = "#{object_name}[#{options[:key_field]}][]"
         else
-          options[:key_field] = options[:real_foreign_key].present? ? options[:real_foreign_key] :  "#{key.to_s.singularize}_id" 
+          options[:key_field] = if options[:real_foreign_key].present?
+                                  options[:real_foreign_key]
+                                else
+                                  "#{key.to_s.singularize}_id"
+                                end
           options[:limited_elements] = 1
           options[:initial_text_field_tag_name] = "#{object_name}[#{options[:key_field]}]"
         end
-        
         return humanized_field, selector_type, relation_type
-        
       end
-      
-      def url_craft_settings object_class_name, options = {}
+
+      def url_craft_settings class_name, options = {}
         if options[:collection_url].blank?
-          options[:related_url] = send("new_ubiquo_#{object_class_name.tableize.singularize}_url")
-          options[:collection_url] = "ubiquo_#{object_class_name.tableize.pluralize}_url"
-          related_objects = object_class_name.constantize.respond_to?(:locale) ? object_class_name.constantize.locale(current_locale, :ANY).all : object_class_name.constantize.all
+          options[:related_url] = send("new_ubiquo_#{class_name.tableize.singularize}_url")
+          options[:collection_url] = "ubiquo_#{class_name.tableize.pluralize}_url"
+          related_objects = if class_name.constantize.respond_to?(:locale)
+                              class_name.constantize.locale(current_locale, :ANY).all
+                            else
+                              class_name.constantize.all
+                            end
         else
           options[:hide_controls] = true
           related_objects = []
         end
-        
         options[:related_object_id_field] ||= 'id'
         return related_objects
       end
-      
+
       def discover_relation_by_reflections object, key, options = {}
         relation_type = nil
-        object_class_name = nil
-        
+        class_name = nil
         object.class.reflections.each do |ref|
           if ref[1].name == key.to_sym
             relation_type = ref[1].macro
-            object_class_name = ref[1].class_name
+            class_name = ref[1].class_name
             if ref[1].options[:foreign_key].present?
               options[:real_foreign_key] = ref[1].options[:foreign_key]
             end
             break
           end
         end
-        return [relation_type, object_class_name]
+        return [relation_type, class_name]
       end
-      
+
       def relation_checkbox_selector(object, object_name, key, related_objects, humanized_field, relation_type, options = {})
-        
         current_related_objects = object.send(key).to_a
-        current_related_objects = current_related_objects.map(&:id).to_a if current_related_objects.length > 0
+        if current_related_objects.length > 0
+          current_related_objects = current_related_objects.map(&:id).to_a
+        end
         output = content_tag(:ul, :class => 'check_list') do
           related_objects.map do |ro|
             content_tag(:li) do
               check_box_tag("#{object_name}[#{options[:key_field]}][]", ro.id, 
                 current_related_objects.include?(ro.id),
                 :id => "#{object_name}_#{options[:key_field]}_#{ro.id}") +
-                label_tag("#{object_name}_#{options[:key_field]}_#{ro.id}", ro.send(humanized_field))
+                label_tag("#{object_name}_#{options[:key_field]}_#{ro.id}",
+                          ro.send(humanized_field))
             end
           end.join
         end
@@ -152,10 +156,11 @@ module Ubiquo
         output << relation_controls(options)
         output
       end
-      
-      def relation_select_selector(object, object_name, key, related_objects, humanized_field, relation_type, options = {})
 
-        objects_for_select = related_objects.collect { |cat| [cat.send(humanized_field), cat.id] }
+      def relation_select_selector(object, object_name, key, related_objects, humanized_field, relation_type, options = {})
+        objects_for_select = related_objects.collect { |cat|
+          [cat.send(humanized_field), cat.id]
+        }
         output = select_tag("#{object_name}[#{options[:key_field]}]", 
           options_for_select(objects_for_select,
             :selected => (object.send(key).id rescue '')),
@@ -163,18 +168,27 @@ module Ubiquo
         output << relation_controls(options)
         output
       end
-      
+
       def relation_autocomplete_selector(object, object_name, key, related_objects, humanized_field, relation_type, options = {})
         url_params = {:format => :js}
         url_params.merge!(options[:url_params]) if options[:url_params].present?
-        
         autocomplete_options = { 
           :url => send(options[:collection_url], url_params),
-          :current_values => create_open_struct_from_model(object.send(key), options[:related_object_id_field] || 'id', humanized_field),
+          :current_values => open_struct_from_model(object.send(key),
+                                                    options[:related_object_id_field] || 'id',
+                                                    humanized_field),
           :style => options[:autocomplete_style] || "tag"
         }
-        options[:add_callback] = options[:add_callback].blank? ? 'undefined' : "'#{options[:add_callback]}'"
-        options[:remove_callback] =  options[:remove_callback].blank? ? 'undefined' : "'#{options[:remove_callback]}'"
+        options[:add_callback] = if options[:add_callback].blank?
+                                   'undefined'
+                                 else
+                                   "'#{options[:add_callback]}'"
+                                 end
+        options[:remove_callback] = if options[:remove_callback].blank?
+                                      'undefined'
+                                    else
+                                      "'#{options[:remove_callback]}'"
+                                    end
         js_code =<<-JS
           document.observe('dom:loaded', function() {
             var autocomplete = new RelationAutoCompleteSelector(
@@ -191,46 +205,44 @@ module Ubiquo
             )
           });
         JS
-        
         output = javascript_tag(js_code) +
           text_field_tag(options[:initial_text_field_tag_name], "",
           :id => "#{object_name}_#{options[:key_field]}_autocomplete")
         output << relation_controls(options)
-
       end
 
-      def create_open_struct_from_model(objects, id_field, key_field)
+      def open_struct_from_model(objects, id_field, key_field)
         ret = []
         objects.to_a.each do |obj|
-          ret << OpenStruct.new(id_field.to_sym => obj.send(id_field), key_field.to_sym => obj.send(key_field))
+          ret << OpenStruct.new(id_field.to_sym => obj.send(id_field),
+                                key_field.to_sym => obj.send(key_field))
         end
         ret.to_json
       end
-      
+
       def new_relation_controls(type, object_name, key)
         content_tag(:div, :class => "new_category_controls") do
-          link_to(t("ubiquo.category_selector.new_element"), '#', 
+          link_to(t("ubiquo.category_selector.new_element"), '#',
             :id => "link_new__#{type}__#{object_name}__#{key}",
             :class => "category_selector_new") +
             content_tag(:div, :class => "add_new_category", :style => "display:none") do
             text_field_tag("new_#{object_name}_#{key}", "", :id => "new_#{object_name}_#{key}") +
-              link_to(t("ubiquo.category_selector.add_element"), "", :class => "add_new_category_link")
+              link_to(t("ubiquo.category_selector.add_element"),
+                      "",
+                      :class => "add_new_category_link")
           end
         end
       end
 
-      
       def relation_controls(options = {})
-        ret_case = if options[:hide_controls] == true
-                     ''
-                   elsif options[:related_control].blank?
-                     "<p class='relation_new'>#{link_to(I18n.t('new_relation'), options[:related_url], {:target => '_blank'})}</p>"
-                   else
-                     options[:related_control]
-                   end
-        ret_case
+        if options[:hide_controls] == true
+          ''
+        elsif options[:related_control].blank?
+          "<p class='relation_new'>#{link_to(I18n.t('new_relation'), options[:related_url], {:target => '_blank'})}</p>"
+        else
+          options[:related_control]
+        end
       end
-      
     end
   end
 end
