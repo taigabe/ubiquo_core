@@ -1,5 +1,5 @@
 en:
   application:
-    welcome: "Welcome to {{name}}"
+    welcome: "Welcome to %{name}"
     home: "Home"
-    goto: "Go to {{place}}"
+    goto: "Go to %{place}"

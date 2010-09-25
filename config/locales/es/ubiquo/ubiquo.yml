@@ -13,7 +13,7 @@ es:
     confirm_item_removal: "Estás seguro de querer borrar este item?"
     save: "Guardar cambios"
     search: "Buscar"
-    empty: "No hay resultados para {{thing}}"
+    empty: "No hay resultados para %{thing}"
     help: "Ayuda"
     back_to_list: "Volver al listado"
     back_to_index: "Volver al índice"
@@ -26,19 +26,19 @@ es:
     text: "texto"
     or: "o"
     # Filters
-    filter: "Filtrar por {{thing}}"
+    filter: "Filtrar por %{thing}"
     filters:
       remove_filter: "Quitar filtro"
       remove_all_filters:
         one: "Quitar filtro"
         other: "Quitar todos los filtros"
       text: "Texto"
-      filter_text: "texto '{{string}}'"
-      filtered_by: "Filtrando por: {{field}}"
+      filter_text: "texto '%{string}'"
+      filtered_by: "Filtrando por: %{field}"
       filter_between: "entre {{date_start}} y {{date_end}}"
       filter_from: "desde {{date_start}}"
       filter_until: "hasta {{date_end}}"
-      filter_simple_date: "fecha {{date}}"
+      filter_simple_date: "fecha %{date}"
     base:
       actions: "Acciones"
       from: "Desde"
