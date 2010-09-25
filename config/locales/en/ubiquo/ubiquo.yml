@@ -35,9 +35,9 @@ en:
       text: "Text"
       filter_text: "text '%{string}'"
       filtered_by: "Filtered by: %{field}"
-      filter_between: "between {{date_start}} and {{date_end}}"
-      filter_from: "from {{date_start}}"
-      filter_until: "to {{date_end}}"
+      filter_between: "between %{date_start} and %{date_end}"
+      filter_from: "from %{date_start}"
+      filter_until: "to %{date_end}"
     base:
       actions: "Actions"
       from: "From"
