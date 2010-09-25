@@ -6,13 +6,13 @@
       tab.link = ubiquo_home_path
       tab.highlights_on({:controller => "ubiquo/home"})
       tab.highlighted_class = "active"
-    end
+    end # Last tab
     static_pages_tab(navigator) if respond_to?(:static_pages_tab)
   end
 %>
 <%= render_tab_navigator(navigator_left) %>
 
-<% 
+<%
      navigator_right = create_tab_navigator(:id => "general_tabnav") do |navigator|
        category_sets_tab(navigator) if respond_to?(:category_sets_tab)
        media_tab(navigator) if respond_to?(:media_tab)
