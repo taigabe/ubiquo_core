@@ -25,6 +25,7 @@ es:
     add_new_link: "Añadir nuevo enlace"
     text: "texto"
     or: "o"
+    new_relation: "Nuevo elemento"
     # Filters
     filter: "Filtrar por %{thing}"
     filters:

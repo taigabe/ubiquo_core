@@ -238,7 +238,7 @@ module Ubiquo
         if options[:hide_controls] == true
           ''
         elsif options[:related_control].blank?
-          "<p class='relation_new'>#{link_to(I18n.t('new_relation'), options[:related_url], {:target => '_blank'})}</p>"
+          "<p class='relation_new'>#{link_to(I18n.t('ubiquo.new_relation'), options[:related_url], {:target => '_blank'})}</p>"
         else
           options[:related_control]
         end

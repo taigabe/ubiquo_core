@@ -25,6 +25,7 @@ ca:
     add_new_link: "Afegir nou enllaç"
     text: "text"
     or: "o"
+    new_relation: "Nou element"
     # Filters
     filter: "Filtrar per %{thing}"
     filters:

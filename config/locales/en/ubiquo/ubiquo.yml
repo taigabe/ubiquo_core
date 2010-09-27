@@ -25,6 +25,7 @@ en:
     add_new_link: "Add new link"
     text: "text"
     or: "or"
+    new_relation: "New item"
     # Filters
     filter: "Filter by %{thing}"
     filters:
