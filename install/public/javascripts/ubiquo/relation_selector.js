@@ -362,7 +362,7 @@ var RelationAutoCompleteSelector = Class.create({
   add_token_from_li: function(item) {
     var li_data = item.readAttribute('alt').evalJSON();
     keys = []; for(iter in li_data) {keys.push(iter)};
-    this.add_token(li_data.id, li_data[keys[0]][this.queryParam] || li_data[this.queryParam], li_data[keys[0]] [this.idQueryParam]);
+    this.add_token(li_data.id, li_data[keys[0]][this.queryParam] || li_data[this.queryParam], li_data[keys[0]] [this.idQueryParam] || li_data[this.idQueryParam]);
   },
 
   add_token_from_json: function(item) {
