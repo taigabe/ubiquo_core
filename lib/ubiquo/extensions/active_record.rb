@@ -79,7 +79,7 @@ module Ubiquo
           :styles => styles,
           :processors => processors,
           :whiny => false,
-          :storage => options[:storage],
+          :storage => options[:storage] || :filesystem,
           :s3_credentials => {
             :access_key_id => s3[:key],
             :secret_access_key => s3[:secret],
