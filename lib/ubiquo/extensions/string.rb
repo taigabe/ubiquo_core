@@ -23,7 +23,7 @@ module Ubiquo
       end
       
       # allowed options:
-      # :length - the maximum length of the result. Includes the omissions
+      # :max_chars - the maximum length of the result. Includes the omissions
       # :omission - the string to show when the text is truncated. Default "..."
       # :center - A piece of text where the truncate will be centered.
       # :highlight - some words or pieces of text that will be highlighted with an span
@@ -33,7 +33,7 @@ module Ubiquo
       def truncate_words(options = {})
         stripped = ActionController::Base.helpers.strip_tags(self)
         
-        max_length = options[:length] || 100
+        max_length = options[:max_chars] || 100
         omission = options[:omission] || "..."
         center = options[:center]
         highlight = [options[:highlight]].flatten.compact
@@ -67,7 +67,11 @@ module Ubiquo
             limit = max_length - 1 - omission.length
             result = stripped[0..limit]
             if stripped[limit + 1,1] != " "
-              result = result[0..(result.rindex(" ")-1)]
+              if result.rindex(" ")
+                result = result[0..(result.rindex(" ")-1)]
+              else
+                result = ""
+              end
             end
             result += omission
           end
