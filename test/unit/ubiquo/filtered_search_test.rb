@@ -74,22 +74,39 @@ class FilteredSearchTest < ActiveSupport::TestCase
     @m.paginated_filtered_search(:page => page_param) {}
   end
 
+  test 'Should respect enabled scopes for different models' do
+    @m.class_eval do
+      filtered_search_scopes :defaults => false
+    end
+    AlternateSearchTestModel.class_eval do
+      filtered_search_scopes
+    end
+    params = { 'filter_text' => 'Tired' }
+    assert_raise Ubiquo::InvalidFilter do
+      @m.filtered_search(params)
+    end
+    assert_nothing_raised do
+      AlternateSearchTestModel.filtered_search(params)
+    end
+  end
+
   private
 
   def self.create_test_tables
-    table = 'search_test_models'
-    conn = ActiveRecord::Base.connection
-    conn.drop_table(table) if conn.tables.include?(table)
+    %w{search_test_models alternate_search_test_models}.each do |table|
+      conn = ActiveRecord::Base.connection
+      conn.drop_table(table) if conn.tables.include?(table)
 
-    conn.create_table table.to_sym do |t|
-      t.string :title
-      t.string :description
-      t.string :published_at
-      t.boolean :private
+      conn.create_table table.to_sym do |t|
+        t.string :title
+        t.string :description
+        t.string :published_at
+        t.boolean :private
+      end
+
+      model = table.classify
+      Object.const_set(model, Class.new(ActiveRecord::Base)) unless Object.const_defined? model
     end
-
-    model = 'SearchTestModel'
-    Object.const_set(model, Class.new(ActiveRecord::Base)) unless Object.const_defined? model
   end
 
   def load_test_data

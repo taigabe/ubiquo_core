@@ -35,11 +35,11 @@ module Ubiquo
       #  >> filtered_search_scopes :text => [ :title, :description ]
       def filtered_search_scopes(options = {})
         options.reverse_merge!({:defaults => true})
-        @@enabled_scopes = options[:enable] || []
+        @enabled_scopes = options[:enable] || []
         text_scope(options[:text]) if (options[:defaults] || options[:text])
         if options[:defaults]
           published_at_scopes
-          @@enabled_scopes << :locale
+          @enabled_scopes << :locale
         end
       end
 
@@ -84,7 +84,7 @@ module Ubiquo
       def text_scope(selected_fields)
         fields = selected_fields || default_text_fields
         regexp_op = connection.adapter_name == "PostgreSQL" ? "~*" : "REGEXP"
-        @@enabled_scopes.concat [:text]
+        @enabled_scopes.concat [:text]
         named_scope :text, lambda { |value|
           match = accent_insensitive_regexp(value.downcase)
           matches = fields.inject([]) { |r, f| r << match }
@@ -98,7 +98,7 @@ module Ubiquo
       def published_at_scopes
         # TODO: End and removal of parse_date, see I18n.parse_date
         if column_names.include?("published_at")
-          @@enabled_scopes.concat [ :publish_start, :publish_end ]
+          @enabled_scopes.concat [ :publish_start, :publish_end ]
           named_scope :publish_start , lambda { |value| { :conditions => ["#{table_name}.published_at >= ?", parse_date(value)] } }
           named_scope :publish_end   , lambda { |value| { :conditions => ["#{table_name}.published_at <= ?", parse_date(value, :time_offset => 1.day)] } }
         end
@@ -123,7 +123,7 @@ module Ubiquo
       def select_scopes(params,restrict_scopes)
         filters = params.reject {|k,v| !k.to_s.match /^filter_/ }
         scopes = filters.inject({}) { |h, (k,v)| h[k.gsub('filter_', '').to_sym] = v; h } # transform filter_bla keys into :bla
-        valid_scopes = restrict_scopes || @@enabled_scopes
+        valid_scopes = restrict_scopes || @enabled_scopes
         rogue_filters = scopes.keys - valid_scopes
         unless rogue_filters.blank?
           raise Ubiquo::InvalidFilter, "Unexpected filter received in params: #{rogue_filters.inspect}"
