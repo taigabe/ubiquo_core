@@ -194,8 +194,7 @@ var RelationAutoCompleteSelector = Class.create({
 
   prepareTokenList: function() {
     var klass = this;
-    var token_list = document.createElement('ul');
-    token_list.addClassName(this.CLASSES.tokenList);
+    var token_list = new Element('ul', {'class': this.CLASSES.tokenList});
     token_list.observe('click', function(event) {
       var li = this.get_element_from_event(event, 'LI');
       if(li && $(li) != $(this.input_token)) {
@@ -235,16 +234,14 @@ var RelationAutoCompleteSelector = Class.create({
   },
 
   prepareDropdown: function() {
-    var dropdown = document.createElement('div');
-    dropdown.addClassName(this.CLASSES.dropdown);
+    var dropdown = new Element('div', {'class':this.CLASSES.dropdown});
     this.token_list.insert({after: dropdown});
     dropdown.hide();
     return dropdown;
   },
 
   prepareInputToken: function() {
-    var input_token = document.createElement('li');
-    input_token.addClassName(this.CLASSES.inputToken);
+    var input_token = new Element('li',{'class':this.CLASSES.inputToken});
     this.token_list.insert(input_token);
     input_token.insert(this.input_box);
     return input_token;
@@ -289,13 +286,11 @@ var RelationAutoCompleteSelector = Class.create({
   // Inner function to a token to the list
   insert_token: function(id, value) {
     var klass = this;
-    var this_token = document.createElement('li');
+    var this_token = new Element('li',{'class':this.CLASSES.token});
     this_token.insert('<p>'+value+'</p>');
-    this_token.addClassName(this.CLASSES.token);
     this.input_token.insert({before: this_token});
-    var delete_token_button = document.createElement('span');
+    var delete_token_button = new Element('span',{'class':this.CLASSES.tokenDelete});
     delete_token_button.insert("x");
-    delete_token_button.addClassName(this.CLASSES.tokenDelete);
     delete_token_button.observe('click',function(event) {
       klass.delete_token($(this).up());
       event.stop();
@@ -463,7 +458,7 @@ var RelationAutoCompleteSelector = Class.create({
     var klass = this;
     if(results.length) {
       this.dropdown.update('');
-      var dropdown_ul = document.createElement('ul');
+      var dropdown_ul = new Element('ul');
       dropdown_ul.observe('click', function(event) {
         klass.add_token_from_li(klass.get_element_from_event(event, "LI"));
         event.stop();
@@ -481,7 +476,7 @@ var RelationAutoCompleteSelector = Class.create({
       this.dropdown.insert(dropdown_ul);
       for(var i in results) {
         if (results.hasOwnProperty(i)) {
-          var this_li = document.createElement('li');
+          var this_li = new Element('li');
           //hack to retrieve keys
           keys = []; for(iter in results[i]) {keys.push(iter)};
           var value = this.highlight_term(results[i][this.queryParam] || results[i][keys[0]][this.queryParam], query)
