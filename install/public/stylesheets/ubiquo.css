@@ -435,7 +435,6 @@ table, th, td { border: none;}
 #content table {
 	clear: both;
 	margin: 2em 0;
-        display: inline-table;
 }
 #content th, #content td {
 	border-right: 2px solid #FFF;
