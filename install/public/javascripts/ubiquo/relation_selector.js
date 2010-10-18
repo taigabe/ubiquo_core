@@ -194,7 +194,8 @@ var RelationAutoCompleteSelector = Class.create({
 
   prepareTokenList: function() {
     var klass = this;
-    var token_list = new Element('ul', {'class': this.CLASSES.tokenList});
+    var token_list = new Element('ul');
+    token_list.addClassName(this.CLASSES.tokenList);
     token_list.observe('click', function(event) {
       var li = this.get_element_from_event(event, 'LI');
       if(li && $(li) != $(this.input_token)) {
@@ -234,14 +235,16 @@ var RelationAutoCompleteSelector = Class.create({
   },
 
   prepareDropdown: function() {
-    var dropdown = new Element('div', {'class':this.CLASSES.dropdown});
+    var dropdown = new Element('div');
+    dropdown.addClassName(this.CLASSES.dropdown);
     this.token_list.insert({after: dropdown});
     dropdown.hide();
     return dropdown;
   },
 
   prepareInputToken: function() {
-    var input_token = new Element('li',{'class':this.CLASSES.inputToken});
+    var input_token = new Element('li');
+    input_token.addClassName(this.CLASSES.inputToken);
     this.token_list.insert(input_token);
     input_token.insert(this.input_box);
     return input_token;
@@ -286,10 +289,12 @@ var RelationAutoCompleteSelector = Class.create({
   // Inner function to a token to the list
   insert_token: function(id, value) {
     var klass = this;
-    var this_token = new Element('li',{'class':this.CLASSES.token});
+    var this_token = new Element('li');
+    this_token.addClassName(this.CLASSES.token);
     this_token.insert('<p>'+value+'</p>');
     this.input_token.insert({before: this_token});
-    var delete_token_button = new Element('span',{'class':this.CLASSES.tokenDelete});
+    var delete_token_button = new Element('span');
+    delete_token_button.addClassName(this.CLASSES.tokenDelete);
     delete_token_button.insert("x");
     delete_token_button.observe('click',function(event) {
       klass.delete_token($(this).up());
