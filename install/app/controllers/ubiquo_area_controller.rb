@@ -24,8 +24,7 @@ forecolor backcolor separator code separator undo redo indent outdent separator 
       :plugins => %w{contextmenu paste media},
       :editor_selector => "visual_editor",
       :entities => "", # disables html entities replace
-      :extended_valid_elements => "script[*],style[*]",
-      :entities => '',
+      :extended_valid_elements => "script[*],style[*]"
     }
   end
   
