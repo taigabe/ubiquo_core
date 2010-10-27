@@ -97,7 +97,7 @@ module Ubiquo
       # published_at column exists
       def published_at_scopes
         # TODO: End and removal of parse_date, see I18n.parse_date
-        if column_names.include?("published_at")
+        if table_exists? && column_names.include?("published_at")
           @enabled_scopes.concat [ :publish_start, :publish_end ]
           named_scope :publish_start , lambda { |value| { :conditions => ["#{table_name}.published_at >= ?", parse_date(value)] } }
           named_scope :publish_end   , lambda { |value| { :conditions => ["#{table_name}.published_at <= ?", parse_date(value, :time_offset => 1.day)] } }
@@ -108,7 +108,7 @@ module Ubiquo
       # columns. Currently it uses title, name and description
       def default_text_fields
         ["title", "name", "description"].inject([]) do |result, text_field|
-          result << text_field if column_names.include? text_field
+          result << text_field if table_exists? && column_names.include?(text_field)
           result
         end
       end
