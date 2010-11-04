@@ -9,7 +9,7 @@ module Ubiquo
           defaults = {
             :collection  => collection,
             :id_field    => :id,
-            :name_field  => default_name_field,
+            :name_field  => default_name_field(collection),
             :caption     => @model.human_attribute_name(field),
             :all_caption => @model.human_attribute_name(field),
           }
@@ -70,11 +70,12 @@ module Ubiquo
 
         private
 
-        def default_name_field
-          columns = @model.columns.map(&:name).map(&:to_sym)
-          if columns.include?(:name)
+        def default_name_field(collection)
+          return unless collection.is_a? Array
+          element = collection.first
+          if element.respond_to?(:name)
             :name
-          elsif columns.include?(:title)
+          elsif element.respond_to?(:title)
             :title
           end
         end
