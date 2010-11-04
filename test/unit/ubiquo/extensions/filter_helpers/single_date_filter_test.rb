@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + "/../../../../test_helper.rb"
 require 'ubiquo/extensions/filter_helpers/single_date_filter'
 
-class SingleDateFilterTest < UbiquoFilterTestCase
+class SingleDateFilterTest < Ubiquo::Extensions::FilterHelpers::UbiquoFilterTestCase
 
   def setup
     @filter = SingleDateFilter.new(@model, @context)

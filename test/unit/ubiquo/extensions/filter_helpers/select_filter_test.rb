@@ -2,7 +2,7 @@
 require File.dirname(__FILE__) + "/../../../../test_helper.rb"
 require 'ubiquo/extensions/filter_helpers/select_filter'
 
-class SelectFilterTest < UbiquoFilterTestCase
+class SelectFilterTest < Ubiquo::Extensions::FilterHelpers::UbiquoFilterTestCase
 
   def setup
     @filter = SelectFilter.new(@model, @context)

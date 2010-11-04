@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + "/../../../../test_helper.rb"
 require 'ubiquo/extensions/filter_helpers/text_filter'
 
-class TextFilterTest < UbiquoFilterTestCase
+class TextFilterTest < Ubiquo::Extensions::FilterHelpers::UbiquoFilterTestCase
 
   def setup
     @filter = TextFilter.new(@model, @context)

@@ -2,7 +2,7 @@
 require File.dirname(__FILE__) + "/../../../../test_helper.rb"
 require 'ubiquo/extensions/filter_helpers/links_or_select_filter'
 
-class LinksOrSelectFilterTest < UbiquoFilterTestCase
+class LinksOrSelectFilterTest < Ubiquo::Extensions::FilterHelpers::UbiquoFilterTestCase
 
   def setup
     @filter = LinksOrSelectFilter.new(@model, @context)

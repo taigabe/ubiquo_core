@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + "/../../../../test_helper.rb"
 require 'ubiquo/extensions/filter_helpers/locale_filter'
 
-class LocaleFilterTest < UbiquoFilterTestCase
+class LocaleFilterTest < Ubiquo::Extensions::FilterHelpers::UbiquoFilterTestCase
 
   def setup
     @filter = LocaleFilter.new(@model, @context)

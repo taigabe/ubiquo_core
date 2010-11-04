@@ -208,12 +208,9 @@ module Ubiquo
         end
 
         def method_missing(method, *args, &block)
-          filter_class = "Ubiquo::Extensions::FilterHelpers::#{method.to_s.classify}Filter"
-          filter = filter_class.constantize.new(@model, @context)
+          filter = get_filter_class(method).new(@model, @context)
           filter.configure(*args,&block)
           @filters << filter
-        rescue NameError
-          raise UnknownFilter.new("Ubiquo filter class #{filter_class} couldn't be found or doesn't exist.")
         end
 
         # Renders all filters of the set, in order, as a string
@@ -262,6 +259,14 @@ module Ubiquo
         # From an array of strings, return a human-language enumeration
         def string_enumeration(strings)
           strings.reject(&:empty?).to_sentence()
+        end
+
+        # Given a filter_for method name returns the appropiate filter class
+        def get_filter_class(filter_name)
+          camel_cased_word = "Ubiquo::Extensions::FilterHelpers::#{filter_name.to_s.classify}Filter"
+          camel_cased_word.split('::').inject(Object) do |constant, name|
+            constant = constant.const_get(name)
+          end
         end
 
       end
@@ -353,8 +358,6 @@ module Ubiquo
       def initialize_filter_set_if_needed
         helper = "#{@controller.controller_name.singularize}_filters"
         send(helper) unless @filter_set
-      rescue NameError
-        raise MissingFilterSetDefinition.new("Missing #{helper} helper. Please define it and use filter_for to define a filter set. Check ubiquo filter documentation for examples.")
       end
 
       # Transitional method to maintain compatibility with the old
@@ -386,7 +389,8 @@ module Ubiquo
       # TODO: To be removed from the 0.9.0 release
       def deprecation_message
         caller_method_name = caller.first.scan /`([a-z_]+)'$/
-        logger.warn("DEPRECATION WARNING: #{caller_method_name} will be removed in 0.9.0. See http://guides.ubiquo.me/edge/ubiquo_core.html for more information.")
+        msg = "DEPRECATION WARNING: #{caller_method_name} will be removed in 0.9.0. See http://guides.ubiquo.me/edge/ubiquo_core.html for more information."
+        ActiveSupport::Deprecation.warn(msg)
       end
 
     end
