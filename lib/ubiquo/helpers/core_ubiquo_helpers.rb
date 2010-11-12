@@ -39,7 +39,7 @@ module Ubiquo
         options = sources.extract_options!.stringify_keys
         default_sources = []
         if sources.include?(:defaults)
-          default_sources += [:ubiquo, :lightwindow]
+          default_sources += [:ubiquo, :lightwindow, :lightwindow_ubiquo]
           default_sources += collect_asset_files("#{javascripts_dir}", "plugins/*.js")
         end
         ubiquo_sources = (sources + default_sources).collect do |source|

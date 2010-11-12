@@ -9,6 +9,14 @@
 	height: 100px;
 	z-index: 500;
 	/* REQUIRED */
+    background-image: url("../../images/ubiquo/lightwindow/black-70.png");
+    background-repeat: repeat;
+}
+
+#lightwindow_overlay .alt-png{
+    background-image: url("../../images/ubiquo/lightwindow/black-.png");
+    background-color:#000;
+    filter: alpha("opacity:70");
 }
 
 #lightwindow {
@@ -134,7 +142,7 @@
 	#lightwindow_next {
 		width: 49%;
 		height: 100%;
-		background: transparent url(../../../../images/shared/ubiquo/lightwindow/blank.gif) no-repeat; /* Trick IE into showing hover */
+		background: transparent url(../../images/shared/ubiquo/lightwindow/blank.gif) no-repeat; /* Trick IE into showing hover */
 		display: block;
 	}
 	
@@ -150,12 +158,12 @@
 
 	#lightwindow_previous:hover, 
 	#lightwindow_previous:active { 
-		background: url(../../../../images/shared/ubiquo/lightwindow/prevlabel.gif) left 15% no-repeat; 
+		background: url(../../images/shared/ubiquo/lightwindow/prevlabel.gif) left 15% no-repeat; 
 	}
 
 	#lightwindow_next:hover, 
 	#lightwindow_next:active { 
-		background: url(../../../../images/shared/ubiquo/lightwindow/nextlabel.gif) right 15% no-repeat; 
+		background: url(../../images/shared/ubiquo/lightwindow/nextlabel.gif) right 15% no-repeat; 
 	}
 	
 	#lightwindow_previous_title,
@@ -194,7 +202,7 @@
 		cursor: pointer;
 		font-size: 11px;
 		color: #ffffbe;
-		background: url(../../../../images/shared/ubiquo/lightwindow/black-70.png) repeat 0 0 transparent;
+		background: url(../../images/shared/ubiquo/lightwindow/black-70.png) repeat 0 0 transparent;
 	}
 	
 	* html a#lightwindow_galleries_tab,		
@@ -220,15 +228,15 @@
 	}
 	
 	#lightwindow_galleries_tab .up	{
-		background: url(../../../../images/shared/ubiquo/lightwindow/arrow-up.gif) no-repeat 60px 5px transparent;
+		background: url(../../images/shared/ubiquo/lightwindow/arrow-up.gif) no-repeat 60px 5px transparent;
 	}
 
 	#lightwindow_galleries_tab .down {
-		background: url(../../../../images/shared/ubiquo/lightwindow/arrow-down.gif) no-repeat 60px 6px transparent;
+		background: url(../../images/shared/ubiquo/lightwindow/arrow-down.gif) no-repeat 60px 6px transparent;
 	}
 
 	#lightwindow_galleries_list {
-		background: url(../../../../images/shared/ubiquo/lightwindow/black-70.png) repeat 0 0 transparent;
+		background: url(../../images/shared/ubiquo/lightwindow/black-70.png) repeat 0 0 transparent;
 		overflow: hidden;
 		height: 0px;
 	}

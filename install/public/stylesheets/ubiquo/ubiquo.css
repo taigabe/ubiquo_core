@@ -7,7 +7,7 @@ body, input, select, textarea { color: #000; font-family: "Trebuchet MS", Verdan
 a { text-decoration: none;}
 img { border: none;}
 hr, #skip { display: none;}
-iframe { width: 1px; height: 1px; border: none;}
+iframe#upload_frame { width: 1px; height: 1px; border: none;}
 h1, h2, h3, h4, h5 { font-weight: normal;}
 h1 { font-size: 2.4em;}
 h2 { font-size: 1.6em;}
@@ -1101,7 +1101,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 
 /*--- Lightwindow ---*/
 #lightwindow_stage {
-	width: 67.9em;
+	width: 67.9em; 
 }
 	#ubiquo_lb {
 		position: relative;
@@ -1196,6 +1196,18 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 		height: 4em;
 		background: url(../../images/ubiquo/bg_lightwindow.png) no-repeat left bottom;
 	}
+    
+#lightwindow.wide #lightwindow_stage {
+	width: 780px;
+}
+#lightwindow.wide #ubiquo_lb {
+    background: url(../images/ubiquo/bg_lightwindow_long_wide.png) no-repeat left top;
+    padding-bottom:0px;
+}
+#lightwindow.wide #lightwindow_stage .inferior {
+    height: 3em;
+    background: url(../images/ubiquo/bg_lightwindow_wide.png) no-repeat left bottom;
+}
 
 /*-------------- Clearfix --------------*/
 #controls:after, #tabs:after, #central:after, #content:after, .submenu:after, form .page_templates:after, form#frm_calendar p:after, #template:after, .form_box:after, .box_list:after { content: "."; display: block; height: 0; clear: both; visibility: hidden;}

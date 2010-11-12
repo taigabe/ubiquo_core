@@ -84,11 +84,11 @@ lightwindow.prototype = {
 				width : 20
 			},
 			dimensions : {
-				image : {height : 250, width : 600},
-				page : {height : 250, width : 600},
-				inline : {height : 250, width : 600},
-				media : {height : 250, width : 600},
-				external : {height : 250, width : 600},
+				image : {height : 250, width : 250},
+				page : {height : 250, width : 250},
+				inline : {height : 250, width : 250},
+				media : {height : 250, width : 250},
+				external : {height : 250, width : 250},
 				titleHeight : 25
 			},
 			classNames : {	
@@ -153,21 +153,19 @@ lightwindow.prototype = {
 			EOLASFix : 'swf,wmv,fla,flv',
 			overlay : {
 				opacity : 0.7,
-				image : '/images/ubiquo/lightwindow/black.png',
-				presetImage : '/images/ubiquo/lightwindow/black-70.png'
+				image : 'images/black.png',
+				presetImage : 'images/black-70.png'
 			},
 			skin : 	{
 				main : 	'<div id="lightwindow_container" >'+
 							'<div id="lightwindow_title_bar" >'+
 								'<div id="lightwindow_title_bar_inner" >'+
 									'<span id="lightwindow_title_bar_title"></span>'+
-								
+									'<a id="lightwindow_title_bar_close_link" >close</a>'+
 								'</div>'+
 							'</div>'+
 							'<div id="lightwindow_stage" >'+
-								'<div id="ubiquo_lb">'+
-									'<div id="lightwindow_contents" >'+
-									'</div>'+
+								'<div id="lightwindow_contents" >'+
 								'</div>'+
 								'<div id="lightwindow_navigation" >'+
 									'<a href="#" id="lightwindow_previous" >'+
@@ -187,7 +185,6 @@ lightwindow.prototype = {
 									'<div id="lightwindow_galleries_list" >'+
 									'</div>'+
 								'</div>'+
-								'<div class="inferior" />'+
 							'</div>'+
 							'<div id="lightwindow_data_slide" >'+
 								'<div id="lightwindow_data_slide_inner" >'+
@@ -205,10 +202,9 @@ lightwindow.prototype = {
 									'</div>'+
 								'</div>'+
 							'</div>'+
-						'</div>',
-
+						'</div>',	
 				loading : 	'<div id="lightwindow_loading" >'+
-								'<img src="/images/ubiquo/lightwindow/ajax-loading.gif" alt="loading" />'+
+								'<img src="images/ajax-loading.gif" alt="loading" />'+
 								'<span>Loading or <a href="javascript: myLightWindow.deactivate();">Cancel</a></span>'+
 								'<iframe name="lightwindow_loading_shim" id="lightwindow_loading_shim" src="javascript:false;" frameBorder="0" scrolling="no"></iframe>'+
 							'</div>',
@@ -241,7 +237,7 @@ lightwindow.prototype = {
 			galleryAnimationHandler : false,
 			showGalleryCount : true
 		}, options || {});
-		this.duration = 0;
+		this.duration = ((11-this.options.resizeSpeed)*0.15);
 		this._setupLinks();
 		this._getScroll();
 		this._getPageDimensions();
@@ -278,7 +274,6 @@ lightwindow.prototype = {
 	//	Turn off the window
 	//
 	deactivate : function(){
-		killeditor();
 		// The window is not active
 		this.windowActive = false;
 		
@@ -489,20 +484,12 @@ lightwindow.prototype = {
 		var overlay = Element.extend(document.createElement('div'));
 		overlay.setAttribute('id', 'lightwindow_overlay');		
 		// FF Mac has a problem with putting Flash above a layer without a 100% opacity background, so we need to use a pre-made
-		if (Prototype.Browser.Gecko) {
-			overlay.setStyle({
-				backgroundImage: 'url('+this.options.overlay.presetImage+')',
-				backgroundRepeat: 'repeat',
-				height: this.pageDimensions.height+'px'
-			});			
-		} else {
-			overlay.setStyle({
-				opacity: this.options.overlay.opacity,
-				backgroundImage: 'url('+this.options.overlay.image+')',
-				backgroundRepeat: 'repeat',
-				height: this.pageDimensions.height+'px'
-			});
+		if (!Prototype.Browser.Gecko) {
+            overlay.addClassName("alt-png");
 		}
+        overlay.setStyle({
+            height: this.pageDimensions.height+'px'
+        });
 		
 		var lw = document.createElement('div');
 		lw.setAttribute('id', 'lightwindow');
@@ -1338,7 +1325,7 @@ lightwindow.prototype = {
 					method: 'get', 
 					parameters: '', 
 					onComplete: function(response) {
-						$('lightwindow_contents').insert(response.responseText);
+						$('lightwindow_contents').innerHTML += response.responseText;
 						this.resizeTo.height = $('lightwindow_contents').scrollHeight+(this.options.contentOffset.height);
 						this.resizeTo.width = $('lightwindow_contents').scrollWidth+(this.options.contentOffset.width);
 						this._processWindow();
@@ -1517,8 +1504,6 @@ lightwindow.prototype = {
 		// We are ready, lets show this puppy off!
 		this._displayLightWindow('block', 'visible');
 		this._animateLightWindow();
-		
-		this._putTinyMCE('visual_editor');
 	},
 	//
 	//  Fire off our animation handler
@@ -1555,7 +1540,7 @@ lightwindow.prototype = {
 	// 
 	_handleFinalWindowAnimation : function(delay) {
 		if (this.options.finalAnimationHandler) {
-			this.options.finalAnimationHandler().bind(this, delay);
+			this.options.finalAnimationHandler.bind(this)(delay);
 		} else {
 			this._defaultfinalWindowAnimationHandler(delay);
 		}		
@@ -1707,8 +1692,8 @@ lightwindow.prototype = {
 			this._setStatus(false);
 		} else {
 			Effect.Fade('lightwindow_loading', {
-				duration: 0,
-				delay: 0, 
+				duration: 0.75,
+				delay: 1.0, 
 				afterFinish: function() {
 					// Just in case we need some scroll goodness (this also avoids the swiss cheese effect)
 					if (this.windowType != 'image' && this.windowType != 'media' && this.windowType != 'external') {
@@ -1912,24 +1897,17 @@ lightwindow.prototype = {
 
 		// Initialize any actions
 		this._setupActions();
-	},
-	
-	// Insert TinyMCE
-	_putTinyMCE : function(reference){
-	  $$("."+reference+", #"+reference).each(function(v) {
-	    tinyMCE.execCommand('mceAddControl', true, $(v).id);
-	  });
-        }
+	}
 }
 
-/*-----------------------------------------------------------------------------------------------*/
+// Uncomment to run default lightwindow
+/*
+
+var myLightWindow = null;
+function lightwindowInit() {
+    myLightWindow = new lightwindow();
+}
 
 Event.observe(window, 'load', lightwindowInit, false);
 
-//
-//	Set up all of our links
-//
-var myLightWindow = null;
-function lightwindowInit() {
-	myLightWindow = new lightwindow();
-}
+*/
