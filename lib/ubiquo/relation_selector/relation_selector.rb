@@ -29,19 +29,18 @@ module Ubiquo
             key,
             options)
           # This part is setting needed vars for url-craft and populates
-          # array of possible values
-          related_objects = url_craft_settings object_class_name, options
+          
           # This part populate needed vars for all selectors
           humanized_field,
           selector_type,
           relation_type = define_needed_controls(
             object_class_name,
-            related_objects,
             relation_type,
             key,
             object_name,
             options)
-
+          # array of possible values
+          related_objects = url_craft_settings object_class_name, selector_type, options
           # Finally, output is generated
           if selector_type.to_sym == :select
             output = content_tag(:p, html_options) do
@@ -68,11 +67,12 @@ module Ubiquo
 
       protected
 
-      def define_needed_controls class_name, related_objects, relation_type, key, object_name, options = {}
+      def define_needed_controls class_name, relation_type, key, object_name, options = {}
         if options[:name_field].blank?
-          if class_name.constantize.respond_to?(:name)
+          sample_obj = class_name.constantize.new
+          if sample_obj.respond_to?(:name)
             humanized_field = :name
-          elsif class_name.constantize.respond_to?(:title)
+          elsif sample_obj.respond_to?(:title)
             humanized_field = :title
           else
             raise RelationSelector::NeedNameField.new("Need a name_field for #{class_name} because no one convention name found")
@@ -103,18 +103,20 @@ module Ubiquo
         return humanized_field, selector_type, relation_type
       end
 
-      def url_craft_settings class_name, options = {}
+      def url_craft_settings class_name, selector_type, options = {}
+        related_objects = []
         if options[:collection_url].blank?
           options[:related_url] = send("new_ubiquo_#{class_name.tableize.singularize}_url")
           options[:collection_url] = "ubiquo_#{class_name.tableize.pluralize}_url"
-          related_objects = if class_name.constantize.respond_to?(:locale)
-                              class_name.constantize.locale(current_locale, :ANY).all
-                            else
-                              class_name.constantize.all
+          if selector_type != :autocomplete
+            related_objects = if class_name.constantize.respond_to?(:locale)
+                                class_name.constantize.locale(current_locale, :ANY).all
+                              else
+                                class_name.constantize.all
+                              end
                             end
         else
           options[:hide_controls] = true
-          related_objects = []
         end
         options[:related_object_id_field] ||= 'id'
         return related_objects
