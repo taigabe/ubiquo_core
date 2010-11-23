@@ -35,7 +35,7 @@ table, th, td { border: none;}
 			margin-right: .8em;
 			padding-right: 1em;
 			font-size: 1em;
-			background: url(../images/ubiquo/controls_divider.gif) no-repeat right .2em;
+			background: url(../../images/ubiquo/controls_divider.gif) no-repeat right .2em;
 		}
 			#controls li:last-child {
 				margin-right: 0;
@@ -50,7 +50,7 @@ table, th, td { border: none;}
 			}
 			#controls li.ubiquo_user a {
 				padding-left: 14px;
-				background: url(../images/ubiquo/user.gif) no-repeat 0 50%;
+				background: url(../../images/ubiquo/user.gif) no-repeat 0 50%;
 			}
 			#controls li.active a, #controls li.active span {
 				color: #000;
@@ -117,13 +117,13 @@ table, th, td { border: none;}
         position: relative;
         float: left;
         width: 72%;
-		background: #FFF url(../images/ubiquo/bg_content_right.gif) repeat-y right;
+		background: #FFF url(../../images/ubiquo/bg_content_right.gif) repeat-y right;
 		border-top: 1px solid #CCC;
 		border-left: 2px solid #CCC;
 	}
 	#inner-content {
 		padding: 1.3em 1.4em 1.7em 1em;
-		background: url(../images/ubiquo/bg_content_bottom.gif) repeat-x bottom;
+		background: url(../../images/ubiquo/bg_content_bottom.gif) repeat-x bottom;
 	}
 		#content a {
 			text-decoration: underline;
@@ -224,10 +224,10 @@ table, th, td { border: none;}
 		padding: .1em 0 .1em 3.3em;
 	}
 	#page_info p.published_page {
-		background: url(../images/ubiquo/published.gif) no-repeat left center;
+		background: url(../../images/ubiquo/published.gif) no-repeat left center;
 	}
 	#page_info p.non_published_page {
-		background: url(../images/ubiquo/non_published.gif) no-repeat left center;
+		background: url(../../images/ubiquo/non_published.gif) no-repeat left center;
 	}
 		#page_info h4 a {
 			font-size: .8em;
@@ -271,7 +271,7 @@ table, th, td { border: none;}
 }
 
 #footer a.logo_ubiquo {
-	background: url("../images/ubiquo/logo_ubiquo.jpg") top left no-repeat;
+	background: url("../../images/ubiquo/logo_ubiquo.jpg") top left no-repeat;
 	width: 90px;
 	height: 30px;
 	text-indent: -1000px;
@@ -351,7 +351,7 @@ table, th, td { border: none;}
  	width: 17px;
  	height: 17px;
  	text-indent: -5000px;
- 	background: url(../images/ubiquo/updownarrows.gif) no-repeat 0 0;
+ 	background: url(../../images/ubiquo/updownarrows.gif) no-repeat 0 0;
  	cursor: move;
 }
 
@@ -372,12 +372,12 @@ table, th, td { border: none;}
 	.pagination a.bot_pag_prev {
 		left: 0;
 		padding-left: 1.6em;
-		background: url(../images/ubiquo/arrow_left.gif) no-repeat left center;
+		background: url(../../images/ubiquo/arrow_left.gif) no-repeat left center;
 	}
 	.pagination a.bot_pag_next {
 		right: 0;
 		padding-right: 1.6em;
-		background: url(../images/ubiquo/arrow_right.gif) no-repeat right center;
+		background: url(../../images/ubiquo/arrow_right.gif) no-repeat right center;
 	}
 /*--- corners ---*/
 .corner_tl, .corner_tr, .corner_bl, .corner_br {
@@ -387,22 +387,22 @@ table, th, td { border: none;}
 	height: 9px;
 }
 .corner_tl {
-	background: url(../images/ubiquo/bg_corner_tl.gif) no-repeat 0 0;
+	background: url(../../images/ubiquo/bg_corner_tl.gif) no-repeat 0 0;
 	top: -1px;
 	left: -2px;
 }
 .corner_tr {
-	background: url(../images/ubiquo/bg_corner_tr.gif) no-repeat 0 0;
+	background: url(../../images/ubiquo/bg_corner_tr.gif) no-repeat 0 0;
 	top: -1px;
 	right: 0;
 }
 .corner_bl {
-	background: url(../images/ubiquo/bg_corner_bl.gif) no-repeat 0 0;
+	background: url(../../images/ubiquo/bg_corner_bl.gif) no-repeat 0 0;
 	bottom: 0;
 	left: -2px;
 }
 .corner_br {
-	background: url(../images/ubiquo/bg_corner_br.gif) no-repeat 0 0;
+	background: url(../../images/ubiquo/bg_corner_br.gif) no-repeat 0 0;
 	bottom: 0;
 	right: 0;
 }
@@ -411,22 +411,22 @@ table, th, td { border: none;}
 	height: 6px;
 }
 .form_box .corner_tl {
-	background-image: url(../images/ubiquo/bg_form_box_tl.gif);
+	background-image: url(../../images/ubiquo/bg_form_box_tl.gif);
 	top: -2px;
 	left: -2px;
 }
 .form_box .corner_tr {
-	background-image: url(../images/ubiquo/bg_form_box_tr.gif);
+	background-image: url(../../images/ubiquo/bg_form_box_tr.gif);
 	top: -2px;
 	right: -2px;
 }
 .form_box .corner_bl {
-	background-image: url(../images/ubiquo/bg_form_box_bl.gif);
+	background-image: url(../../images/ubiquo/bg_form_box_bl.gif);
 	bottom: -2px;
 	left: -2px;
 }
 .form_box .corner_br {
-	background: url(../images/ubiquo/bg_form_box_br.gif);
+	background: url(../../images/ubiquo/bg_form_box_br.gif);
 	bottom: -2px;
 	right: -2px;
 }
@@ -461,10 +461,10 @@ table, th, td { border: none;}
 		display: block;
 	}
 	#content th a.order_asc {
-		background: url(../images/ubiquo/arrow_asc.png) no-repeat right center;
+		background: url(../../images/ubiquo/arrow_asc.png) no-repeat right center;
 	}
 	#content th a.order_desc {
-		background: url(../images/ubiquo/arrow_desc.png) no-repeat right center;
+		background: url(../../images/ubiquo/arrow_desc.png) no-repeat right center;
 	}
 #content td {
 	padding: .5em;
@@ -740,10 +740,10 @@ form textarea {
 	width: 23.5%;
 }
 #template .draggable_target {
-	background: #E9E9E9 url(../images/ubiquo/bg_dragdrop.jpg) no-repeat center center;
+	background: #E9E9E9 url(../../images/ubiquo/bg_dragdrop.jpg) no-repeat center center;
 }
 #template .non_draggable_target {
-	background: #F7F7F7 url(../images/ubiquo/bg_no_dragdrop.jpg) no-repeat center center;
+	background: #F7F7F7 url(../../images/ubiquo/bg_no_dragdrop.jpg) no-repeat center center;
 }
 .top_options p {
 	margin-bottom: .4em;
@@ -767,16 +767,16 @@ li.component {
 	padding: 4.2em 1em 0 .7em;
 	margin: 0 auto;
 	font-size: 1em;
-	background: url(../images/ubiquo/component.jpg) no-repeat;
+	background: url(../../images/ubiquo/component.jpg) no-repeat;
 }
 ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
-	background: url(../images/ubiquo/component_error.jpg) no-repeat;
+	background: url(../../images/ubiquo/component_error.jpg) no-repeat;
 }
 #sidebar li.component {
 	width: 23em;
 	height: 4.3em;
 	padding: 1.5em 1em 0 .7em;
-	background-image: url(../images/ubiquo/long_component.jpg);
+	background-image: url(../../images/ubiquo/long_component.jpg);
 }
 	li.component a {
 		position: absolute;
@@ -787,7 +787,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 		width: 14px;
 		height: 15px;
 		text-indent: -5000px;
-		background: url(../images/ubiquo/trash_icon.jpg) no-repeat;
+		background: url(../../images/ubiquo/trash_icon.jpg) no-repeat;
 	}
 	#central li.component a.edit {
 		right: 2.4em;
@@ -799,7 +799,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 		width: 17px;
 		height: 17px;
 		text-indent: -5000px;
-		background: url(../images/ubiquo/cross.gif) no-repeat;
+		background: url(../../images/ubiquo/cross.gif) no-repeat;
 	}
 	li.component a.editor_cancel {
 		position: static;
@@ -879,37 +879,37 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 }
 
 #sidebar .version .se {
-	background: transparent url("../images/ubiquo/corner_pt_se.gif") no-repeat scroll 0 0;
+	background: transparent url("../../images/ubiquo/corner_pt_se.gif") no-repeat scroll 0 0;
 }
 #sidebar .version_selected .se {
-	background: transparent url("../images/ubiquo/corner_pt_se2.gif") no-repeat scroll 0 0;
+	background: transparent url("../../images/ubiquo/corner_pt_se2.gif") no-repeat scroll 0 0;
 }
 
 #sidebar .version .sd {
-	background: transparent url("../images/ubiquo/corner_pt_sd.gif") no-repeat scroll 0 0;
+	background: transparent url("../../images/ubiquo/corner_pt_sd.gif") no-repeat scroll 0 0;
 }
 #sidebar .version_selected .sd {
-	background: transparent url("../images/ubiquo/corner_pt_sd2.gif") no-repeat scroll 0 0;
+	background: transparent url("../../images/ubiquo/corner_pt_sd2.gif") no-repeat scroll 0 0;
 }
 
 #sidebar .version .ie {
-	background: transparent url("../images/ubiquo/corner_pt_ie.gif") no-repeat scroll 0 0;
+	background: transparent url("../../images/ubiquo/corner_pt_ie.gif") no-repeat scroll 0 0;
 }
 #sidebar .version_selected .ie {
-	background: transparent url("../images/ubiquo/corner_pt_ie2.gif") no-repeat scroll 0 0;
+	background: transparent url("../../images/ubiquo/corner_pt_ie2.gif") no-repeat scroll 0 0;
 }
 
 #sidebar .version .id {
-	background: url("../images/ubiquo/corner_pt_id.gif") no-repeat scroll 0 0;
+	background: url("../../images/ubiquo/corner_pt_id.gif") no-repeat scroll 0 0;
 }
 
 #sidebar .version_selected .id {
-	background: url("../images/ubiquo/corner_pt_id2.gif") no-repeat scroll 0 0;
+	background: url("../../images/ubiquo/corner_pt_id2.gif") no-repeat scroll 0 0;
 }
 
 #sidebar .version p.name,
 #sidebar .version_selected p.name {
-	background:transparent url("../images/ubiquo/icona_wiki.gif") no-repeat scroll left top;
+	background:transparent url("../../images/ubiquo/icona_wiki.gif") no-repeat scroll left top;
 	clear: both;
 	font-size: 14px;
 	font-weight: bold;
@@ -1093,7 +1093,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 
 .preview ul.attachment li {
 	list-style-type: none;
-	background: url("../images/ubiquo/attachment.gif") left center no-repeat;
+	background: url("../../images/ubiquo/attachment.gif") left center no-repeat;
 	padding-left: 17px;
 }
 
@@ -1107,7 +1107,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 		position: relative;
 		overflow: hidden;
 		padding: 2em;
-		background: url(../images/ubiquo/bg_lightwindow_long.png) no-repeat left top;
+		background: url(../../images/ubiquo/bg_lightwindow_long.png) no-repeat left top;
 	}
 		#lightwindow_contents {
 			background: none;
@@ -1125,7 +1125,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 				width: 19px;
 				height: 19px;
 				text-indent: -5000px;
-				background: url(../images/ubiquo/close.jpg) no-repeat 0 0;
+				background: url(../../images/ubiquo/close.jpg) no-repeat 0 0;
 			}
 			#lightwindow_contents input {
 				display: block;
@@ -1163,7 +1163,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 					width: 17px;
 					height: 17px;
 					text-indent: -5000px;
-					background: url(../images/ubiquo/updownarrows.gif) no-repeat;
+					background: url(../../images/ubiquo/updownarrows.gif) no-repeat;
 					cursor: move;
 				}
 				#lightwindow_contents fieldset li a.view {
@@ -1194,7 +1194,7 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 				}
 	#lightwindow_stage .inferior {
 		height: 4em;
-		background: url(../images/ubiquo/bg_lightwindow.png) no-repeat left bottom;
+		background: url(../../images/ubiquo/bg_lightwindow.png) no-repeat left bottom;
 	}
 
 /*-------------- Clearfix --------------*/

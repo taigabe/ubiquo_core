@@ -3,11 +3,33 @@ module Ubiquo
     module CoreUbiquoHelpers
 
       # Adds the default stylesheet tags needed for ubiquo
-      def ubiquo_stylesheet_link_tags(files=['ubiquo','ubiquo_application','lightwindow'])
-        files.delete 'lightwindow' unless File.exists?(Rails.root.join('public', 'stylesheets', 'lightwindow.css'))
-        files.collect do |css|
-          stylesheet_link_tag "#{css}", :media => "all"
-        end.join "\n"
+      # options:
+      #   color: by default is red, but you can replace it calling another color
+      #          css file
+      #   rest of options: this helper doesn't user more options, the rest are
+      #                    send to stylesheet_link_tag generic helper
+      def ubiquo_stylesheet_link_tag(*sources)
+        stylesheets_dir = ActionView::Helpers::AssetTagHelper::STYLESHEETS_DIR + '/ubiquo'
+        options = sources.extract_options!.stringify_keys
+        color = options.delete("color") || :red
+        default_sources = []
+        if sources.include?(:defaults)
+          default_sources += [:ubiquo, :ubiquo_application, :lightwindow, :listings, color]
+          default_sources += collect_asset_files("#{stylesheets_dir}", "plugins/*.css")
+        end
+        ubiquo_sources = (sources + default_sources).collect do |source|
+          next if source == :defaults
+          "ubiquo/#{source}"
+        end.compact
+        output = stylesheet_link_tag(ubiquo_sources, options)
+        if sources.include?(:defaults)
+          output += <<-eos
+            <!--[if lte IE 6]>
+              #{stylesheet_link_tag 'ubiquo/ubiquo_ie6'}
+            <![endif]-->
+          eos
+        end
+        output
       end
 
       # return javascripts with ubiquo path.

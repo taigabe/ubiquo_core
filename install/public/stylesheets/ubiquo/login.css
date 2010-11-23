@@ -15,7 +15,7 @@ p {
 /*-------------- Capsa formulari --------------*/
 .form_box {
 	padding: 0;
-	background-image: url(../images/ubiquo/bg_login_right.gif);
+	background-image: url(../../images/ubiquo/bg_login_right.gif);
 	background-repeat: repeat-y;
 	background-position: right;
 	border-width: 5px;
@@ -24,7 +24,7 @@ p {
 }
 .inner_form_box {
 	padding: 2em 3em 2.8em 2em;
-	background: url(../images/ubiquo/bg_login_bottom.gif) repeat-x bottom;
+	background: url(../../images/ubiquo/bg_login_bottom.gif) repeat-x bottom;
 }
 form {
 	margin: 2em 0 0;
@@ -79,7 +79,7 @@ form {
 		}   
 		
 		.form_buttons input.buttons {
-			background: url(/images/ubiquo/bg_button.png) no-repeat;
+			background: url(../../images/ubiquo/bg_button.png) no-repeat;
 			text-align: center;
 			width: 100px;
 			height: 29px;
@@ -93,22 +93,22 @@ form {
 	height: 19px;
 }
 .form_box .corner_tl {
-	background-image: url(../images/ubiquo/bg_login_tl.gif);
+	background-image: url(../../images/ubiquo/bg_login_tl.gif);
 	top: -5px;
 	left: -5px;
 }
 .form_box .corner_tr {
-	background-image: url(../images/ubiquo/bg_login_tr.gif);
+	background-image: url(../../images/ubiquo/bg_login_tr.gif);
 	top: -5px;
 	right: 0;
 }
 .form_box .corner_bl {
-	background-image: url(../images/ubiquo/bg_login_bl.gif);
+	background-image: url(../../images/ubiquo/bg_login_bl.gif);
 	bottom: 0;
 	left: -5px;
 }
 .form_box .corner_br {
-	background-image: url(../images/ubiquo/bg_login_br.gif);
+	background-image: url(../../images/ubiquo/bg_login_br.gif);
 	bottom: 0;
 	right: 0;
 }
