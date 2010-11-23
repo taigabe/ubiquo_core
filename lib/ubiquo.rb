@@ -1,3 +1,4 @@
+require 'ubiquo/jruby_sqlite_extension'
 require 'ubiquo/version'
 require 'ubiquo/extensions'
 require 'ubiquo/helpers'
