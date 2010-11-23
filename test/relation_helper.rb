@@ -19,7 +19,7 @@ def create_relation_test_model_backend
     t.integer :test_only_model_id #for belongs_to with the same class name
     t.integer :arbitrary_name_id #for belongs to with different class
     #name
-    t.string :name
+    t.string :title
     t.string :arbitrary_name
   end
 

@@ -40,8 +40,8 @@ class RelationSelectorTest < ActionView::TestCase
   test "should_display_owned_value" do
     #Display all options with the instance choice selected
     obj1 = TestOnlyModel.create(:name => 'first')
-    obj2 = TestOnlyModelTwo.create(:name => 'second')
-    obj3 = TestOnlyModelTwo.create(:name => 'third')
+    obj2 = TestOnlyModelTwo.create(:title => 'second')
+    obj3 = TestOnlyModelTwo.create(:title => 'third')
     
     obj1.test_only_model_twos << obj2
     
@@ -58,9 +58,9 @@ class RelationSelectorTest < ActionView::TestCase
   test "should_display_owned_values" do
     #Display all options with the instance choices selected
     obj1 = TestOnlyModel.create(:name => 'first')
-    obj2 = TestOnlyModelTwo.create(:name => 'second')
-    obj3 = TestOnlyModelTwo.create(:name  => 'third')
-    obj4 = TestOnlyModelTwo.create(:name => 'fourth')
+    obj2 = TestOnlyModelTwo.create(:title => 'second')
+    obj3 = TestOnlyModelTwo.create(:title  => 'third')
+    obj4 = TestOnlyModelTwo.create(:title => 'fourth')
 
     obj1.test_only_model_twos << obj2
     obj1.test_only_model_twos << obj3
@@ -79,8 +79,8 @@ class RelationSelectorTest < ActionView::TestCase
   
   test "should_use_desired_name" do
     obj1 = TestOnlyModel.create(:name => 'first')
-    obj2 = TestOnlyModelTwo.create(:arbitrary_name => 'second', :name => 'no_name')
-    obj3 = TestOnlyModelTwo.create(:arbitrary_name => 'third', :name => 'no_name')
+    obj2 = TestOnlyModelTwo.create(:arbitrary_name => 'second', :title => 'no_name')
+    obj3 = TestOnlyModelTwo.create(:arbitrary_name => 'third', :title => 'no_name')
     
     obj1.test_only_model_two = obj2
     obj1.save
@@ -96,6 +96,52 @@ class RelationSelectorTest < ActionView::TestCase
       assert_select lk.first, 'option' do |opt|
         opt.each do |s_opt|
           assert_equal obj2.arbitrary_name, s_opt.children.first.content if s_opt['selected'].present?
+        end
+      end
+    end
+  end
+
+  test "should_use_default_field_as_title" do
+    obj1 = TestOnlyModel.create(:name => 'first')
+    obj2 = TestOnlyModelTwo.create(:arbitrary_name => 'second', :title => 'no_name')
+    obj3 = TestOnlyModelTwo.create(:arbitrary_name => 'third', :title => 'no_name')
+    
+    obj1.test_only_model_two = obj2
+    obj1.save
+    
+    r = relation_selector('test_only_model',
+      :test_only_model_two,
+      :object => obj1,
+      :type => :select)
+
+    doc = HTML::Document.new(r)
+    assert_select doc.root, 'select' do |lk|
+      assert_select lk.first, 'option' do |opt|
+        opt.each do |s_opt|
+          assert_equal obj2.title, s_opt.children.first.content if s_opt['selected'].present?
+        end
+      end
+    end
+  end
+
+  test "should_use_default_field_as_name" do
+    obj1 = TestOnlyModelTwo.create(:title => 'first')
+    obj2 = TestOnlyModel.create(:arbitrary_name => 'second', :name => 'no_name')
+    obj3 = TestOnlyModel.create(:arbitrary_name => 'third', :name => 'no_name')
+    
+    obj1.test_only_model = obj2
+    obj1.save
+    
+    r = relation_selector('test_only_model_two',
+      :test_only_model,
+      :object => obj1,
+      :type => :select)
+
+    doc = HTML::Document.new(r)
+    assert_select doc.root, 'select' do |lk|
+      assert_select lk.first, 'option' do |opt|
+        opt.each do |s_opt|
+          assert_equal obj2.name, s_opt.children.first.content if s_opt['selected'].present?
         end
       end
     end
