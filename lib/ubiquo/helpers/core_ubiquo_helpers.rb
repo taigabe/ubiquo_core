@@ -32,14 +32,21 @@ module Ubiquo
         output
       end
 
-      # return javascripts with ubiquo path.
-      def ubiquo_javascript_include_tags(files=['ubiquo', 'lightwindow'])
-         files.delete 'lightwindow' unless File.exists?(Rails.root.join('public', 'javascripts', 'ubiquo', 'lightwindow.js'))
-        files.collect do |js|
-          javascript_include_tag "ubiquo/#{js}"
-        end.join "\n"
+      def ubiquo_javascript_include_tag(*sources)
+        javascripts_dir = ActionView::Helpers::AssetTagHelper::JAVASCRIPTS_DIR + '/ubiquo'
+        options = sources.extract_options!.stringify_keys
+        default_sources = []
+        if sources.include?(:defaults)
+          default_sources += [:ubiquo, :lightwindow]
+          default_sources += collect_asset_files("#{javascripts_dir}", "plugins/*.js")
+        end
+        ubiquo_sources = (sources + default_sources).collect do |source|
+          next if source == :defaults
+          "ubiquo/#{source}"
+        end.compact
+        javascript_include_tag(ubiquo_sources, options)
       end
-
+      
       # surrounds the block between the specified box.
       def box(name, options={}, &block)
         options.merge!(:body=>capture(&block))
