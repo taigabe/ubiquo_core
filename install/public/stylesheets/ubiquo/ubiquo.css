@@ -290,11 +290,11 @@ table, th, td { border: none;}
 	border: 1px solid #C2D2D1;
         clear: both;
 }
-#feedback_error, #feedback_notice {
+#feedback_error, #feedback_notice, #feedback_warning {
 	margin: .67em 0;
 	padding: .67em;
 }
-#feedback_error, #feedback_notice {
+#feedback_error, #feedback_notice,#feedback_warning {
 	font-size: 1.5em;
 	font-weight: bold;
 }
@@ -310,6 +310,13 @@ table, th, td { border: none;}
 	background-color: #D4EFD0;
 	border: 1px solid #4CB53B;
 }
+
+#feedback_warning {
+	color: #e7be00;
+	border: 1px solid #e7be00;
+        background-color: #fcf7db;
+}
+
 #errorExplanation {
 	margin: 0 0 1em;
 	padding: 1em;
