@@ -24,21 +24,22 @@ module Ubiquo
 
         if object.respond_to?(key)
           # This part checks reflections
-          relation_type,
-          object_class_name = discover_relation_by_reflections(object,
+          relation_type, object_class_name = discover_relation_by_reflections(
+            object,
             key,
-            options)
+            options
+          )
           # This part is setting needed vars for url-craft and populates
-          
+
           # This part populate needed vars for all selectors
           humanized_field,
-          selector_type,
-          relation_type = define_needed_controls(
+          selector_type, relation_type = define_needed_controls(
             object_class_name,
             relation_type,
             key,
             object_name,
-            options)
+            options
+          )
           # array of possible values
           related_objects = url_craft_settings object_class_name, selector_type, options
           # Finally, output is generated
@@ -93,10 +94,10 @@ module Ubiquo
           options[:initial_text_field_tag_name] = "#{object_name}[#{options[:key_field]}][]"
         else
           options[:key_field] = if options[:real_foreign_key].present?
-                                  options[:real_foreign_key]
-                                else
-                                  "#{key.to_s.singularize}_id"
-                                end
+            options[:real_foreign_key]
+          else
+            "#{key.to_s.singularize}_id"
+          end
           options[:limited_elements] = 1
           options[:initial_text_field_tag_name] = "#{object_name}[#{options[:key_field]}]"
         end
@@ -110,11 +111,12 @@ module Ubiquo
           options[:collection_url] = "ubiquo_#{class_name.tableize.pluralize}_url"
           if selector_type != :autocomplete
             related_objects = if class_name.constantize.respond_to?(:locale)
-                                class_name.constantize.locale(current_locale, :ANY).all
-                              else
-                                class_name.constantize.all
-                              end
-                            end
+              # TODO this should be in a connector
+              class_name.constantize.locale(current_locale, :all).all
+            else
+              class_name.constantize.all
+            end
+          end
         else
           options[:hide_controls] = true
         end
@@ -146,11 +148,13 @@ module Ubiquo
         output = content_tag(:ul, :class => 'check_list') do
           related_objects.map do |ro|
             content_tag(:li) do
-              check_box_tag("#{object_name}[#{options[:key_field]}][]", ro.id, 
+              check_box_tag("#{object_name}[#{options[:key_field]}][]", ro.id,
                 current_related_objects.include?(ro.id),
                 :id => "#{object_name}_#{options[:key_field]}_#{ro.id}") +
-                label_tag("#{object_name}_#{options[:key_field]}_#{ro.id}",
-                          ro.send(humanized_field))
+                label_tag(
+                  "#{object_name}_#{options[:key_field]}_#{ro.id}",
+                  ro.send(humanized_field)
+                )
             end
           end.join
         end
@@ -163,7 +167,7 @@ module Ubiquo
         objects_for_select = related_objects.collect { |cat|
           [cat.send(humanized_field), cat.id]
         }
-        output = select_tag("#{object_name}[#{options[:key_field]}]", 
+        output = select_tag("#{object_name}[#{options[:key_field]}]",
           options_for_select(objects_for_select,
             :selected => (object.send(key).id rescue '')),
           { :id => "#{object_name}_#{options[:key_field]}_select" })
@@ -174,23 +178,25 @@ module Ubiquo
       def relation_autocomplete_selector(object, object_name, key, related_objects, humanized_field, relation_type, options = {})
         url_params = {:format => :js}
         url_params.merge!(options[:url_params]) if options[:url_params].present?
-        autocomplete_options = { 
+        autocomplete_options = {
           :url => send(options[:collection_url], url_params),
-          :current_values => open_struct_from_model(object.send(key),
-                                                    options[:related_object_id_field] || 'id',
-                                                    humanized_field),
+          :current_values => open_struct_from_model(
+            object.send(key),
+            options[:related_object_id_field] || 'id',
+            humanized_field
+          ),
           :style => options[:autocomplete_style] || "tag"
         }
         options[:add_callback] = if options[:add_callback].blank?
-                                   'undefined'
-                                 else
-                                   "'#{options[:add_callback]}'"
-                                 end
+          'undefined'
+        else
+          "'#{options[:add_callback]}'"
+        end
         options[:remove_callback] = if options[:remove_callback].blank?
-                                      'undefined'
-                                    else
-                                      "'#{options[:remove_callback]}'"
-                                    end
+          'undefined'
+        else
+          "'#{options[:remove_callback]}'"
+        end
         js_code =<<-JS
           document.observe('dom:loaded', function() {
             var autocomplete = new RelationAutoCompleteSelector(
@@ -207,17 +213,20 @@ module Ubiquo
             )
           });
         JS
-        output = javascript_tag(js_code) +
-          text_field_tag(options[:initial_text_field_tag_name], "",
-          :id => "#{object_name}_#{options[:key_field]}_autocomplete")
+        output = javascript_tag(js_code) + text_field_tag(
+          options[:initial_text_field_tag_name], "",
+          :id => "#{object_name}_#{options[:key_field]}_autocomplete"
+        )
         output << relation_controls(options)
       end
 
       def open_struct_from_model(objects, id_field, key_field)
         ret = []
         objects.to_a.each do |obj|
-          ret << OpenStruct.new(id_field.to_sym => obj.send(id_field),
-                                key_field.to_sym => obj.send(key_field))
+          ret << OpenStruct.new(
+            id_field.to_sym => obj.send(id_field),
+            key_field.to_sym => obj.send(key_field)
+          )
         end
         ret.to_json
       end
@@ -229,9 +238,11 @@ module Ubiquo
             :class => "category_selector_new") +
             content_tag(:div, :class => "add_new_category", :style => "display:none") do
             text_field_tag("new_#{object_name}_#{key}", "", :id => "new_#{object_name}_#{key}") +
-              link_to(t("ubiquo.category_selector.add_element"),
-                      "",
-                      :class => "add_new_category_link")
+              link_to(
+                t("ubiquo.category_selector.add_element"),
+                "",
+                :class => "add_new_category_link"
+              )
           end
         end
       end
