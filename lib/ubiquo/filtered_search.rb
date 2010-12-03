@@ -51,7 +51,21 @@ module Ubiquo
       def paginated_filtered_search(params = {}, options = {})
         order_by =  params[:order_by] || options[:order_by] || "#{table_name}.id"
         sort_order = params[:sort_order] || options[:sort_order] || 'desc'
+
+        order_by_segments = order_by.split('.')
+
+        # To deal with relation columns. Ex: :'author.name'
+        # We need to deal with a special case with categories
+        if order_by_segments.size > 2
+          table, assoc, column = order_by_segments
+          assoc_table = (self.reflections[assoc.to_sym] ||
+                         self.reflections[assoc.pluralize.to_sym]).table_name
+          options[:include] = assoc_table == 'categories' ? assoc.pluralize : assoc
+          order_by = "#{assoc_table}.#{column}"
+        end
+
         options[:order] = "#{order_by} #{sort_order}"
+
         ubiquo_paginate(:page => params[:page]) do
           filtered_search params, options.except(:order_by, :sort_order)
         end

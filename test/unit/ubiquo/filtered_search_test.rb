@@ -74,6 +74,24 @@ class FilteredSearchTest < ActiveSupport::TestCase
     @m.paginated_filtered_search(:page => page_param) {}
   end
 
+  test 'Should support order_by when using relation columns' do
+    @m.class_eval { cattr_accessor :reflections; @@reflections = {} }
+    @m.reflections = { :author => stub(:table_name => 'authors') }
+    params = { :order_by => 'articles.author.name', :sort_order => 'desc' }
+    options = { :order => 'authors.name desc', :include => 'author' }
+    @m.expects(:filtered_search).with(params, options).returns([])
+    @m.paginated_filtered_search(params)
+  end
+
+  test 'Should support order_by when using relation columns with categories' do
+    @m.class_eval { cattr_accessor :reflections; @@reflections = {} }
+    @m.reflections = { :section => stub(:table_name => 'categories') }
+    params = { :order_by => 'articles.section.name', :sort_order => 'desc' }
+    options = { :order => 'categories.name desc', :include => 'sections' }
+    @m.expects(:filtered_search).with(params, options).returns([])
+    @m.paginated_filtered_search(params)
+  end
+
   test 'Should respect enabled scopes for different models' do
     @m.class_eval do
       filtered_search_scopes :defaults => false

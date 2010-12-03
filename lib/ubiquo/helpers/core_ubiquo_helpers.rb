@@ -106,7 +106,7 @@ module Ubiquo
         concat(render(:partial => "shared/ubiquo/preview_box", :locals => locals))
       end
 
-      # converts symbol to ubiquo standard table head with order_by and sort_order strings 
+      # converts symbol to ubiquo standard table head with order_by and sort_order strings
       def ubiquo_table_headerfy(column, klass = nil)
         name = klass.nil? ? params[:controller].split("/").last.tableize : klass
 
@@ -121,14 +121,33 @@ module Ubiquo
             end
             #name.classify.human_attribute_name(column.to_s.humanize)
             #t("#{name.classify}|#{column.to_s.humanize}").humanize
-            link_to name.classify.constantize.human_attribute_name(column.to_s), 
-                    link, 
-                    { :class => (params[:order_by] == "#{name.pluralize}.#{column.to_s}" ? 
+
+
+            column_segments = column.to_s.split('.')
+            column_header = if column_segments.size > 1
+              begin
+                # Here we are dealing with relation columns
+                assoc_model = column_segments.first.classify.constantize
+                column_name = assoc_model.human_attribute_name(column_segments.last)
+                assoc_model.human_name.downcase
+              rescue NameError
+                # Here we are dealing with relation columns using categories
+                category_name = CategorySet.find_by_key(column_segments.first).name
+                category_name
+              end
+            else
+              name.classify.constantize.human_attribute_name(column.to_s)
+            end
+
+            link_to column_header,
+                    link,
+                    { :class => (params[:order_by] == "#{name.pluralize}.#{column.to_s}" ?
                                 (params[:sort_order] == "asc" ? "order_desc" : "order_asc") : "order" )}
           when String
             column.humanize
         end
       end
+
     end
   end
 end
