@@ -202,7 +202,7 @@ module Ubiquo
       def deprecation_message
         caller_method_name = caller.first.scan /`([a-z_]+)'$/
         msg = "DEPRECATION WARNING: #{caller_method_name} will be removed in 0.9.0. See http://guides.ubiquo.me/edge/ubiquo_core.html for more information."
-        ActiveSupport::Deprecation.warn(msg)
+        ActiveSupport::Deprecation.warn(msg, caller(2))
       end
 
     end
