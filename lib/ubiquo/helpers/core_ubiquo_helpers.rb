@@ -2,6 +2,8 @@ module Ubiquo
   module Helpers
     module CoreUbiquoHelpers
 
+      class AssociationNotFound < StandardError; end
+
       # Adds the default stylesheet tags needed for ubiquo
       # options:
       #   color: by default is red, but you can replace it calling another color
@@ -46,7 +48,7 @@ module Ubiquo
         end.compact
         javascript_include_tag(ubiquo_sources, options)
       end
-      
+
       # surrounds the block between the specified box.
       def box(name, options={}, &block)
         options.merge!(:body=>capture(&block))
@@ -122,8 +124,7 @@ module Ubiquo
             #name.classify.human_attribute_name(column.to_s.humanize)
             #t("#{name.classify}|#{column.to_s.humanize}").humanize
 
-
-            column_segments = column.to_s.split('.')
+            column_segments = column.to_s.split('.') # Example column: :"author.name"
             column_header = if column_segments.size > 1
               begin
                 # Here we are dealing with relation columns
@@ -132,8 +133,10 @@ module Ubiquo
                 assoc_model.human_name.downcase
               rescue NameError
                 # Here we are dealing with relation columns using categories
-                category_name = CategorySet.find_by_key(column_segments.first).name
-                category_name
+                category = CategorySet.find_by_key(column_segments.first)
+                msg = "Couldn't find #{column_segments.first} association for #{column_name} column."
+                raise AssociationNotFound, msg unless category
+                category.name
               end
             else
               name.classify.constantize.human_attribute_name(column.to_s)
