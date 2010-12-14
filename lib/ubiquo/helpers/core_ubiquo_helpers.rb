@@ -55,18 +55,18 @@ module Ubiquo
         concat(render(:partial => "shared/ubiquo/boxes/#{name}", :locals => options), block.binding)
       end
 
-      # return HTML code for required ubiquo image
-      def ubiquo_image_tag(name, options={})
-        options[:src] ||= ubiquo_image_path(name)
-        options[:alt] ||= "Ubiquo image"
-        tag('img', options)
+      # This is a wrapper for image_tag for images inside the "ubiquo" directory
+      # This folder can be changed using the :ubiquo_path configuration option
+      def ubiquo_image_tag(source, options={})
+        image_tag(ubiquo_image_path(source), options)
       end
 
-      # return path for required ubiquo image
+      # Returns the path for an ubiquo image
       def ubiquo_image_path(name)
-        "/images/ubiquo/#{name}"
+        "#{Ubiquo::Config.get(:ubiquo_path)}/#{name}"
       end
 
+      # Returns a "tick" or "cross" image, useful to display boolean values
       def ubiquo_boolean_image(value)
         ubiquo_image_tag(value ? 'ok.gif' : 'ko.gif')
       end
