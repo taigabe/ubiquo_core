@@ -33,8 +33,8 @@ Rails::Generator::Commands::Destroy.send(:include, Ubiquo::Extensions::RailsGene
 Rails::Generator::Commands::List.send(:include, Ubiquo::Extensions::RailsGenerator::List)
 
 if Rails.env.test?
-  ActiveSupport::TestCase.send(:include, Ubiquo::Extensions::TestImprovements)
-  ActionController::TestCase.send(:include, Ubiquo::Extensions::TestImprovements)
+  ActiveSupport::TestCase.send(:include, Ubiquo::Extensions::TestCase)
+  ActionController::TestCase.send(:include, Ubiquo::Extensions::TestCase)
 end
 
 ActiveRecord::Base.send(:include, Ubiquo::Extensions::ConfigCaller)
