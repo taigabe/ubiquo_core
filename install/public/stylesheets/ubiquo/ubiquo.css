@@ -1208,12 +1208,12 @@ ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
 	width: 780px;
 }
 #lightwindow.wide #ubiquo_lb {
-    background: url(../images/ubiquo/bg_lightwindow_long_wide.png) no-repeat left top;
+    background: url(../../images/ubiquo/bg_lightwindow_long_wide.png) no-repeat left top;
     padding-bottom:0px;
 }
 #lightwindow.wide #lightwindow_stage .inferior {
     height: 3em;
-    background: url(../images/ubiquo/bg_lightwindow_wide.png) no-repeat left bottom;
+    background: url(../../images/ubiquo/bg_lightwindow_wide.png) no-repeat left bottom;
 }
 
 /*-------------- Clearfix --------------*/
