@@ -9,7 +9,9 @@ class Ubiquo::AdaptersTest < ActiveSupport::TestCase
     end
     
     ActiveRecord::Base.connection.drop_sequence(:test)
-    assert_raise ActiveRecord::StatementInvalid do
+    exceptions = [ActiveRecord::StatementInvalid]
+    exceptions << ActiveRecord::JDBCError if ActiveRecord.const_defined?(:JDBCError)
+    assert_raise *exceptions do
       ActiveRecord::Base.connection.next_val_sequence(:test)
     end
   end
