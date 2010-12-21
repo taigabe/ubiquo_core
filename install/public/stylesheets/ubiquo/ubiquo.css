@@ -219,26 +219,6 @@ table, th, td { border: none;}
 		#date_filter_content input.filter_submit {
 			float: right;
 		}
-	/*--- sidebar: maquetacio ---*/
-	#page_info p {
-		padding: .1em 0 .1em 3.3em;
-	}
-	#page_info p.published_page {
-		background: url(../../images/ubiquo/published.gif) no-repeat left center;
-	}
-	#page_info p.non_published_page {
-		background: url(../../images/ubiquo/non_published.gif) no-repeat left center;
-	}
-		#page_info h4 a {
-			font-size: .8em;
-		}
-		#page_info p a {
-			font-size: .9em;
-		}
-	#page_info .button-to div {
-		text-align: right;
-		font-size: 1.2em;
-	}
 /*--- footer ---*/
 
 #footer {
@@ -726,104 +706,6 @@ form textarea {
 .relations_list li a.change {
 	margin-left: .7em;
 }
-
-/*--- Maquetació ---*/
-.column_4, .column_3, .column_2, .column_1 {
-	margin: 0 1.5% 1.5% 0;
-}
-.column_4 {
-	width: 98.5%;
-}
-.column_3, .column_2, .column_1 {
-	float: left;
-}
-.column_3 {
-	width: 73.5%;
-}
-.column_2 {
-	width: 48.5%;
-}
-.column_1 {
-	width: 23.5%;
-}
-#template .draggable_target {
-	background: #E9E9E9 url(../../images/ubiquo/bg_dragdrop.jpg) no-repeat center center;
-}
-#template .non_draggable_target {
-	background: #F7F7F7 url(../../images/ubiquo/bg_no_dragdrop.jpg) no-repeat center center;
-}
-.top_options p {
-	margin-bottom: .4em;
-	font-size: 1.1em;
-}
-	.top_options input {
-		vertical-align: middle;
-	}
-	ul.block_type_holder {
-		min-height: 15em;
-		padding: 1em;
-		border: .1em solid #B4B4B4;
-	}
-	.column_3 ul.block_type_holder, .column_2 ul.block_type_holder, .column_1 ul.block_type_holder {
-		min-height: 28em;
-	}
-li.component {
-	position: relative;
-	width: 13.9em;
-	height: 5.2em;
-	padding: 4.2em 1em 0 .7em;
-	margin: 0 auto;
-	font-size: 1em;
-	background: url(../../images/ubiquo/component.jpg) no-repeat;
-}
-ul.block_type_holder li.error { /* ie6 no accepta li.component.error */
-	background: url(../../images/ubiquo/component_error.jpg) no-repeat;
-}
-#sidebar li.component {
-	width: 23em;
-	height: 4.3em;
-	padding: 1.5em 1em 0 .7em;
-	background-image: url(../../images/ubiquo/long_component.jpg);
-}
-	li.component a {
-		position: absolute;
-		top: .6em;
-	}
-	li.component a.delete {
-		left: .6em;
-		width: 14px;
-		height: 15px;
-		text-indent: -5000px;
-		background: url(../../images/ubiquo/trash_icon.jpg) no-repeat;
-	}
-	#central li.component a.edit {
-		right: 2.4em;
-		font-size: 1.2em;
-		text-decoration: none;
-	}
-	li.component a.move {
-		right: .9em;
-		width: 17px;
-		height: 17px;
-		text-indent: -5000px;
-		background: url(../../images/ubiquo/cross.gif) no-repeat;
-	}
-	li.component a.editor_cancel {
-		position: static;
-	}
-	#sidebar li.component a.move {
-		top: 1.6em;
-		left: .3em;
-	}
-	#central li.component h4 {
-		color: #572F14;
-		text-align: center;
-		font-size: 1.5em;
-		font-weight: bold;
-	}
-	#central li.component form input {
-		display: inline;
-	}
 
 
 /*--- Translation sidebar box ---*/
