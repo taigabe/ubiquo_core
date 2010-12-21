@@ -10,7 +10,6 @@ module Ubiquo
     autoload :Array,                 'ubiquo/extensions/array'
     autoload :String,                'ubiquo/extensions/string'
     autoload :TestImprovements,      'ubiquo/extensions/test_improvements'
-    autoload :FiltersHelper,         'ubiquo/extensions/filters_helper'
     autoload :ActionView,            'ubiquo/extensions/action_view'
     autoload :ConfigCaller,          'ubiquo/extensions/config_caller'
 
@@ -22,7 +21,6 @@ end
 
 ActionController::Routing::RouteSet::Mapper.send(:include, Ubiquo::Extensions::Routing)
 Ubiquo::Extensions::UbiquoAreaController.append_include(Ubiquo::Extensions::DateParser)
-Ubiquo::Extensions::UbiquoAreaController.append_helper(Ubiquo::Extensions::FilterHelpers)
 ActionView::Base.field_error_proc = Ubiquo::Extensions::ActionView.ubiquo_field_error_proc
 ActiveRecord::Base.send(:extend, Ubiquo::Extensions::ActiveRecord)
 Array.send(:include, Ubiquo::Extensions::Array)

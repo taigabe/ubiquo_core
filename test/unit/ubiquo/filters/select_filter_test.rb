@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-require File.dirname(__FILE__) + "/../../../../test_helper.rb"
-require 'ubiquo/extensions/filter_helpers/select_filter'
+require File.dirname(__FILE__) + "/../../../test_helper.rb"
+require 'ubiquo/filters/select_filter'
 
-class SelectFilterTest < Ubiquo::Extensions::FilterHelpers::UbiquoFilterTestCase
+class SelectFilterTest < Ubiquo::Filters::UbiquoFilterTestCase
 
   def setup
     @filter = SelectFilter.new(@model, @context)

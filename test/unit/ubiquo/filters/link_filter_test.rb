@@ -1,7 +1,7 @@
-require File.dirname(__FILE__) + "/../../../../test_helper.rb"
-require 'ubiquo/extensions/filter_helpers/link_filter'
+require File.dirname(__FILE__) + "/../../../test_helper.rb"
+require 'ubiquo/filters/link_filter'
 
-class LinkFilterTest < Ubiquo::Extensions::FilterHelpers::UbiquoFilterTestCase
+class LinkFilterTest < Ubiquo::Filters::UbiquoFilterTestCase
 
   def setup
     @filter = LinkFilter.new(@model, @context)

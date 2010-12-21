@@ -1,7 +1,7 @@
-require File.dirname(__FILE__) + "/../../../../test_helper.rb"
-require 'ubiquo/extensions/filter_helpers/date_filter'
+require File.dirname(__FILE__) + "/../../../test_helper.rb"
+require 'ubiquo/filters/date_filter'
 
-class DateFilterTest < Ubiquo::Extensions::FilterHelpers::UbiquoFilterTestCase
+class DateFilterTest < Ubiquo::Filters::UbiquoFilterTestCase
 
   def setup
     @filter = DateFilter.new(@model, @context)

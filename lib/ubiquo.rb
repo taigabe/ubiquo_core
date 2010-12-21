@@ -1,5 +1,6 @@
 require 'ubiquo/version'
 require 'ubiquo/extensions'
+require 'ubiquo/filters'
 require 'ubiquo/helpers'
 require 'ubiquo/navigation_tabs'
 require 'ubiquo/navigation_links'
