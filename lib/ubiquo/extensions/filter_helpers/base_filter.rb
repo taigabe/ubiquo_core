@@ -9,12 +9,11 @@ module Ubiquo
 
         def lateral_filter(options = {}, &block)
           @context.content_tag(:div, :class => 'sidebar_box') do
+            fields = [options[:field]].flatten
             @context.content_tag(:div, :class => 'sidebar_title') do
-              fields = [options[:field]].flatten
               @context.content_tag(:h3, I18n.t("ubiquo.filter", :thing => options[:caption])) + \
-              disable_link(fields) + \
-              yield(extract_keepable_params(fields))
-            end
+              disable_link(fields)
+            end + yield(extract_keepable_params(fields))
           end
         end
 
