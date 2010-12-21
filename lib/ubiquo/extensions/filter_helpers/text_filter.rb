@@ -16,9 +16,9 @@ module Ubiquo
           lateral_filter(@options) do |keepable_params|
             @context.form_tag(@options[:url_for_options], :method => :get) do
               hidden_fields(keepable_params) + \
-              @context.content_tag(:p) do
+              @context.content_tag(:div, :class => 'form-item-submit') do
                 @context.text_field_tag(@options[:field], @context.params[@options[:field]]) + "\n" + \
-                @context.submit_tag(I18n.t('ubiquo.search'))
+                @context.submit_tag(I18n.t('ubiquo.search'), :class => 'bt-filter-submit')
               end
             end
           end

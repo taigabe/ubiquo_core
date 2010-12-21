@@ -142,7 +142,7 @@ module Ubiquo
               name.classify.constantize.human_attribute_name(column.to_s)
             end
 
-            link_to column_header,
+            link_to content_tag(:span, column_header),
                     link,
                     { :class => (params[:order_by] == "#{name.pluralize}.#{column.to_s}" ?
                                 (params[:sort_order] == "asc" ? "order_desc" : "order_asc") : "order" )}

@@ -49,8 +49,8 @@ table_id ||= name.pluralize + "-list"
             </td>
           <% end %>
           <% unless hide_actions %>
-            <td>
-              <%= row[:actions].delete_if{|r|r.blank?}.join(" | ") %>
+            <td class="actions">
+              <%= row[:actions].delete_if{|r|r.blank?} %>
             </td>            
           <% end %>
         </tr>

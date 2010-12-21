@@ -49,8 +49,8 @@ module Ubiquo
           remove_fields = fields + [:commit, :page]
           new_params = @context.params.clone
           remove_fields.each { |field| new_params[field] = nil }
-          link_text = "[" + I18n.t('ubiquo.filters.remove_all_filters', :count => fields.size) + "]"
-          message = [ I18n.t('ubiquo.filters.filtered_by', :field => info), @context.link_to(link_text, new_params)]
+          link_text = I18n.t('ubiquo.filters.remove_all_filters', :count => fields.size)
+          message = [ I18n.t('ubiquo.filters.filtered_by', :field => info), @context.link_to(link_text, new_params, :class => 'bt-remove-filters')]
           @context.content_tag(:p, message.join(" "), :class => 'search_info')
         end
 

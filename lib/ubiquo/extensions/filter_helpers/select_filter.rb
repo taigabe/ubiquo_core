@@ -24,7 +24,7 @@ module Ubiquo
           lateral_filter(@options) do |keepable_params|
             @context.content_tag(:div, :id => 'select_filter_content') do
               @context.form_tag(@options[:url_for_options], :method => :get) do
-                @context.content_tag(:p) do
+                @context.content_tag(:div, :class => 'form-item-submit') do
                   hidden_fields(keepable_params) + \
                   @context.select_tag(filter_field,
                              header_option + @context.options_from_collection_for_select(@options[:collection],
@@ -32,7 +32,7 @@ module Ubiquo
                                                                                 @options[:name_field],
                                                                                 (@context.params[filter_field].blank? ? @options[:default_selected] : field_value)),
                              {:id => nil}.merge(@options[:html_options] || {})) + \
-                  @context.submit_tag(I18n.t("ubiquo.search"), :class => "select_filter")
+                  @context.submit_tag(I18n.t("ubiquo.search"), :class => "select_filter bt-filter-submit")
                 end
               end
             end

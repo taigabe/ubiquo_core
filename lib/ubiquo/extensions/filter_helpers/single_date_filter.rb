@@ -21,12 +21,12 @@ module Ubiquo
             @context.content_tag(:div, :id => 'date_filter_content') do
               @context.form_tag(@options[:url_for_options], :method => :get, :id => "frm_calendar") do
                 hidden_fields(keepable_params) + \
-                @context.content_tag(:p) do
+                @context.content_tag(:div, :class => 'form-item') do
                   @context.content_tag(:label, :for => "filter_" + date_field.to_s) { I18n.t('ubiquo.base.to') } + \
                   @context.calendar_date_select_tag(date_field, @context.params[date_field],
                                                     calendar_options.merge(:id => "filter_" + date_field.to_s))
                 end + \
-                @context.content_tag(:p) { @context.submit_tag(I18n.t('ubiquo.search'), :class => 'filter_submit') }
+                @context.content_tag(:div, :class => 'form-item-submit') { @context.submit_tag(I18n.t('ubiquo.search'), :class => 'bt-filter-submit') }
               end
             end
           end
