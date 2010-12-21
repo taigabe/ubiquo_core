@@ -7,12 +7,12 @@ module Ubiquo
           options[:field] = add_filter_prefix_when_needed(options[:field]) if options[:field]
           @options = {
             :field       => [:filter_publish_start, :filter_publish_end],
-            :caption     => @model.human_attribute_name("published_at")
+            :caption     => @model.human_attribute_name("published_at"),
+            :box_id      => options[:field].first.to_s.dasherize.split('-').first(2).join('-')
           }.merge(options)
         end
 
         def render
-          filter_field = @options[:field]
           date_start_field, date_end_field = @options[:field].map(&:to_sym)
           year_range = ((@options[:year_start] || 2000)..(@options[:year_end] || Time.now.year))
           calendar_options = {:popup => true, :year_range => year_range}

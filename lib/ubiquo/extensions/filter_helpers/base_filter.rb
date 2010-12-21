@@ -8,12 +8,15 @@ module Ubiquo
         end
 
         def lateral_filter(options = {}, &block)
-          @context.content_tag(:div, :class => 'sidebar_box') do
+          box_id = "box-" + (options[:box_id] || options[:field].to_s.dasherize)
+          @context.content_tag(:div, :class => 'sidebar_box filters-box', :id => box_id) do
             fields = [options[:field]].flatten
-            @context.content_tag(:div, :class => 'sidebar_title') do
+            @context.content_tag(:div, :class => 'header') do
               @context.content_tag(:h3, I18n.t("ubiquo.filter", :thing => options[:caption])) + \
               disable_link(fields)
-            end + yield(extract_keepable_params(fields))
+            end + @context.content_tag(:div, :class => 'content') do
+              yield(extract_keepable_params(fields))
+            end
           end
         end
 
