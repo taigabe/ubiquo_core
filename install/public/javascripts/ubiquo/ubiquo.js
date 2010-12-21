@@ -1,6 +1,6 @@
 document.observe("dom:loaded", function() {
   //content corners
-  if ($('content')){
+  /*if ($('content')){
 	$('content').insert({bottom: '<span class="corner_tl"></span><span class="corner_tr"></span><span class="corner_bl"></span><span class="corner_br"></span>'});
   }
   //form_box corners
@@ -14,7 +14,8 @@ document.observe("dom:loaded", function() {
     $$('#sidebar .version, #sidebar .version_selected').each(function(f) {
       f.insert({bottom: '<span class="se"></span><span class="sd"></span><span class="ie"></span><span class="id"></span>'});
     });
-  }
+  }*/
+
   //ubiquo_authentication
   if($('send_confirm_creation') && $("welcome_message_block")) {
     $('send_confirm_creation').observe("change", function() {

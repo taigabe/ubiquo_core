@@ -39,16 +39,13 @@ img.list_example {
 }
 
 #balloon_actions {
-	text-align: center;	
-	margin-top: 50px;
-	margin-bottom: 50px;	
+	margin: 2em 0 4em;
 }
 
-#balloon_actions a.new {
-	font-size: 24px;
-	font-weight: bold;
-    float: none;
-}
+	#balloon_actions a.new {
+	    float: none;
+		margin: 0 auto;
+	}
 
 .balloon_wrapper { 
     float: left;
