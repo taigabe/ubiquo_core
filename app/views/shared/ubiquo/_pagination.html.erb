@@ -1,10 +1,8 @@
 <div class="pagination">
   <% if item_pages %>
-    <% unless item_pages[:previous].nil? %>
-        <%= link_to t("ubiquo.previous"), params.merge({:page => item_pages[:previous]}), {:class => "bot_pag_prev"} %>
-    <% end %>
-    <% unless item_pages[:next].nil? %>
-        <%= link_to t("ubiquo.next"), params.merge({:page => item_pages[:next]}), {:class => "bot_pag_next"} %>
+    <% %w{next previous}.each do |dir| %>
+      <% page = item_pages[dir.to_sym] %>
+      <%= link_to t("ubiquo.#{dir}"), params.merge({:page => page}), {:class => "bot_pag_#{dir}#{' disabled' unless page}"} %>
     <% end %>
   <% end %>
 </div>
