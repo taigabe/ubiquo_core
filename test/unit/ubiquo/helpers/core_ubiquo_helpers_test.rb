@@ -18,4 +18,9 @@ class Ubiquo::Helpers::CoreUbiquoHelpersTest < ActionView::TestCase
     assert_equal 'image_tag', ubiquo_image_tag('image.png', options)
   end
 
+  test 'ubiquo_boolean_image should return a span with class and value' do
+    result = HTML::Document.new(ubiquo_boolean_image(true))
+    assert_select result.root, "span[class=state_true]", 'true'
+  end
+
 end

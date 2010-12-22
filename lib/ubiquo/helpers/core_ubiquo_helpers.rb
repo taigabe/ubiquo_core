@@ -68,7 +68,7 @@ module Ubiquo
 
       # Returns a "tick" or "cross" image, useful to display boolean values
       def ubiquo_boolean_image(value)
-        ubiquo_image_tag(value ? 'ok.gif' : 'ko.gif')
+        content_tag(:span, value, :class => "state_#{value}")
       end
 
       # Return true if string_date is a valid date representation with a
