@@ -47,7 +47,7 @@ window["lightwindowInit"] = function() {
             main : '<div id="lightwindow_container" >'+
                                                         '<div id="lightwindow_title_bar" >'+
                                                                 '<div id="lightwindow_title_bar_inner" >'+
-                                                                        '<span id="lightwindow_title_bar_title"></span>'+
+                                                                        '<span id="lightwindow_title_bar_title" style="display:none;"></span>'+
 
                                                                 '</div>'+
                                                         '</div>'+

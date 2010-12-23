@@ -1325,7 +1325,7 @@ lightwindow.prototype = {
 					method: 'get', 
 					parameters: '', 
 					onComplete: function(response) {
-						$('lightwindow_contents').innerHTML += response.responseText;
+						$('lightwindow_contents').insert( response.responseText );
 						this.resizeTo.height = $('lightwindow_contents').scrollHeight+(this.options.contentOffset.height);
 						this.resizeTo.width = $('lightwindow_contents').scrollWidth+(this.options.contentOffset.width);
 						this._processWindow();

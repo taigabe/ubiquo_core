@@ -1169,6 +1169,7 @@ form .page_templates li {
 			#lightwindow_contents h3 {
 				margin-bottom: 1em;
 				font-size: 1.8em;
+                                margin-right: 40px;
 			}
 			#lightwindow_contents a.close {
 				display: block;
