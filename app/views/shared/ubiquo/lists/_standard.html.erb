@@ -50,7 +50,7 @@ table_id ||= name.pluralize + "-list"
           <% end %>
           <% unless hide_actions %>
             <td class="actions">
-              <%= row[:actions].delete_if{|r|r.blank?} %>
+              <%= row[:actions].delete_if{|r|r.blank?}.join(' ') %>
             </td>            
           <% end %>
         </tr>
