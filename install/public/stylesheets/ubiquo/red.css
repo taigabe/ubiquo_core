@@ -12,7 +12,7 @@ a {
 	background-color: #881B20;
 }
 #tabs li.active a, #tabs li.active span {
-	color: #881B20;
+	/*color: #881B20;*/
 }
 form h3 {
 	color: #B7383F;

@@ -1,4 +1,7 @@
 /* Pàgina principal llistat */
+.empty_list {
+	clear: both;
+}
 
 img.list_example {
 	float: left;
@@ -9,7 +12,8 @@ img.list_example {
 #balloon_list {
 	position: relative;
 	float: left;
-	width: 318px;	
+	width: 318px;
+	text-align: center;	
 	background-color: #ecf5f4;
 	padding: 20px;
 }
@@ -30,12 +34,6 @@ img.list_example {
 	bottom: -28px;
 	left: 20px;
 	background: url("../../images/ubiquo/balloon-triangle.gif") top left no-repeat;
-}
-
-.empty_list { 
-    margin: 0 auto 20px auto;
-    text-align: center;
-    width: 100%;
 }
 
 #balloon_actions {
