@@ -44,8 +44,7 @@ table_id ||= name.pluralize + "-list"
               <%=
                  case col
                    when ActiveSupport::TimeWithZone : l(col)
-                   # TODO: Move this to a helper
-                   when TrueClass || FalseClass : '<span class="state_' + col.to_s + '">' + col.to_s + '</span>'
+                   when TrueClass, FalseClass : ubiquo_boolean_image(col)
                    else col.to_s
                  end %>
             </td>
