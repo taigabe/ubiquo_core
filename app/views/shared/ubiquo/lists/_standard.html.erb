@@ -1,4 +1,4 @@
-<% 
+<%
 =begin
 
 parameters:
@@ -12,11 +12,11 @@ parameters:
 
 
 optionals:
- :model        - A Model name constant or string. 
+ :model        - A Model name constant or string.
  :hide_actions - Set to true to hide actions (default: false)
- :link_to_new  - A new action link 
+ :link_to_new  - A new action link
  :table_id     - An html id for list table
- 
+
 =end
 
 model ||= name.classify
@@ -41,9 +41,11 @@ table_id ||= name.pluralize + "-list"
         <tr class="<%= cycle('even', 'odd') %>" id="<%= name %>_<%= row[:id] %>">
           <% row[:columns].each do |col| %>
             <td>
-              <%= 
+              <%=
                  case col
                    when ActiveSupport::TimeWithZone : l(col)
+                   # TODO: Move this to a helper
+                   when TrueClass : '<span class="state_' + col.to_s + '">' + col.to_s + '</span>'
                    else col.to_s
                  end %>
             </td>
@@ -51,7 +53,7 @@ table_id ||= name.pluralize + "-list"
           <% unless hide_actions %>
             <td class="actions">
               <%= row[:actions].delete_if{|r|r.blank?}.join(' ') %>
-            </td>            
+            </td>
           <% end %>
         </tr>
     <% end %>
@@ -60,7 +62,7 @@ table_id ||= name.pluralize + "-list"
     <%= render :partial => "shared/ubiquo/pagination", :locals => { :item_pages => pages } %>
   <% end %>
 <% else %>
-  <%= render :partial => "shared/ubiquo/lists/empty", 
+  <%= render :partial => "shared/ubiquo/lists/empty",
              :locals => { :name => name,
                           :link_to_new => link_to_new,
                           :model => model } %>
