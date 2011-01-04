@@ -76,12 +76,13 @@ module Ubiquo
       def ubiquo_sidebar_box(title, options, &block)
         css_class = "sidebar_box #{options[:class]}".strip
         extra_header = options[:extra_header] || ''
-        content_tag(:div, :class => css_class, :id => options[:id]) do
+        result = content_tag(:div, :class => css_class, :id => options[:id]) do
           content_tag(:div, :class => "header") do
             content_tag(:h3, title) + extra_header
           end + \
           content_tag(:div, capture(&block), :class => "content")
         end
+        block_called_from_erb?(block) ? concat(result) : result
       end
 
       # Return true if string_date is a valid date representation with a
