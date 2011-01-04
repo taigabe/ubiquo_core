@@ -75,13 +75,10 @@ module Ubiquo
       # Used to display sidebar items like filters, help boxes, etc.
       def ubiquo_sidebar_box(title, options, &block)
         css_class = "sidebar_box #{options[:class]}".strip
-        box = content_tag(:div, :class => css_class) do
-          content_tag(:h3) do
-            content_tag(:div, title, :class => "header")
-          end + \
+        content_tag(:div, :class => css_class) do
+          content_tag(:div, :class => "header") { content_tag(:h3, title) } + \
           content_tag(:div, capture(&block), :class => "content")
         end
-        concat box
       end
 
       # Return true if string_date is a valid date representation with a
@@ -105,8 +102,9 @@ module Ubiquo
 
       # Renders a message in a help block in the sidebar
       def help_block_sidebar(message)
-        render :partial => '/shared/ubiquo/help_block_sidebar',
-        :locals => {:message => message}
+        ubiquo_sidebar_box(t("ubiquo.help"), :class => "help-box") do
+          "<p>#{message}</p>"
+        end
       end
 
       # Renders a preview
