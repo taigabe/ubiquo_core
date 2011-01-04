@@ -75,8 +75,11 @@ module Ubiquo
       # Used to display sidebar items like filters, help boxes, etc.
       def ubiquo_sidebar_box(title, options, &block)
         css_class = "sidebar_box #{options[:class]}".strip
-        content_tag(:div, :class => css_class) do
-          content_tag(:div, :class => "header") { content_tag(:h3, title) } + \
+        extra_header = options[:extra_header] || ''
+        content_tag(:div, :class => css_class, :id => options[:id]) do
+          content_tag(:div, :class => "header") do
+            content_tag(:h3, title) + extra_header
+          end + \
           content_tag(:div, capture(&block), :class => "content")
         end
       end

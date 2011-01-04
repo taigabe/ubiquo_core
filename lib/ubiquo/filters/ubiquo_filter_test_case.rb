@@ -49,6 +49,7 @@ module Ubiquo
     class UbiquoFilterTestCase < ::ActionView::TestCase
 
       include ::Ubiquo::Filters
+      include ::Ubiquo::Helpers::CoreUbiquoHelpers
 
       def initialize(*args)
         ::ActionController::Routing::Routes.draw { |map| map.resources :tests }

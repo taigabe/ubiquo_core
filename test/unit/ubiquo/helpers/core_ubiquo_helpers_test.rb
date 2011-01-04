@@ -24,10 +24,11 @@ class Ubiquo::Helpers::CoreUbiquoHelpersTest < ActionView::TestCase
   end
 
   test 'ubiquo_sidebar_box should return a sidebarbox div with header and content' do
-    sidebar_box = ubiquo_sidebar_box('title', :class => 'test') { "body" }
+    sidebar_box = ubiquo_sidebar_box('title', :class => 'test', :id => 'myid', :extra_header => 'myheader') { "body" }
     result = HTML::Document.new sidebar_box
-    assert_select result.root, "div[class=sidebar_box test] > div[class=header] > h3", "title"
-    assert_select result.root, "div[class=sidebar_box test] > div[class=content]", "body"
+    assert_select result.root, "div[class=sidebar_box test]#myid > div[class=header] > h3", "title"
+    assert_select result.root, "div[class=sidebar_box test]#myid > div[class=header]", "titlemyheader"
+    assert_select result.root, "div[class=sidebar_box test]#myid > div[class=content]", "body"
   end
 
 end
