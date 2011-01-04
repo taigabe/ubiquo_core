@@ -71,6 +71,19 @@ module Ubiquo
         content_tag(:span, value, :class => "state_#{value}")
       end
 
+      # Returns a properly marked up ubiquo sidebar box.
+      # Used to display sidebar items like filters, help boxes, etc.
+      def ubiquo_sidebar_box(title, options, &block)
+        css_class = "sidebar_box #{options[:class]}".strip
+        box = content_tag(:div, :class => css_class) do
+          content_tag(:h3) do
+            content_tag(:div, title, :class => "header")
+          end + \
+          content_tag(:div, capture(&block), :class => "content")
+        end
+        concat box
+      end
+
       # Return true if string_date is a valid date representation with a
       # given format (the so-called italian format by default: %d/%m/%Y)
       def is_valid_date?(string_date, format="%d/%m/%Y")

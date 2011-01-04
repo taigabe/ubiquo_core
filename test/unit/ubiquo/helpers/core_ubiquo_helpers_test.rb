@@ -23,4 +23,11 @@ class Ubiquo::Helpers::CoreUbiquoHelpersTest < ActionView::TestCase
     assert_select result.root, "span[class=state_true]", 'true'
   end
 
+  test 'ubiquo_sidebar_box should return a sidebarbox div with header and content' do
+    sidebar_box = ubiquo_sidebar_box('title', :class => 'test') { "body" }
+    result = HTML::Document.new sidebar_box
+    assert_select result.root, "div[class=sidebar_box test] > h3 > div[class=header]", "title"
+    assert_select result.root, "div[class=sidebar_box test] > div[class=content]", "body"
+  end
+
 end
