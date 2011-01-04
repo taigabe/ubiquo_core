@@ -6,7 +6,12 @@ a {
 }
 
 #header {
-	background-color: #B7383F;
+	background: #B7383F;
+}
+#header_central {
+	background: -moz-linear-gradient(0% 0% 270deg, #000000, #B7383F);
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#000000), to(#B7383F));
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#000000', endColorstr='#B7383F');
 }
 #tabs li {
 	background-color: #881B20;
