@@ -102,9 +102,12 @@ table, th, td { border: none;}
 			padding: .7em 1em;
 			font-size: 1.2em;
 			font-weight: bold;
-			-moz-border-radius: 6px 6px 0 0;
-			-webkit-border-radius: 6px 6px 0 0;
-			border-radius: 6px 6px 0 0;
+			-moz-border-radius-topleft: 6px;
+			-moz-border-radius-topright: 6px;
+			-webkit-border-top-left-radius: 6px;
+			-webkit-border-top-right-radius: 6px;
+			border-top-left-radius: 6px;
+			border-top-right-radius: 6px;
 		}
 		#tabs li, #tabs li a  {
 			color: #FFF;
@@ -157,15 +160,19 @@ table, th, td { border: none;}
 			line-height: 1.3em;
 			text-align: left;
 			font-size: 2.4em;
-			/*color: #FFF;
-			-moz-text-shadow: 1px 1px 0 #000;
-			-webkit-text-shadow: 1px 1px 0 #000;
-			text-shadow: 1px 1px 0 #000;*/
 			font-weight: bold;
 			background: #eece9b;
-			-moz-border-radius: 6px 6px 0 0;
-			-webkit-border-radius: 6px 6px 0 0;
-			border-radius: 6px 6px 0 0;
+			-moz-border-radius-topleft: 6px;
+			-moz-border-radius-topright: 6px;
+			-webkit-border-top-left-radius: 6px;
+			-webkit-border-top-right-radius: 6px;
+			border-top-left-radius: 6px;
+			border-top-right-radius: 6px;
+		}
+		@media screen and (-webkit-min-device-pixel-ratio:0) {
+			#content h1 {
+				width: 97.2%;
+			}
 		}
 		/* submenu */
 		#content h2 {
@@ -573,7 +580,7 @@ table, th, td { border: none;}
 /*--- taula dades genèrica ---*/
 #content table {
 	clear: both;
-	margin: 2em 0;
+	padding: 2em 0;
 }
 #content th, #content td {
 	border-right: 1px solid #FFF;
@@ -717,12 +724,8 @@ table, th, td { border: none;}
         }
 
 /*--- taula dades per TinyMCE ---*/
-#content table.mceLayout {
-	margin: 0;
-}
-#content .mceLayout table {
-	clear: both;
-	margin: 0;
+#content table.mceLayout, #content .mceLayout table {
+	padding: 0;
 }
 #content .mceLayout th, #content .mceLayout td  {
 	border-right: none;
