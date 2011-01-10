@@ -26,6 +26,9 @@ module Ubiquo
         output = stylesheet_link_tag(ubiquo_sources, options)
         if sources.include?(:defaults)
           output += <<-eos
+            <!--[if IE]>
+              #{stylesheet_link_tag 'ubiquo/ubiquo_ie'}
+            <![endif]-->
             <!--[if lte IE 6]>
               #{stylesheet_link_tag 'ubiquo/ubiquo_ie6'}
             <![endif]-->
