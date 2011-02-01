@@ -20,7 +20,8 @@ module Ubiquo
       end
 
       def run(task)
-        log_execution_message(task)
+        execution_message = build_execution_message(task)
+        @logger.add(Logger::INFO,execution_message) if @logger
         while_redirecting_stds do
           Lockfile(Digest::MD5.hexdigest(task), :retries => 0) do
             @invoked = true
@@ -30,7 +31,8 @@ module Ubiquo
         true
       rescue Exception => e
         @backtrace = e.backtrace
-        @logger.add(Logger::ERROR, build_error_message(e)) if @logger
+        error_message = build_error_message(e)
+        @logger.add(Logger::ERROR, error_message) if @logger
         false
       end
 
@@ -68,12 +70,11 @@ module Ubiquo
         message.join("\n")
       end
 
-      def log_execution_message(task)
+      def build_execution_message(task)
         date = Time.now.strftime("%b %d %H:%M:%S")
         hostname = Socket.gethostname
         username = Etc.getlogin
         msg = "#{date} #{hostname} #{$$} (#{username}) JOB (#{task})"
-        @logger.add(Logger::INFO,msg) if @logger
       end
 
       def preserve_stds
