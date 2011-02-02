@@ -69,9 +69,18 @@ class FilteredSearchTest < ActiveSupport::TestCase
   end
 
   test 'Should use ubiquo_paginate in paginated_filtered_search' do
-    page_param = 'test'
-    @m.expects(:ubiquo_paginate).with(:page => page_param)
-    @m.paginated_filtered_search(:page => page_param) {}
+    page_param, per_page_param = ['test', 'test']
+    @m.expects(:ubiquo_paginate).with(:page => page_param, :per_page => per_page_param)
+    @m.paginated_filtered_search(:page => page_param, :per_page => per_page_param) {}
+  end
+
+  test "Should use per_page param with paginated_filtered_search" do
+    pages, results = @m.paginated_filtered_search(:page => 1, :per_page => 1)
+    assert_nil pages[:previous]
+    assert_equal 2, pages[:next]
+    pages, results = @m.paginated_filtered_search(:page => 3, :per_page => 1)
+    assert_nil pages[:next]
+    assert_equal 2, pages[:previous]
   end
 
   test 'Should support order_by when using relation columns' do

@@ -66,7 +66,7 @@ module Ubiquo
 
         options[:order] = "#{order_by} #{sort_order}"
 
-        ubiquo_paginate(:page => params[:page]) do
+        ubiquo_paginate(:page => params[:page], :per_page => params[:per_page]) do
           filtered_search params, options.except(:order_by, :sort_order)
         end
       end
