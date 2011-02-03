@@ -90,7 +90,6 @@ module Ubiquo
 
         if relation_type == :has_many
           options[:key_field] = "#{key.to_s.singularize}_ids"
-          options[:limited_elements] = nil
           options[:initial_text_field_tag_name] = "#{object_name}[#{options[:key_field]}][]"
         else
           options[:key_field] = if options[:real_foreign_key].present?
@@ -178,6 +177,7 @@ module Ubiquo
       def relation_autocomplete_selector(object, object_name, key, related_objects, humanized_field, relation_type, options = {})
         url_params = {:format => :js}
         url_params.merge!(options[:url_params]) if options[:url_params].present?
+
         autocomplete_options = {
           :url => send(options[:collection_url], url_params),
           :current_values => open_struct_from_model(
@@ -197,22 +197,25 @@ module Ubiquo
         else
           "'#{options[:remove_callback]}'"
         end
-        js_code =<<-JS
-          document.observe('dom:loaded', function() {
-            var autocomplete = new RelationAutoCompleteSelector(
-              '#{autocomplete_options[:url]}',
-              '#{object_name}',
-              '#{options[:key_field]}',
-              #{autocomplete_options[:current_values]},
-              '#{autocomplete_options[:style]}',
-              #{options[:limited_elements] || 'undefined'},
-              '#{humanized_field}',
-              '#{options[:related_object_id_field]}',
-              #{options[:add_callback]},
-              #{options[:remove_callback]}
-            )
-          });
+        js_autocomplete =<<-JS
+          var autocomplete = new RelationAutoCompleteSelector(
+            '#{autocomplete_options[:url]}',
+            '#{object_name}',
+            '#{options[:key_field]}',
+            #{autocomplete_options[:current_values]},
+            '#{autocomplete_options[:style]}',
+            #{options[:limited_elements] || 'undefined'},
+            '#{humanized_field}',
+            '#{options[:related_object_id_field]}',
+            #{options[:add_callback]},
+            #{options[:remove_callback]}
+          )
         JS
+        js_code = if (request.format rescue nil) == :js
+          js_autocomplete
+        else
+          "document.observe('dom:loaded', function() { %s })" % js_autocomplete
+        end
         output = javascript_tag(js_code) + text_field_tag(
           options[:initial_text_field_tag_name], "",
           :id => "#{object_name}_#{options[:key_field]}_autocomplete"
