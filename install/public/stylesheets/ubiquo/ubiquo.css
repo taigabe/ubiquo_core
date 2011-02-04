@@ -1,5 +1,7 @@
 @charset "utf-8";
 
+@import url(http://fonts.googleapis.com/css?family=Ubuntu:Bold|PT+Sans+Caption);
+
 /*-------------- Generics / Reset --------------*/
 * { margin: 0; padding: 0; line-height: 1em; font-size: 1em;}
 body { font-size: 62.5%; background-color: #E5E5E5;}
@@ -70,8 +72,8 @@ table, th, td { border: none;}
 		padding: .5em 2em .3em;
 	}
 		#header_central	h1 {
+			font-family: 'Ubuntu', Arial, serif;
 			font-size: 3.6em;
-			font-weight: bold;
 			line-height: 1;
 			width: 50%;
 			float: left;
@@ -151,6 +153,9 @@ table, th, td { border: none;}
 		padding: 8.8em 1.4em 1.7em;
 		min-height: 40em;
 	}
+		#content h1, #tabs li, #sidebar h3 {
+			font-family: 'PT Sans Caption', Arial, serif;
+		}
 		#content h1 {
 			position: absolute;
 			top: 0;
@@ -160,7 +165,6 @@ table, th, td { border: none;}
 			line-height: 1.3em;
 			text-align: left;
 			font-size: 2.4em;
-			font-weight: bold;
 			background: #eece9b;
 			-moz-border-radius-topleft: 6px;
 			-moz-border-radius-topright: 6px;
@@ -428,7 +432,7 @@ table, th, td { border: none;}
 	-webkit-border-radius: 9px;
 	border-radius: 9px;*/
 }
-#feedback_error, #feedback_notice, #feedback_warning, .search_info {
+#feedback_error, #feedback_notice, #feedback_warning, #errorExplanation, .search_info {
 	margin: 0 0 1em;
 	padding: .5em 1% .5em 5%;
 	float: left;
@@ -441,12 +445,11 @@ table, th, td { border: none;}
 	border-radius: 6px;
 }
 #feedback_error, #errorExplanation {
-	background-color: #EFD2D4;
 	border-color: #B7393D;
+	background: #EFD2D4 url(../../images/ubiquo/ico-advice-bad.png) no-repeat .5em .3em;
 }
 #feedback_error {
 	color: #B7393D;
-	background: #EFD2D4 url(../../images/ubiquo/ico-advice-bad.png) no-repeat .5em .3em;
 }
 #feedback_notice {
 	color: #4CB53B;
@@ -460,22 +463,25 @@ table, th, td { border: none;}
 }
 
 #errorExplanation {
-	margin: 0 0 1em;
+	float: none;
+	width: auto;
 	padding: 1em;
+	font-size: 1em;
 }
 	#errorExplanation h2 {
+		position: static;
 		margin: -.54em -.54em .6em;
-		padding: .4em;
-		color: #FFF;
+		padding: .4em 0 0 2.5em;
+		color: #B7393D;
+		font-size: 1.4em;
 		font-weight: bold;
-		font-size: 1.3em;
-		background-color: #B7393D;
 	}
 	#errorExplanation ul {
 		padding-left: 2em;
 	}
 	#errorExplanation p, #errorExplanation li {
 		color: #333;
+		font-size: 1.2em;
 	}
 	#errorExplanation p {
 		margin-bottom: .7em;
@@ -508,6 +514,7 @@ table, th, td { border: none;}
 	padding: .4em .7em .5em;
 	font-size: 1.3em;
 	text-align: center;
+	line-height: 1.6;
 	font-weight: bold;
 	color: #000;
 	border: 1px solid #AAA;
@@ -518,7 +525,7 @@ table, th, td { border: none;}
 	background: #d1d3d3 url(../../images/ubiquo/bg-button.png) no-repeat left top;
 }
 #content a.new {
-	padding: .6em .7em;
+	padding: .5em .7em;
 	margin-bottom: 2em;
 	width: 18%;
 }
@@ -657,8 +664,9 @@ table, th, td { border: none;}
 		background: url(../../images/ubiquo/ico-no.png) no-repeat center center;
 	}
 	#content td.actions a {
-		display: block;
-		float: left;
+		/*display: block;
+		float: left;*/
+		display: inline-block;
 	}
 	#content td.actions a, form a.view, form a.select, form a.delete, form a.change, form a.add, form a.new {
 		padding: .2em .5em;
@@ -878,9 +886,6 @@ form label {
     min-width:300px;
 }*/
 
-#content form input.checkbox,#content form input.radio {
-	display: inline;
-}
 form .page_templates li {
 	float: left;
 	margin-right: 1em;
@@ -912,6 +917,9 @@ form .page_templates li {
 		font-size: 1.4em;
 		margin-bottom: .8em;
 	}
+		#content .form-item p, #content .form-item-inline p {
+			font-size: 1em;
+		}
 	#content .form-item-submit {
 		text-align: right;
 	}
@@ -936,6 +944,7 @@ form .page_templates li {
 		}
 		#content input.checkbox, #content input.radio {
 			width: auto;
+			padding-top: .2em;
 		}
 		#content .form-item .mceEditor {
 			width: 78%;
@@ -1003,7 +1012,9 @@ form .page_templates li {
 	border-radius: 4px;
 }
 #sidebar .selected {
-	background: #CCC;
+	color: #FFF;
+	border-color: #881B20;
+	background: #881B20;
 }
 
 	#sidebar .translation span.name {
@@ -1013,23 +1024,24 @@ form .page_templates li {
 	#sidebar .translation .options {
 		float: right;
 		width: 45%;
-		text-align: center;
+		text-align: right;
 	}
 		#sidebar .translation .options a {
+			margin-left: .1em;
 			font-size: 0.8em;
 			line-height: 1;
 			padding: 0.2em 0.5em;
 		}
 		#sidebar .translation .options a.preview {
-			float: right;
+			
 		}
 
 		#sidebar .translation .options a.edit {
-			float: left;
+			
 		}
 
 		#sidebar .translation .options a.translate {
-			float: left;
+			
 		}
 
 /*--- Versions sidebar box ---*/
@@ -1042,7 +1054,7 @@ form .page_templates li {
 	margin-bottom: 6px;
 	overflow: hidden;
 	position: relative;
-	padding: 3px;
+	padding: .3em .3em .5em;
 }
 
 #sidebar .version_selected {
@@ -1078,10 +1090,10 @@ form .page_templates li {
 
 #sidebar .version .options,
 #sidebar .version_selected .options {
-	line-height: 1em;
-	margin-bottom: 2px;
-	margin-right: 4px;
-	padding-left: 21px;
+	line-height: 1;
+	margin-bottom: .2em;
+	margin-right: .4em;
+	padding-left: 2.5em;
 	position: relative;
 }
 
@@ -1094,6 +1106,7 @@ form .page_templates li {
 #sidebar .version .options li,
 #sidebar .version_selected .options li {
 	display:inline;
+	font-size: 1.1em;
 }
 
 #sidebar .version .options li a,
