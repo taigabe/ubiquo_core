@@ -40,7 +40,9 @@ link_to_new ||= ""
 table_id ||= name.pluralize + "-list"
 %>
 <% if rows.size > 0 %>
-  <%= link_to_new %>
+  <% content_for :sidebar do %>
+	<%= link_to_new %>
+  <% end %>
   <ul id="<%= table_id %>" class="box_list">
     <% rows.each do |row| %>
       <li id="<%= name %>_<%= row[:id] %>" class="box <%= cycle('even', 'odd') %>">

@@ -1,7 +1,9 @@
 <% if model.count == 0 %>
   <div class="empty_list">
     <div id="balloon_actions">
-      <%= link_to_new %>
+      <% content_for :sidebar do %>
+		<%= link_to_new %>
+	  <% end %>
     </div>
     <div class="balloon_wrapper">
       <div class="balloon_content">
@@ -16,7 +18,9 @@
   </div>
   <br style="clear: both;"/>
 <% else %>
-  <%= link_to_new %>
+  <% content_for :sidebar do %>
+	<%= link_to_new %>
+  <% end %>
   <p id="empty">
     <%= t 'ubiquo.empty', :thing => model.human_name.downcase %>
   </p>

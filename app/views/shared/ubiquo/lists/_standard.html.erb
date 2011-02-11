@@ -27,7 +27,9 @@ table_id ||= name.pluralize + "-list"
 
 %>
 <% if rows.size > 0 %>
-  <%= link_to_new %>
+  <% content_for :sidebar do %>
+	<%= link_to_new %>
+  <% end %>
   <table id="<%= table_id %>" width="100%" border="1" cellspacing="0" cellpadding="3">
     <tr>
       <% headers.each do |column| %>
