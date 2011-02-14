@@ -12,6 +12,8 @@ module Ubiquo
       attr_accessor  :logfile
       attr_accessor  :lines
 
+      def self.reloadable?() false end
+
       class << self
 
         def clear!
@@ -24,7 +26,7 @@ module Ubiquo
           self.instance = crontab
         end
 
-        def schedule(namespace="#{Ubiquo::Config.get(:app_name)}")
+        def schedule(namespace = Ubiquo::Config.get(:app_name))
           crontab = self.instance || self.new
           crontab.comment "Start jobs for #{namespace}"
           yield crontab
@@ -57,18 +59,21 @@ module Ubiquo
       def initialize
         @path     = Rails.root
         @env      = Rails.env
-        @logfile  = File.join Rails.root, 'logs', 'cron.log'
+        @logfile  = File.join Rails.root, 'log', "cron-#{@env}.log"
         self.instance = self
         @lines    = []
       end
 
       def rake(schedule, task)
-        cron_job = "#{schedule} /bin/bash -l -c 'cd #{self.path} && RAILS_ENV=#{self.env} rake #{task} --silent 2>&1'"
+        parts = task.split(' ')
+        job = parts.first
+        rest = parts.drop(1).join(' ')
+        cron_job = "#{schedule} /bin/bash -l -c \"cd #{self.path} && RAILS_ENV=#{self.env} rake ubiquo:cron:runner task=\'#{job}\' #{rest} --silent 2>&1\""
         @lines << cron_job
       end
 
       def runner(schedule, task)
-        cron_job = "#{schedule} /bin/bash -l -c 'cd #{self.path} && script/ubiquo_runner -e #{self.env} \"#{task}\" 2>&1'"
+        cron_job = "#{schedule} /bin/bash -l -c \"cd #{self.path} && RAILS_ENV=#{self.env} rake ubiquo:cron:runner task=\'#{task}\' type='script' --silent 2>&1\""
         @lines << cron_job
       end
 

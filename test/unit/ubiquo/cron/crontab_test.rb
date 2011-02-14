@@ -18,7 +18,7 @@ class Ubiquo::Cron::CrontabTest < ActiveSupport::TestCase
   end
 
   test "Should be able to a log file" do
-    default_log_file = File.join Rails.root, 'logs', 'cron.log'
+    default_log_file = File.join Rails.root, 'log', "cron-#{Rails.env}.log"
     assert_equal default_log_file, @crontab.logfile
     assert_equal '/tmp/cron.log', @crontab.logfile = '/tmp/cron.log'
   end
@@ -57,8 +57,18 @@ class Ubiquo::Cron::CrontabTest < ActiveSupport::TestCase
       assert @crontab.rake schedule, task
       line = @crontab.lines.last
       assert_match /^#{Regexp.escape(schedule)} /, line
-      assert_match /rake #{task}/, line
-      assert_match /2>&1\'$/, line
+      assert_match /rake ubiquo:cron:runner task='#{task}'/, line
+      assert_match /2>&1\"$/, line
+    end
+  end
+
+  test "Should be able add a rake task to a crontab instance with vars" do
+    assert_difference '@crontab.lines.size', +1 do
+      assert @crontab.rake "@weekly", "ubiquo:guides myvar='6'"
+      line = @crontab.lines.last
+      assert_match /^#{Regexp.escape("@weekly")} /, line
+      assert_match /rake ubiquo:cron:runner task='ubiquo:guides' myvar='6'/, line
+      assert_match /2>&1\"$/, line
     end
   end
 
@@ -68,8 +78,8 @@ class Ubiquo::Cron::CrontabTest < ActiveSupport::TestCase
       assert @crontab.runner schedule, task
       line = @crontab.lines.last
       assert_match /^#{Regexp.escape(schedule)} /, line
-      assert_match /script\/ubiquo_runner -e #{@crontab.env} \"#{task}\"/, line
-      assert_match /2>&1\'$/, line
+      assert_match /rake ubiquo:cron:runner task='#{task}' type='script'/, line
+      assert_match /2>&1\"$/, line
     end
   end
 
@@ -122,7 +132,7 @@ class Ubiquo::Cron::CrontabTest < ActiveSupport::TestCase
     assert_match /^@reboot/, crontab.shift
     assert_match /Users/, crontab.shift
     assert_match /@daily/, crontab.shift
-    assert_match /^### End jobs for/, crontab.shift
+    assert_match /^### End jobs/, crontab.shift
   end
 
   test "Should be able to render a crontab as a string" do

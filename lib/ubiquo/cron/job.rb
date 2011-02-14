@@ -5,35 +5,45 @@ require 'digest/md5'
 
 module Ubiquo
   module Cron
-    # Log rotation
-    # http://overstimulate.com/articles/logrotate-rails-passenger
-    # Check logrotate include directive
+
     class Job
 
       attr_reader :backtrace
 
-      def initialize(logger=nil)
+      def initialize(logger=nil, debug = false, recipients = Ubiquo::Cron::Crontab.instance.mailto)
         preserve_stds
-        @logger = logger
-        @stdout = StringIO.new
-        @stderr = StringIO.new
+        @logger     = logger
+        @recipients = recipients
+        @stdout     = StringIO.new
+        @stderr     = StringIO.new
+        @debug      = debug
       end
 
-      def run(task)
+      def run(task, type = :task)
+        start = Time.now
         execution_message = build_execution_message(task)
-        @logger.add(Logger::INFO,execution_message) if @logger
         while_redirecting_stds do
-          Lockfile(Digest::MD5.hexdigest(task), :retries => 0) do
-            @invoked = true
-            Rake::Task[task].invoke
+          lockfile = File.join Rails.root, "tmp", "cron-" + Digest::MD5.hexdigest(task)
+          Lockfile(lockfile, :retries => 0) do
+           @invoked = true
+            case type
+            when :task then Rake::Task[task].invoke
+            when :script then eval(task)
+            end
           end
         end
         true
       rescue Exception => e
         @backtrace = e.backtrace
         error_message = build_error_message(e)
-        @logger.add(Logger::ERROR, error_message) if @logger
+        Ubiquo::Cron::JobMailer.deliver_error(@recipients, task, execution_message, error_message) if @recipients
         false
+      ensure
+        execution_message << " (#{Time.now - start} seconds elapsed)"
+        # TODO: Fix this to use only a logger.add call
+        @logger.add(Logger::INFO, execution_message) if @logger
+        @logger.add(Logger::ERROR, error_message) if @logger && error_message
+        @logger.add(Logger::DEBUG, build_debug_message ) if @logger && @debug && !error_message
       end
 
       def invoked?
@@ -64,16 +74,30 @@ module Ubiquo
         end
         unless stderr.blank?
           message << tabify("Stderr: ")
-          message << tabidy(stderr)
+          message << tabify(stderr)
         end
         message << tabify(@backtrace) unless @backtrace.blank?
         message.join("\n")
       end
 
+      def build_debug_message
+        message = []
+        unless stdout.blank?
+          message << tabify("DEBUG Standard output: ")
+          message << tabify(stdout)
+        end
+        unless stderr.blank?
+          message << tabify("DEBUG Standard error: ")
+          message << tabify(stderr)
+        end
+        message.join("\n")
+        # Return nil if empty
+      end
+
       def build_execution_message(task)
         date = Time.now.strftime("%b %d %H:%M:%S")
         hostname = Socket.gethostname
-        username = Etc.getlogin
+        username = Etc.getpwuid(Process.uid).name
         msg = "#{date} #{hostname} #{$$} (#{username}) JOB (#{task})"
       end
 

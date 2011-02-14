@@ -5,25 +5,6 @@ require 'etc'
 
 class Ubiquo::Cron::JobTest < ActiveSupport::TestCase
 
-  # Things we need to handle:
-  # 1) Avoid multiple execution (if possible without external dependencies). Done.
-  # 2) Log results to a file (deal with log rotations). partially done.
-  # 3) Send email alerts on errors (avoid multiple if possible).
-  # 4) Ability to run rake or script based tasks
-
-  # status = Open4::open4("ls -l -zxc") { |pid,stdin,stdout,stderr| puts "PID: #{pid}"; puts "STDOUT: \n#{stdout.read.strip}"; puts "STDERR: \n#{stderr.read.strip}"; }
-
-# class Crooner
-#   def self.run(task, script=false)
-#     # Should we support cron runner
-#     # We must redirect all output to the log file
-#     # Prevent multiple execution
-#     script ? eval(task) : Rake::Task[task].invoke
-#   rescue Exception => e
-#     puts "Ouch this failed badly #{e}"; exit 1
-#   end
-# end
-
   def setup
     @job = Ubiquo::Cron::Job.new
     Rake::Task.define_task :ubiquo_cron_test do; end
@@ -59,19 +40,30 @@ class Ubiquo::Cron::JobTest < ActiveSupport::TestCase
   end
 
   test "Should be able to log results to a specified log file" do
-    logfile = Tempfile.new('ubiquo_cron_test')
+    logfile = Tempfile.new('ubiquo_cron_stds_test')
     logger = Logger.new(logfile.path, Logger::DEBUG)
     job = Ubiquo::Cron::Job.new(logger)
     job.run('ubiquo_cron_stds_test')
     contents = File.read(logfile.path)
     hostname = Socket.gethostname
-    username = Etc.getlogin
+    username = Etc.getpwuid(Process.uid).name
     date     = Time.now.strftime("%b %d")
     assert_match(/^#{date}/, contents)
     assert_match(/#{hostname}/, contents)
     assert_match(/#{username}/, contents)
     assert_match(/#{$$}/, contents)
+    assert_match(/seconds elapsed/, contents)
     assert_match(/ubiquo_cron_stds_test/, contents)
+  end
+
+  test "Should be able to log debug messages when debug is active" do
+    logfile = Tempfile.new('ubiquo_cron_test')
+    logger = Logger.new(logfile.path, Logger::DEBUG)
+    job = Ubiquo::Cron::Job.new(logger, true) # Debug activated
+    job.run('ubiquo_cron_stds_test')
+    contents = File.read(logfile.path)
+    assert_match(/DEBUG Standard output/, contents)
+    assert_match(/DEBUG Standard error/, contents)
   end
 
   test "Lockfile shouldn't fail when task has special characters" do
@@ -111,7 +103,50 @@ class Ubiquo::Cron::JobTest < ActiveSupport::TestCase
     assert_match(/lockfile.rb/, contents)
   end
 
-  # TODO: Send emails when exceptions occur
-  # TODO: Ability to run scripts with eval and regular commands
+  test "Should send email when a task error occurs" do
+    Ubiquo::Cron::Crontab.configure do |config|
+      config.mailto = 'test@test.com'
+    end
+    task = 'ubiquo_cron_mail_test'
+    Rake::Task.define_task task.to_sym do; krash; end
+    logfile = Tempfile.new task
+    logger  = Logger.new(logfile.path, Logger::DEBUG)
+    job     = Ubiquo::Cron::Job.new(logger)
+    assert_difference 'ActionMailer::Base.deliveries.size', +1 do
+      job.run task
+    end
+    error_mail = ActionMailer::Base.deliveries.first
+
+    assert_match /CRON JOB ERROR/, error_mail.subject
+    assert_equal error_mail.to[0], 'test@test.com'
+    assert_match /krash/, error_mail.body
+  end
+
+  test "Should not send emails when no recipients are set" do
+    task       = '3+3'
+    recipients = nil
+    logfile    = Tempfile.new task
+    logger     = Logger.new(logfile.path, Logger::DEBUG)
+    job        = Ubiquo::Cron::Job.new(logger,recipients)
+    assert_no_difference 'ActionMailer::Base.deliveries.size' do
+      job.run(task,:script)
+    end
+  end
+
+  test "Should be able to run script/runner like commands" do
+    task = 'a = 3 * 2; puts a'
+    logfile = Tempfile.new task
+    logger  = Logger.new(logfile.path, Logger::DEBUG)
+    job = Ubiquo::Cron::Job.new(logger)
+    assert job.run(task, :script)
+    assert_equal '6', job.stdout.strip
+  end
+
+  # TODO: Let the directory for locks to be configurable
+  # TODO: Refactor crontab.instance and job interface
+  # TODO: Comment public methods
+  # TODO: Refactor tests
+  # TODO: Deal with multiple environments
+  # TODO: Install with capistrano
 
 end
