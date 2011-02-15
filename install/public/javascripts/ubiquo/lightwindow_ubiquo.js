@@ -20,7 +20,7 @@ tinyMceLightWindow = Class.create( lightwindow,{
         killeditor();
         var classname = this._getParameter("lightwindow_class");
         if(classname){
-            $('lightwindow').removeClassName(classname);
+            this._getInternalElem('lightwindow').removeClassName(classname);
         }
         $super();
     },
@@ -28,12 +28,8 @@ tinyMceLightWindow = Class.create( lightwindow,{
         $super(link);
         var classname = this._getParameter("lightwindow_class");
         if(classname){
-            $('lightwindow').addClassName(classname);
+            this._getInternalElem('lightwindow').addClassName(classname);
         }
-    },
-    // To use when we reload the content without notifying the lightwindow
-    reprocessInnerLinks: function(){
-        this._setupActions();
     }
 });
 
@@ -45,62 +41,62 @@ window["lightwindowInit"] = function() {
            inline : {height : 250, width : 600},
            media : {height : 250, width : 600},
            external : {height : 250, width : 600},
-           titleHeight: 0
+           titleHeight: 25
         },
         skin : 	{
-            main : '<div id="lightwindow_container" >'+
-                                                        '<div id="lightwindow_title_bar" >'+
-                                                                '<div id="lightwindow_title_bar_inner" >'+
-                                                                        '<span id="lightwindow_title_bar_title" style="display:none;"></span>'+
+            main : '<div class="lightwindow_container" >'+
+                                                        '<div class="lightwindow_title_bar" >'+
+                                                                '<div class="lightwindow_title_bar_inner" >'+
+                                                                        '<span class="lightwindow_title_bar_title" style="display:none;"></span>'+
 
                                                                 '</div>'+
                                                         '</div>'+
-                                                        '<div id="lightwindow_stage" >'+
-                                                                '<div id="ubiquo_lb">'+
-                                                                        '<div id="lightwindow_contents" >'+
+                                                        '<div class="lightwindow_stage" >'+
+                                                                '<div class="ubiquo_lb">'+
+                                                                        '<div class="lightwindow_contents" >'+
                                                                         '</div>'+
                                                                 '</div>'+
-                                                                '<div id="lightwindow_navigation" >'+
-                                                                        '<a href="#" id="lightwindow_previous" >'+
-                                                                                '<span id="lightwindow_previous_title"></span>'+
+                                                                '<div class="lightwindow_navigation" >'+
+                                                                        '<a href="#" class="lightwindow_previous" >'+
+                                                                                '<span class="lightwindow_previous_title"></span>'+
                                                                         '</a>'+
-                                                                        '<a href="#" id="lightwindow_next" >'+
-                                                                                '<span id="lightwindow_next_title"></span>'+
+                                                                        '<a href="#" class="lightwindow_next" >'+
+                                                                                '<span class="lightwindow_next_title"></span>'+
                                                                         '</a>'+
-                                                                        '<iframe name="lightwindow_navigation_shim" id="lightwindow_navigation_shim" src="javascript:false;" frameBorder="0" scrolling="no"></iframe>'+
+                                                                        '<iframe name="lightwindow_navigation_shim" class="lightwindow_navigation_shim" src="javascript:false;" frameBorder="0" scrolling="no"></iframe>'+
                                                                 '</div>'+
-                                                                '<div id="lightwindow_galleries">'+
-                                                                        '<div id="lightwindow_galleries_tab_container" >'+
-                                                                                '<a href="#" id="lightwindow_galleries_tab" >'+
-                                                                                        '<span id="lightwindow_galleries_tab_span" class="up" >Galleries</span>'+
+                                                                '<div class="lightwindow_galleries">'+
+                                                                        '<div class="lightwindow_galleries_tab_container" >'+
+                                                                                '<a href="#" class="lightwindow_galleries_tab" >'+
+                                                                                        '<span class="lightwindow_galleries_tab_span up" >Galleries</span>'+
                                                                                 '</a>'+
                                                                         '</div>'+
-                                                                        '<div id="lightwindow_galleries_list" >'+
+                                                                        '<div class="lightwindow_galleries_list" >'+
                                                                         '</div>'+
                                                                 '</div>'+
                                                                 '<div class="inferior" />'+
                                                         '</div>'+
-                                                        '<div id="lightwindow_data_slide" >'+
-                                                                '<div id="lightwindow_data_slide_inner" >'+
-                                                                        '<div id="lightwindow_data_details" >'+
-                                                                                '<div id="lightwindow_data_gallery_container" >'+
-                                                                                        '<span id="lightwindow_data_gallery_current"></span>'+
+                                                        '<div class="lightwindow_data_slide" >'+
+                                                                '<div class="lightwindow_data_slide_inner" >'+
+                                                                        '<div class="lightwindow_data_details" >'+
+                                                                                '<div class="lightwindow_data_gallery_container" >'+
+                                                                                        '<span class="lightwindow_data_gallery_current"></span>'+
                                                                                         ' of '+
-                                                                                        '<span id="lightwindow_data_gallery_total"></span>'+
+                                                                                        '<span class="lightwindow_data_gallery_total"></span>'+
                                                                                 '</div>'+
-                                                                                '<div id="lightwindow_data_author_container" >'+
-                                                                                        'by <span id="lightwindow_data_author"></span>'+
+                                                                                '<div class="lightwindow_data_author_container" >'+
+                                                                                        'by <span class="lightwindow_data_author"></span>'+
                                                                                 '</div>'+
                                                                         '</div>'+
-                                                                        '<div id="lightwindow_data_caption" >'+
+                                                                        '<div class="lightwindow_data_caption" >'+
                                                                         '</div>'+
                                                                 '</div>'+
                                                         '</div>'+
                                                 '</div>',
-            loading : '<div id="lightwindow_loading" >'+
-								'<img src="/images/ubiquo/lightwindow/ajax-loading.gif" alt="loading" />'+
-								'<span>Loading or <a href="javascript: myLightWindow.deactivate();">Cancel</a></span>'+
-								'<iframe name="lightwindow_loading_shim" id="lightwindow_loading_shim" src="javascript:false;" frameBorder="0" scrolling="no"></iframe>'+
+            loading : '<div class="lightwindow_loading" >'+
+								'<span class="image"><img src="/images/ubiquo/lightwindow/ajax-loading.gif" alt="loading" /></span>'+
+								'<span class="message">Loading or </span><span class="action"><a href="javascript: myLightWindow.deactivate();">Cancel</a></span>'+
+								'<iframe name="lightwindow_loading_shim" class="lightwindow_loading_shim" src="javascript:false;" frameBorder="0" scrolling="no"></iframe>'+
 							'</div>',
             iframe : 	'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'+
                         '<html xmlns="http://www.w3.org/1999/xhtml">'+
@@ -125,17 +121,17 @@ window["lightwindowInit"] = function() {
         finalAnimationHandler : function(delay) {
             if (this.windowType == 'media' || this._getParameter('lightwindow_loading_animation')) {
                 // Because of major flickering with the overlay we just hide it in this case
-                Element.hide('lightwindow_loading');
+                Element.hide(this._getInternalElem('loading'));
                 this._handleNavigation(this.activeGallery);
                 this._setStatus(false);
             } else {
-                Effect.Fade('lightwindow_loading', {
+                Effect.Fade(this._getInternalElem('loading'), {
                     duration: 0,
                     delay: 0,
                     afterFinish: function() {
                         // Just in case we need some scroll goodness (this also avoids the swiss cheese effect)
                         if (this.windowType != 'image' && this.windowType != 'media' && this.windowType != 'external') {
-                            $('lightwindow_contents').setStyle({
+                            this._getInternalElem('contents').setStyle({
                                 overflow: 'auto'
                             });
                         }

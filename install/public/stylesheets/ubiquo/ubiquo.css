@@ -650,7 +650,7 @@ a.new, #content .form-item-submit input.bt-create {
 		float: left;*/
 		display: inline-block;
 	}
-	#content td.actions a, form a.view, form a.select, form a.delete, form a.change, form a.add, form a.new {
+	#content td.actions a, form a.view, form a.select, form a.delete, form a.change, form a.add, form a.new, form a.action {
 		padding: .2em .5em;
 		margin: 0 .5em .4em 0;
 		font-size: .9em;
