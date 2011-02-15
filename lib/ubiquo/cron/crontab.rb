@@ -67,7 +67,8 @@ module Ubiquo
       def rake(schedule, task)
         parts = task.split(' ')
         job = parts.first
-        rest = parts.drop(1).join(' ')
+        # rest = parts.drop(1).join(' ')
+        rest = parts[1..-1].join(' ')
         cron_job = "#{schedule} /bin/bash -l -c \"cd #{self.path} && RAILS_ENV=#{self.env} rake ubiquo:cron:runner task=\'#{job}\' #{rest} --silent 2>&1\""
         @lines << cron_job
       end
