@@ -84,7 +84,7 @@ class Ubiquo::Cron::JobTest < ActiveSupport::TestCase
   end
 
   test "Same task execution shouldn't pile up" do
-    Rake::Task.define_task :ubiquo_cron_sleep_test do; sleep 2; end
+    Rake::Task.define_task :ubiquo_cron_sleep_test do; sleep 3; end
     threads    = []
     task       = 'ubiquo_cron_sleep_test'
     logfile    = Tempfile.new task
