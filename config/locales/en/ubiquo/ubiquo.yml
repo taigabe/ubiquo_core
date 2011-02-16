@@ -12,7 +12,7 @@ en:
     add: "Add"
     cancel: "Cancel"
     confirm_item_removal: "Are you sure that you want to remove that item?"
-    save: "Save changes"
+    save: "Save"
     search: "Search"
     empty: "There are no results for %{thing}"
     help: "Help"

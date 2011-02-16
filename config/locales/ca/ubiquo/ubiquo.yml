@@ -12,7 +12,7 @@ ca:
     add: "Afegir"
     cancel: "Cancelar"
     confirm_item_removal: "Estàs segur de voler eliminar aquest ítem?"
-    save: "Guardar canvis"
+    save: "Guardar"
     search: "Buscar"
     empty: "No hi ha resultats per %{thing}"
     help: "Ajuda"
