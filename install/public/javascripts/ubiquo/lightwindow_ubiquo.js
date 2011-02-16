@@ -30,6 +30,10 @@ tinyMceLightWindow = Class.create( lightwindow,{
         if(classname){
             $('lightwindow').addClassName(classname);
         }
+    },
+    // To use when we reload the content without notifying the lightwindow
+    reprocessInnerLinks: function(){
+        this._setupActions();
     }
 });
 
@@ -41,7 +45,7 @@ window["lightwindowInit"] = function() {
            inline : {height : 250, width : 600},
            media : {height : 250, width : 600},
            external : {height : 250, width : 600},
-           titleHeight: 25
+           titleHeight: 0
         },
         skin : 	{
             main : '<div id="lightwindow_container" >'+

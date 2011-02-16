@@ -654,7 +654,7 @@ a.new, #content .form-item-submit input.bt-create {
 		float: left;*/
 		display: inline-block;
 	}
-	#content td.actions a, form a.view, form a.select, form a.delete, form a.change, form a.add, form a.new {
+	#content td.actions a, form a.view, form a.select, form a.delete, form a.change, form a.add, form a.new, form a.action {
 		padding: .2em .5em;
 		margin: 0 .5em .4em 0;
 		font-size: .9em;
@@ -1165,118 +1165,6 @@ form .page_templates li {
 	list-style-type: none;
 	background: url("../../images/ubiquo/attachment.gif") left center no-repeat;
 	padding-left: 17px;
-}
-
-
-
-/*--- Lightwindow ---*/
-#lightwindow_stage {
-	width: 67.9em; 
-}
-	#ubiquo_lb {
-		position: relative;
-		overflow: hidden;
-		padding: 2em;
-		background: url(../../images/ubiquo/bg_lightwindow_long.png) no-repeat left top;
-	}
-		#lightwindow_contents {
-			background: none;
-			border: none;
-		}
-			#lightwindow_contents h3 {
-				margin-bottom: 1em;
-				font-size: 1.8em;
-			}
-			#lightwindow_contents a.close {
-				display: block;
-				position: absolute;
-				top: 0;
-				right: 1em;
-				width: 19px;
-				height: 19px;
-				text-indent: -5000px;
-				background: url(../../images/ubiquo/close.jpg) no-repeat 0 0;
-			}
-			#lightwindow_contents input {
-				display: block;
-				width: 26em;
-			}
-			#lightwindow_contents h4, #lightwindow_contents p {
-				font-size: 1.1em;
-			}
-			#lightwindow_contents h4 {
-				font-weight: bold;
-			}
-			#lightwindow_contents fieldset ul.assets_list {
-				margin-top: .6em;
-			}
-			#lightwindow_contents fieldset li, #lightwindow_contents fieldset .assigned_text {
-				position: relative;
-			}
-			#lightwindow_contents fieldset li {
-				margin-bottom: .4em;
-				padding: 0 0 .4em;
-				font-size: 1em;
-				border-bottom: 1px solid #D5D9C2;
-			}
-				.spinner { /* hauria de ser genèric */}
-				#lightwindow_contents fieldset li a {
-					position: absolute;
-					top: 0;
-					right: 0;
-					font-size: 1.2em;
-				}
-				#lightwindow_contents .handle { /* hauria de ser genèric */
-					display: block;
-					position: static;
-					float: left;
-					width: 17px;
-					height: 17px;
-					text-indent: -5000px;
-					background: url(../../images/ubiquo/updownarrows.gif) no-repeat;
-					cursor: move;
-				}
-				#lightwindow_contents fieldset li a.view {
-					right: 6em;
-				}
-				#lightwindow_contents fieldset li h4 {
-					font-size: 1.2em;
-				}
-				#lightwindow_contents fieldset h4, #lightwindow_contents fieldset dt {
-					font-weight: bold;
-				}
-				#lightwindow_contents fieldset dl {
-					margin-top: .4em;
-				}
-				#lightwindow_contents fieldset dt, #lightwindow_contents fieldset dd {
-					display: inline;
-					margin-right: .4em;
-					font-size: 1.1em;
-				}
-				#lightwindow_contents fieldset dd input {
-					display: inline;
-				}
-			#lightwindow_contents .form_buttons {
-				margin-top: 1.5em;
-			}
-				#lightwindow_contents .form_buttons input {
-					width: 6em;
-				}
-	#lightwindow_stage .inferior {
-		height: 4em;
-		background: url(../../images/ubiquo/bg_lightwindow.png) no-repeat left bottom;
-	}
-    
-#lightwindow.wide #lightwindow_stage {
-	width: 780px;
-}
-#lightwindow.wide #ubiquo_lb {
-    background: url(../../images/ubiquo/bg_lightwindow_long_wide.png) no-repeat left top;
-    padding-bottom:0px;
-}
-#lightwindow.wide #lightwindow_stage .inferior {
-    height: 3em;
-    background: url(../../images/ubiquo/bg_lightwindow_wide.png) no-repeat left bottom;
 }
 
 /*-------------- Clearfix --------------*/

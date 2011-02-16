@@ -16,7 +16,7 @@ module Ubiquo
         color = options.delete("color") || :red
         default_sources = []
         if sources.include?(:defaults)
-          default_sources += [:ubiquo, :ubiquo_application, :lightwindow, :listings, color]
+          default_sources += [:ubiquo, :ubiquo_application, :lightwindow, :ubiquo_lightwindow, :listings, color]
           default_sources += collect_asset_files("#{stylesheets_dir}", "plugins/*.css")
         end
         ubiquo_sources = (sources + default_sources).collect do |source|
