@@ -166,7 +166,7 @@ table, th, td { border: none;}
 			line-height: 1.3em;
 			text-align: left;
 			font-size: 2.4em;
-			background: #eece9b;
+			background: #ECF5F4;
 			-moz-border-radius-topleft: 6px;
 			-moz-border-radius-topright: 6px;
 			-webkit-border-top-left-radius: 6px;
@@ -208,7 +208,7 @@ table, th, td { border: none;}
 			.submenu li.active a, .submenu li.active span {
 				padding: .1em .6em;
 				color: #FFF;
-				background: #db9932;
+				background: #459890;
 				text-decoration: none;
 				-moz-border-radius: 9px;
 				-webkit-border-radius: 9px;
@@ -365,45 +365,44 @@ table, th, td { border: none;}
 /*--- footer ---*/
 
 #footer {
-	margin-left: 12px;
+	padding-left: 45em;
 	font-size: 13px;
 	font-family: Helvetica, Arial, sans-serif;
 	color: #969696;
-	line-height: 1.1em;
 	overflow: hidden;
-	zoom: 1;
-	width: 71%;
 }
-
-#footer a {
-	color: #424242;
-	text-decoration: underline;
-	margin-right: 7px;
-}
-
-#footer a:hover {
-	text-decoration: none;
-}
-
-#footer .links_ubiquo, #footer div.logo_ubiquo {
-	float: right;
-}
-
-#footer .links_ubiquo {
-	text-align: left;
-}
-#footer div.logo_ubiquo {
-	margin-right: .7em;
-	padding-right: .7em;
-	border-right: 1px solid #c9c9c9;
-}
-	#footer a.logo_ubiquo {
+	#footer span {
 		display: block;
-		background: url("../../images/ubiquo/logo_ubiquo.png") no-repeat left top;
-		width: 120px;
-		height: 30px;
-		margin: 0;
-		text-indent: -1000px;
+		margin-bottom: .2em;
+	}
+	#footer a {
+		margin-right: 1em;
+		color: #424242;
+		border-bottom: 1px dotted #777;
+	}
+	#footer a:hover {
+		border-bottom: 1px solid #424242;
+	}
+	
+	#footer .logo_ubiquo {
+		float: left;
+		margin-right: .7em;
+		padding-right: .7em;
+		border-right: 1px solid #AAA;
+	}
+		#footer .logo_ubiquo a {
+			display: block;
+			background: url(../../images/ubiquo/logo_ubiquo.png) no-repeat left top;
+			width: 133px;
+			height: 34px;
+			margin: 0;
+			border: none;
+			text-indent: -1000px;
+		}
+
+	#footer .links_ubiquo {
+		float: left;
+		padding: .2em 0 0;
 	}
 
 /*-------------- Estils genèrics --------------*/
@@ -505,12 +504,6 @@ a.new {
 	text-transform: uppercase;
 	border: 1px solid #999;
 	-moz-box-shadow: 1px 1px 0 #FFF;
-	/*padding: .5em .7em;
-	font-size: 1.5em;
-	color: #FFF;
-	text-shadow: #666 0 -1px 0;
-	background: url(../../images/ubiquo/bg-button-gradient-dark.png) repeat-x left center;
-	-moz-box-shadow: 1px 1px 0 #FFFFFF, inset 1px 1px 1px #BBB;*/
 }
 a.new:active {
 	/*text-shadow: none;
@@ -654,7 +647,7 @@ a.new, #content .form-item-submit input.bt-create {
 		float: left;*/
 		display: inline-block;
 	}
-	#content td.actions a, form a.view, form a.select, form a.delete, form a.change, form a.add, form a.new, form a.action {
+	#content td.actions a, form a.view, form a.select, form a.delete, form a.change, form a.add, form a.new {
 		padding: .2em .5em;
 		margin: 0 .5em .4em 0;
 		font-size: .9em;
@@ -860,6 +853,7 @@ form label {
 	box-shadow: inset 1px 1px 2px #DDD;
 }
 #content form input[type='file'] {
+	margin-right: 4em;
 	border: none;
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
@@ -873,19 +867,19 @@ form label {
 	display: inline;
 }
 
-form .page_templates li {
+#content form .page_templates li {
 	float: left;
 	margin-right: 1em;
 }
-	form .page_templates input {
+	#content form .page_templates input {
 		display: inline;
 		vertical-align: middle;
 	}
-	form .page_templates label {
+	#content form .page_templates label {
 		font-weight: normal;
 		font-size: 1em;
 	}
-	form .page_templates img {
+	#content form .page_templates img {
 		display: block;
 	}
 
@@ -950,7 +944,8 @@ form .page_templates li {
 			width: 78%;
 		}
 		#content .form-item-submit input {
-			display: inline;
+			/*display: inline;*/
+			float: right;
 			margin-left: .5em;
 		}
 		

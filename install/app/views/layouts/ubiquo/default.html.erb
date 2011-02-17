@@ -52,13 +52,13 @@
       </div>
       <hr />
       <div id="footer">
+        <div class="logo_ubiquo">
+          <%= link_to 'Ubiquo', 'http://www.ubiquo.me' %>
+        </div>
         <div class="links_ubiquo">
-          ® <%= Time.now.year %> ubiquo <br/>
+          <span class="copy">® <%= Time.now.year %> ubiquo</span> 
           <%= link_to 'MIT license', 'http://www.opensource.org/licenses/mit-license.php' %>
           <%= link_to 'ubiquo website', 'http://www.ubiquo.me' %>
-        </div>
-        <div class="logo_ubiquo">
-          <%= link_to 'Ubiquo', 'http://www.ubiquo.me', :class => 'logo_ubiquo' %>
         </div>
 	  </div>
       <iframe id='upload_frame' name="upload_frame" src="about:blank"></iframe>
