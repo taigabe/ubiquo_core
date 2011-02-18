@@ -46,6 +46,15 @@ namespace :ubiquo do
     desc "Alias task for ubiquo:db:reset"
     task :init => "ubiquo:db:reset"
 
+    desc "Fix the sequence fields consistency for the tables of the given [TABLES=foos[,bars,lands]] [MODELS=Foo[,Bar,Land]] [GROUPS=Group1[,Group2,Group3]]"
+    task :fix_sequences => :environment do
+      include Ubiquo::Tasks::Database
+      ActiveRecord::Base.establish_connection
+      tables = join_table_names(ENV['TABLES'], ENV['MODELS'], ENV['GROUPS'])
+      puts tables.inspect
+      fix_sequence_consistency(tables)
+    end
+
     namespace :fixtures do
       desc "use export [TABLES=foos[,bars,lands]] [MODELS=Foo[,Bar,Land]] [GROUPS=Group1[,Group2,Group3]] to create YAML fixtures from data in an existing database.\n" +
         "Defaults to development database. Set RAILS_ENV to override. "
