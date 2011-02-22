@@ -1,6 +1,6 @@
 
 module Ubiquo
-  
+
   #Usage:
   #Add 'required_fields' to your ActiveRecord model:
   # class YourModel < ActiveRecord::Base
@@ -15,7 +15,7 @@ module Ubiquo
   #   <%= form.label :name, "Name" %>
   # <% end %>
   #
-  #this label will be 
+  #this label will be
   # <label for="yourmodel_name">Name *</label>
   #
   #
@@ -28,13 +28,9 @@ module Ubiquo
   # <%= form.label :name, "Name", :append_asterisk => false %>
   #
   #
-  
-  
+
+
   module RequiredFields
-    autoload :ActiveRecord, "ubiquo/required_fields/active_record.rb"
-    autoload :Validations, "ubiquo/required_fields/validations.rb"
-    autoload :FormHelper, "ubiquo/required_fields/form_helper.rb"
-    autoload :FormTagHelper, "ubiquo/required_fields/form_tag_helper.rb"
   end
 end
 

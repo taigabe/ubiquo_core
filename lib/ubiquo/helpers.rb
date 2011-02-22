@@ -1,7 +1,5 @@
 module Ubiquo
   module Helpers
-    autoload :CoreUbiquoHelpers, 'ubiquo/helpers/core_ubiquo_helpers.rb'
-    autoload :CorePublicHelpers, 'ubiquo/helpers/core_public_helpers.rb'    
   end
 end
 

@@ -1,8 +1,3 @@
-require 'rake'
-require 'rake/testtask'
-require 'rake/rdoctask'
-require 'tasks/rails'
-
 module Ubiquo
 
   def self.tab_template(name)
@@ -15,7 +10,7 @@ module Ubiquo
       tab.highlighted_class = 'active'
     end # Last tab"
   end
-  
+
   module Extensions
     module RailsGenerator
       module Create
@@ -27,16 +22,16 @@ module Ubiquo
           logger.route "#{namespace}.resources #{resource_list}"
           unless options[:pretend]
             gsub_file(
-              'config/routes.rb', 
+              'config/routes.rb',
               /([\t| ]*)(#{Regexp.escape(sentinel)})/mi,
               "\\1\\2\n\\1  #{namespace}.resources #{resource_list}\n"
               )
           end
         end
-        
+
         def nested_route_resources(parent, *resources)
           resource_list = resources.map { |r| r.to_sym.inspect }.join(', ')
-          
+
           unless options[:pretend]
             gsub_file(
               'config/routes.rb',
@@ -50,7 +45,7 @@ module Ubiquo
               )
           end
         end
-        
+
         # Add ubiquo tab
         def ubiquo_tab(name)
           sentinel = 'end # Last tab'
@@ -81,15 +76,15 @@ module Ubiquo
 
         def nested_route_resources(parent, *resources)
           resource_list = resources.map { |r| r.to_sym.inspect }.join(', ')
-          
+
           unless options[:pretend]
             gsub_file(
               'config/routes.rb',
-              /^[^\n]*#{parent}.resources?\s#{resource_list}\n/mi, 
+              /^[^\n]*#{parent}.resources?\s#{resource_list}\n/mi,
               "")
           end
         end
-        
+
         def ubiquo_migration
           Rake::Task['db:rollback'].execute(nil)
         end

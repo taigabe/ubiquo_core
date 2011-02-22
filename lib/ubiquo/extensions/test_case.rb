@@ -1,4 +1,3 @@
-require 'tempfile'
 module Ubiquo
   module Extensions
     module TestCase
@@ -113,13 +112,13 @@ module Ubiquo
 
             (class << self; self end).class_eval do
               eval <<-CONN
-                def test_with_connector name, &block
-                  block_with_connector_load = Proc.new{
-                    "#{plugin.to_s.camelize}::Connectors::#{conn.to_s.camelize}".constantize.load!
-                     block.bind(self).call
-                  }
-                  test_without_connector "#{conn}_\#{name}", &block_with_connector_load
-                end
+              def test_with_connector name, &block
+                block_with_connector_load = Proc.new{
+                  "#{plugin.to_s.camelize}::Connectors::#{conn.to_s.camelize}".constantize.load!
+                  block.bind(self).call
+                }
+                test_without_connector "#{conn}_\#{name}", &block_with_connector_load
+              end
               CONN
 
               unless instance_methods.include?('test_without_connector')
