@@ -5,3 +5,4 @@ if ActiveRecord::Base.connection.class.to_s == "ActiveRecord::ConnectionAdapters
 end
 
 require File.dirname(__FILE__) + '/relation_helper'
+require 'rake' # For cron job testing
