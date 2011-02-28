@@ -29,4 +29,14 @@ class FilterHelpersTest < Ubiquo::Filters::UbiquoFilterTestCase
     assert_select doc, "p[class=search_info]", 1
   end
 
+  test "Shouldn't show filter if collection is empty" do
+    @model.delete_all
+    @filter_set = filters_for 'FilterTest' do |f|
+      f.links :filters, @model.all
+    end
+    @filters = @filter_set.filters
+    doc = HTML::Document.new(show_filters).root
+    assert_select doc, "div#links_filter_content", 0    
+  end
+    
 end

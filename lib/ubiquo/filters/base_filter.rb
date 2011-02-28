@@ -7,6 +7,7 @@ module Ubiquo
       end
 
       def lateral_filter(options = {}, &block)
+        return if options[:collection] && options[:collection].empty?
         box_id = "box-" + (options[:box_id] || options[:field].to_s.dasherize)
         fields = [options[:field]].flatten
         title  = I18n.t("ubiquo.filter", :thing => options[:caption])
