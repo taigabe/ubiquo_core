@@ -1,6 +1,6 @@
 @charset "utf-8";
 
-@import url(http://fonts.googleapis.com/css?family=Ubuntu:Bold|Puritan:Bold);
+@import url(http://fonts.googleapis.com/css?family=Ubuntu:regular,Bold|PT+Sans:regular,bold);
 
 /*-------------- Generics / Reset --------------*/
 * { margin: 0; padding: 0; line-height: 1em; font-size: 1em;}
@@ -26,7 +26,9 @@ table, th, td { border: none;}
 	width: 100%;
 }
 /*--- header ---*/
-#header {}
+#header {
+  padding-top: .6em;
+}
 	#controls {
 		padding: .7em 2em .7em;
 		background: #000;
@@ -35,8 +37,8 @@ table, th, td { border: none;}
 			float: left;
 			margin-right: .6em;
 			padding-right: .7em;
+			font-family: Tahoma, Verdana, serif;
 			font-size: 1em;
-			font-weight: bold;
 			background: url(../../images/ubiquo/controls_divider.gif) no-repeat right .2em;
 		}
 			#controls li:last-child {
@@ -69,11 +71,13 @@ table, th, td { border: none;}
 			float: right;
 		}
 	#header_central {
-		height: 4em;
-		padding: .5em 2em .3em;
+		height: 3.7em;
+		padding: .8em 2em .3em;
 	}
 		#header_central	h1 {
 			font-family: 'Ubuntu', Arial, serif;
+		  font-weight: bold;
+			text-shadow: 1px 1px 4px #590B0E;
 			font-size: 2.6em;
 			line-height: 1;
 			width: 50%;
@@ -103,7 +107,7 @@ table, th, td { border: none;}
 			float: left;
 			margin-right: .3em;
 			padding: .7em 1em;
-			font-size: 1.2em;
+			font-size: 1.15em;
 			font-weight: bold;
 			-moz-border-radius-topleft: 6px;
 			-moz-border-radius-topright: 6px;
@@ -137,8 +141,8 @@ table, th, td { border: none;}
 }
 	/*--- content ---*/
 	#content {
-        float: left;
-        width: 72%;
+    float: left;
+    width: 72%;
 		background: #FFF;
 		/*border-right: 1px solid #b1b1b1;
 		border-bottom: 1px solid #b1b1b1;*/
@@ -154,10 +158,8 @@ table, th, td { border: none;}
 		padding: 8.8em 1.4em 1.7em;
 		min-height: 40em;
 	}
-		#content h1, #tabs li, #sidebar h3 {
-			font-family: 'Puritan', Arial, sans-serif;
-		}
 		#content h1 {
+		  font-family: 'PT Sans', Arial, sans-serif;
 			position: absolute;
 			top: 0;
 			left: 0;
@@ -256,7 +258,6 @@ table, th, td { border: none;}
 			margin-bottom: .4em;
 			padding-bottom: .2em;
 			font-size: 1.8em;
-			font-weight: bold;
 		}
 
 		#sidebar h4 {
