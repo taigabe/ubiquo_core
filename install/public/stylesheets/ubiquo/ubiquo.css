@@ -242,7 +242,7 @@ table, th, td { border: none;}
 				}
 					#sidebar .sidebar_box .header h3 {
 						line-height: 1.1;
-			        	font-size: 1.6em;
+			      font-size: 1.4em;
 						margin: 0 0 .6em;
 						border-bottom: 1px solid #777;
 						-moz-box-shadow: 0 1px 0 #FFF;
@@ -267,6 +267,11 @@ table, th, td { border: none;}
 		}
 		#sidebar p {
 			margin-bottom: .4em;
+			font-size: 1.2em;
+		}
+		#sidebar li {
+      margin-bottom: .3em;
+      font-size: 1.2em;
 		}
 		
 		#sidebar .form-item, #sidebar .form-item-submit {
@@ -317,10 +322,7 @@ table, th, td { border: none;}
 		color: #FFF;
 	}
 	
-	#links_filter_content li {
-		margin-bottom: .3em;
-		font-size: 1.4em;
-	}
+	#links_filter_content li {}
 	#tag_filter_content li {
 		display: inline;
 	}
