@@ -1,6 +1,6 @@
-class UbiquoAreaController < ApplicationController
+class UbiquoController < ApplicationController
 
-  include Ubiquo::Extensions::UbiquoAreaController
+  include Ubiquo::Extensions::UbiquoController
 
   before_filter :login_required
   layout "ubiquo/default"

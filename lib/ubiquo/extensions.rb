@@ -1,12 +1,20 @@
 require "rails_generator"
 
-module Ubiquo
-  module Extensions
+module Ubiquo::Extensions
+  autoload :Loader, 'ubiquo/extensions/loader'
+
+  # Applies any defined extension for +sym+
+  def self.const_missing(sym)
+    if Loader.has_extensions?(sym)
+      const_set(sym, Loader.extensions_for(sym))
+    else
+      super
+    end
   end
 end
 
 ActionController::Routing::RouteSet::Mapper.send(:include, Ubiquo::Extensions::Routing)
-Ubiquo::Extensions::UbiquoAreaController.append_include(Ubiquo::Extensions::DateParser)
+Ubiquo::Extensions::Loader.append_include(:UbiquoController, Ubiquo::Extensions::DateParser)
 ActionView::Base.field_error_proc = Ubiquo::Extensions::ActionView.ubiquo_field_error_proc
 ActiveRecord::Base.send(:extend, Ubiquo::Extensions::ActiveRecord)
 Array.send(:include, Ubiquo::Extensions::Array)
@@ -24,7 +32,7 @@ end
 
 ActiveRecord::Base.send(:include, Ubiquo::Extensions::ConfigCaller)
 ActiveRecord::Base.send(:extend, Ubiquo::Extensions::ConfigCaller)
-Ubiquo::Extensions::UbiquoAreaController.append_extend(Ubiquo::Extensions::ConfigCaller)
-Ubiquo::Extensions::UbiquoAreaController.append_include(Ubiquo::Extensions::ConfigCaller)
+Ubiquo::Extensions::Loader.append_extend(:UbiquoController, Ubiquo::Extensions::ConfigCaller)
+Ubiquo::Extensions::Loader.append_include(:UbiquoController, Ubiquo::Extensions::ConfigCaller)
 ActionView::Base.send(:include, Ubiquo::Extensions::ConfigCaller)
 ActionView::Base.send(:extend, Ubiquo::Extensions::ConfigCaller)

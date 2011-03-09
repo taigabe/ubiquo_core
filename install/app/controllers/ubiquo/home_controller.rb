@@ -1,4 +1,4 @@
-class Ubiquo::HomeController < UbiquoAreaController
+class Ubiquo::HomeController < UbiquoController
   def index
   end
 end

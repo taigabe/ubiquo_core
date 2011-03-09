@@ -1,4 +1,4 @@
-class Ubiquo::AttachmentController < UbiquoAreaController
+class Ubiquo::AttachmentController < UbiquoController
   def show
     send_multimedia(params[:path], :x_sendfile => Ubiquo::Config.get(:attachments)[:use_x_send_file])   
   end

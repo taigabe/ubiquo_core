@@ -3,4 +3,4 @@ module Ubiquo
   end
 end
 
-Ubiquo::Extensions::UbiquoAreaController.append_helper(Ubiquo::NavigationTabs::Helpers)
+Ubiquo::Extensions::Loader.append_helper(:UbiquoController, Ubiquo::NavigationTabs::Helpers)
