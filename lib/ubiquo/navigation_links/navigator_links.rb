@@ -28,10 +28,10 @@ module Ubiquo
       # Method to add a link inside a navigator object
       def add_link(options = {}, &block)
         id = @link_options[:id] ? (@link_options[:id].to_s + "_" + (@links.size + 1).to_s) : nil
-        
-        link = Link.new({ :id => id, 
-                          :class => @link_options[:class]
-                        }.merge(options))
+        link = Ubiquo::NavigationLinks::Link.new(
+          { :id => id, 
+            :class => @link_options[:class]
+          }.merge(options))
         @links << link
         block.call(link)
         link
