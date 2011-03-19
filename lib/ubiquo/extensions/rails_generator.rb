@@ -57,6 +57,8 @@ module Ubiquo
         end
 
         def ubiquo_migration
+          libs = %w[ rake rake/testtask rake/rdoctask tasks/rails ]
+          libs.each { |lib| require lib}
           Rake::Task['db:migrate'].execute(nil)
         end
       end
