@@ -19,4 +19,21 @@ namespace :ubiquo do
     end
 
   end
+
+  namespace :crontab do
+
+    desc "Renders current crontab definition to stdout"
+    task :render => :environment do
+      puts Ubiquo::Cron::Crontab.render
+    end
+
+    desc "Installs current crontab definition to current's user crontab (WARNING: removes all existing crontab entries)"
+    task :install => :environment do
+      `crontab -r` # Remove current crontab
+      sleep 30     # Wait a bit to give a chance for current jobs to finish (yeah I know, too optimistic)
+      Ubiquo::Cron::Crontab.install!
+    end
+
+  end
+
 end
