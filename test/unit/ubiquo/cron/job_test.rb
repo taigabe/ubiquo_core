@@ -104,7 +104,7 @@ class Ubiquo::Cron::JobTest < ActiveSupport::TestCase
   end
 
   test "Should send email when a task error occurs" do
-    Ubiquo::Cron::Crontab.configure do |config|
+    Ubiquo::Cron::Crontab.schedule do |config|
       config.mailto = 'test@test.com'
     end
     task = 'ubiquo_cron_mail_test'

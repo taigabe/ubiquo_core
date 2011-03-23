@@ -5,7 +5,7 @@ class Ubiquo::Cron::CrontabTest < ActiveSupport::TestCase
   def setup
     @krontab = Ubiquo::Cron::Crontab
     @krontab.clear!
-    @crontab = @krontab.new
+    @crontab = @krontab.instance
   end
 
   test "Should be able to set a mailto" do
@@ -29,16 +29,16 @@ class Ubiquo::Cron::CrontabTest < ActiveSupport::TestCase
   end
 
   test "Should be able to configure the crontab" do
-    assert_respond_to @krontab, :configure
+    assert_respond_to @krontab, :schedule
     assert_respond_to @krontab, :instance
-    @krontab.configure do |config|
+    @krontab.schedule do |config|
       config.path    = '/mypath'
       config.logfile = '/mylogfile'
     end
     crontab = @krontab.instance
     assert_equal '/mypath'    , crontab.path
     assert_equal '/mylogfile' , crontab.logfile
-    @krontab.configure do |config|
+    @krontab.schedule do |config|
       config.mailto = 'test@test.com'
     end
     new_crontab = @krontab.instance
@@ -47,15 +47,11 @@ class Ubiquo::Cron::CrontabTest < ActiveSupport::TestCase
     assert_equal 'test@test.com' , new_crontab.mailto
   end
 
-  test "Should be able to get crontab lines" do
-    assert_kind_of Array, @crontab.lines
-  end
-
   test "Should be able add a rake task to a crontab instance" do
-    assert_difference '@crontab.lines.size', +1 do
+    assert_difference "@crontab.render.split('\n').size", +1 do
       schedule = "@weekly"; task = "ubiquo:guides"
       assert @crontab.rake schedule, task
-      line = @crontab.lines.last
+      line = @crontab.render.split('\n').last
       assert_match /^#{Regexp.escape(schedule)} /, line
       assert_match /rake ubiquo:cron:runner task='#{task}'/, line
       assert_match /2>&1\"$/, line
@@ -63,9 +59,9 @@ class Ubiquo::Cron::CrontabTest < ActiveSupport::TestCase
   end
 
   test "Should be able add a rake task to a crontab instance with vars" do
-    assert_difference '@crontab.lines.size', +1 do
+    assert_difference "@crontab.render.split('\n').size", +1 do
       assert @crontab.rake "@weekly", "ubiquo:guides myvar='6'"
-      line = @crontab.lines.last
+      line = @crontab.render.split('\n').last
       assert_match /^#{Regexp.escape("@weekly")} /, line
       assert_match /rake ubiquo:cron:runner task='ubiquo:guides' myvar='6'/, line
       assert_match /2>&1\"$/, line
@@ -73,10 +69,10 @@ class Ubiquo::Cron::CrontabTest < ActiveSupport::TestCase
   end
 
   test "Should be able to launch a script runner" do
-    assert_difference '@crontab.lines.size', +1 do
+    assert_difference "@crontab.render.split('\n').size", +1 do
       schedule = "* * * * *"; task = "Article.notify_users_on_update"
       assert @crontab.runner schedule, task
-      line = @crontab.lines.last
+      line = @crontab.render.split('\n').last
       assert_match /^#{Regexp.escape(schedule)} /, line
       assert_match /rake ubiquo:cron:runner task='#{task}' type='script'/, line
       assert_match /2>&1\"$/, line
@@ -84,26 +80,26 @@ class Ubiquo::Cron::CrontabTest < ActiveSupport::TestCase
   end
 
   test "Should be able to add a comment line in the crontab" do
-    assert_difference '@crontab.lines.size', +1 do
+    assert_difference "@crontab.render.split('\n').size", +1 do
       comment = "This is a comment"
       assert @crontab.comment comment
-      line = @crontab.lines.last
+      line = @crontab.render.split('\n').last
       assert_match /^#/, line
       assert_match /#{comment}/, line
     end
   end
 
   test "Should be able to add a free command to the schedule" do
-    assert_difference '@crontab.lines.size', +1 do
+    assert_difference "@crontab.render.split('\n').size", +1 do
       schedule = "* * * * *"; command = "vacuumdb --all --analyze -q"
       assert @crontab.command schedule, command
-      line = @crontab.lines.last
+      line = @crontab.render.split('\n').last
       assert_match /^#{Regexp.escape(schedule)} #{schedule}/, line
     end
   end
 
   test "Should be able to add several jobs to the schedule" do
-    assert_difference '@crontab.lines.size', +3 do
+    assert_difference "@crontab.render.split('\n').size", +3 do
       @crontab.rake    "@weekly", "clear"
       @crontab.runner  "@reboot", "Articles.tagify!"
       @crontab.comment "End of tasks"
@@ -112,12 +108,13 @@ class Ubiquo::Cron::CrontabTest < ActiveSupport::TestCase
 
   test "Should be able to clear a crontab" do
     assert_respond_to @krontab, :clear!
-    @krontab.configure do |config|
+    original = @krontab.instance
+    @krontab.schedule do |config|
       config.path    = '/mypath'
       config.logfile = '/mylogfile'
     end
     @krontab.clear!
-    assert_nil @krontab.instance
+    assert_equal original, @krontab.instance
   end
 
   test "Should be able to define a crontab schedule" do
@@ -126,7 +123,7 @@ class Ubiquo::Cron::CrontabTest < ActiveSupport::TestCase
       cron.runner  "@weekly", "Users.notify!"
       cron.command "@daily" , "vacuumdb --all --analyze -q"
     end
-    crontab = @krontab.instance.lines
+    crontab = @krontab.render.split("\n")
     assert_equal 5, crontab.size
     assert_match /^### Start jobs for #{Ubiquo::Config.get(:app_name)}/, crontab.shift
     assert_match /^@reboot/, crontab.shift
@@ -147,7 +144,7 @@ class Ubiquo::Cron::CrontabTest < ActiveSupport::TestCase
 
   test "Should be able to install a rendered crontab schedule" do
     assert_respond_to @krontab, :install!
-    @krontab.expects(:system).with("crontab", anything).returns(0)
+    @krontab.instance.expects(:system).with("crontab", anything).returns(0)
     @krontab.schedule do |cron|
       cron.rake "@reboot", "sphinx:start"
     end

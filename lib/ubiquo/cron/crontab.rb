@@ -1,67 +1,32 @@
-require 'tempfile'
-
 module Ubiquo
   module Cron
     class Crontab
 
-      cattr_accessor :instance
+      include Singleton
 
       attr_accessor  :mailto
       attr_accessor  :path
       attr_accessor  :env
       attr_accessor  :logfile
-      attr_accessor  :lines
-
-      def self.reloadable?() false end
 
       class << self
 
         def clear!
-          self.instance = nil
+          self.instance.clear!
         end
 
-        def configure
-          crontab = self.instance || self.new
-          yield crontab
-          self.instance = crontab
-        end
-
-        def schedule(namespace = Ubiquo::Config.get(:app_name))
-          crontab = self.instance || self.new
-          crontab.comment "Start jobs for #{namespace}"
-          yield crontab
-          crontab.comment "End jobs for #{namespace}"
-          self.instance = crontab
+        def schedule(*args, &block)
+          self.instance.schedule(*args, &block)
         end
 
         def render
-          self.instance.lines.join("\n")
+          self.instance.render
         end
 
-        # This methods installs the defined schedule in crontab
-        # ovewriting the one installed for the user running this method.
         def install!
-          crontab_schedule = self.render
-          unless crontab_schedule.blank?
-            schedule = Tempfile.new('crontab_schedule')
-            schedule << crontab_schedule
-            schedule.close
-            status = system("crontab",schedule.path)
-          else
-            status = 0
-          end
-          status
-        ensure
-          schedule.delete if schedule
+          self.instance.install!
         end
-      end
 
-      def initialize
-        @path     = Rails.root
-        @env      = Rails.env
-        @logfile  = File.join Rails.root, 'log', "cron-#{@env}.log"
-        self.instance = self
-        @lines    = []
       end
 
       def rake(schedule, task)
@@ -84,6 +49,54 @@ module Ubiquo
 
       def comment(comment)
         @lines << "### #{comment} ###"
+      end
+
+      def clear!
+        initialize
+      end
+
+      def render
+        @lines.join("\n")
+      end
+
+      # This methods installs the defined schedule in crontab
+      # ovewriting the one installed for the user running this method.
+      def install!
+        schedule = render
+        unless schedule.blank?
+          file = Tempfile.new('schedule')
+          file << schedule
+          file.close
+          status = system("crontab",file.path)
+        else
+          status = 0
+        end
+        status
+      ensure
+        file.delete if file
+      end
+
+      def schedule(namespace = Ubiquo::Config.get(:app_name), &block)
+        block.call(self)
+        add_comments(namespace)
+        self
+      end
+
+      private
+
+      def initialize
+        @mailto   = nil
+        @path     = Rails.root
+        @env      = Rails.env
+        @logfile  = File.join Rails.root, 'log', "cron-#{@env}.log"
+        @lines    = []
+      end
+
+      def add_comments(namespace)
+        unless @lines.blank?
+          @lines.unshift "### Start jobs for #{namespace} ###"
+          @lines << "### End jobs for #{namespace} ###"
+        end
       end
 
     end
