@@ -9,24 +9,8 @@ module Ubiquo
       attr_accessor  :env
       attr_accessor  :logfile
 
-      class << self
-
-        def clear!
-          self.instance.clear!
-        end
-
-        def schedule(*args, &block)
-          self.instance.schedule(*args, &block)
-        end
-
-        def render
-          self.instance.render
-        end
-
-        def install!
-          self.instance.install!
-        end
-
+      def self.schedule(*args, &block)
+        self.instance.schedule(*args, &block)
       end
 
       def rake(schedule, task)
@@ -56,6 +40,7 @@ module Ubiquo
       end
 
       def render
+        return "" if just_comments?
         @lines.join("\n")
       end
 
@@ -77,8 +62,9 @@ module Ubiquo
       end
 
       def schedule(namespace = Ubiquo::Config.get(:app_name), &block)
+        comment "Start jobs for #{namespace}"
         block.call(self)
-        add_comments(namespace)
+        comment "End jobs for #{namespace}"
         self
       end
 
@@ -92,10 +78,9 @@ module Ubiquo
         @lines    = []
       end
 
-      def add_comments(namespace)
-        unless @lines.blank?
-          @lines.unshift "### Start jobs for #{namespace} ###"
-          @lines << "### End jobs for #{namespace} ###"
+      def just_comments?
+        @lines.inject(true) do |result, line|
+          result && line.match(/^#/)
         end
       end
 
