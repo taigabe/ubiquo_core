@@ -4,8 +4,7 @@ class Ubiquo::Cron::CrontabTest < ActiveSupport::TestCase
 
   def setup
     @krontab = Ubiquo::Cron::Crontab
-    @krontab.instance.clear!
-    @crontab = @krontab.instance
+    @crontab = @krontab.instance.send(:reset!)
   end
 
   test "Should be able to set a mailto" do
@@ -107,17 +106,6 @@ class Ubiquo::Cron::CrontabTest < ActiveSupport::TestCase
     end
   end
 
-  test "Should be able to clear a crontab" do
-    assert_respond_to @krontab.instance, :clear!
-    original = @krontab.instance
-    @krontab.schedule do |config|
-      config.path    = '/mypath'
-      config.logfile = '/mylogfile'
-    end
-    @krontab.instance.clear!
-    assert_equal original, @krontab.instance
-  end
-
   test "Should be able to define a crontab schedule" do
     @krontab.schedule do |cron|
       cron.rake    "@reboot", "sphinx:start"
@@ -126,7 +114,7 @@ class Ubiquo::Cron::CrontabTest < ActiveSupport::TestCase
     end
     crontab = @krontab.instance.render.split("\n")
     assert_equal 5, crontab.size
-    assert_match /^### Start jobs for #{Ubiquo::Config.get(:app_name)}/, crontab.shift
+    assert_match /^### Start jobs for application/, crontab.shift
     assert_match /^@reboot/, crontab.shift
     assert_match /Users/, crontab.shift
     assert_match /@daily/, crontab.shift
