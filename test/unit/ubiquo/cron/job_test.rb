@@ -1,7 +1,4 @@
 require File.dirname(__FILE__) + "/../../../test_helper.rb"
-require 'tempfile'
-require 'socket'
-require 'etc'
 
 class Ubiquo::Cron::JobTest < ActiveSupport::TestCase
 
@@ -25,24 +22,10 @@ class Ubiquo::Cron::JobTest < ActiveSupport::TestCase
     assert @job.run('ubiquo_cron_test')
   end
 
-  test "Should be able to determine if a job has been executed" do
-    assert_respond_to @job, :invoked?
-    assert !@job.invoked?
-    assert @job.run('ubiquo_cron_test')
-    assert @job.invoked?
-  end
-
-  test "Should be able to get stdout, stderr of a job" do
-    assert_respond_to @job, :stdout
-    assert @job.run('ubiquo_cron_stds_test')
-    assert_equal "out\n", @job.stdout
-    assert_equal "err\n", @job.stderr
-  end
-
   test "Should be able to log results to a specified log file" do
     logfile = Tempfile.new('ubiquo_cron_stds_test')
     logger = Logger.new(logfile.path, Logger::DEBUG)
-    job = Ubiquo::Cron::Job.new(logger)
+    job = Ubiquo::Cron::Job.new(:logger => logger)
     job.run('ubiquo_cron_stds_test')
     contents = File.read(logfile.path)
     hostname = Socket.gethostname
@@ -59,23 +42,21 @@ class Ubiquo::Cron::JobTest < ActiveSupport::TestCase
   test "Should be able to log debug messages when debug is active" do
     logfile = Tempfile.new('ubiquo_cron_test')
     logger = Logger.new(logfile.path, Logger::DEBUG)
-    job = Ubiquo::Cron::Job.new(logger, true) # Debug activated
+    job = Ubiquo::Cron::Job.new(:logger => logger, :debug => true) # Debug activated
     job.run('ubiquo_cron_stds_test')
     contents = File.read(logfile.path)
-    assert_match(/DEBUG Standard output/, contents)
-    assert_match(/DEBUG Standard error/, contents)
+    assert_match(/Standard output/, contents)
+    assert_match(/Standard error/, contents)
   end
 
   test "Lockfile shouldn't fail when task has special characters" do
     assert !@job.run('/dsada/ $$$$$ \\\\\\')
-    assert_respond_to @job, :stdout
-    assert @job.backtrace
   end
 
   test "Should catch and log exceptions" do
     logfile = Tempfile.new('ubiquo_cron_test')
     logger = Logger.new(logfile.path, Logger::DEBUG)
-    job = Ubiquo::Cron::Job.new(logger)
+    job = Ubiquo::Cron::Job.new(:logger => logger)
     assert_nothing_raised do
       job.run('krash')
     end
@@ -93,7 +74,7 @@ class Ubiquo::Cron::JobTest < ActiveSupport::TestCase
     Thread.abort_on_exception = true
 
     2.times do
-      threads << Thread.new(logger,task) { |logger,task| Ubiquo::Cron::Job.new(logger).run(task) }
+      threads << Thread.new(logger,task) { |logger,task| Ubiquo::Cron::Job.new(:logger => logger).run(task) }
     end
 
     threads.each { |t| t.join }
@@ -109,9 +90,14 @@ class Ubiquo::Cron::JobTest < ActiveSupport::TestCase
     end
     task = 'ubiquo_cron_mail_test'
     Rake::Task.define_task task.to_sym do; krash; end
-    logfile = Tempfile.new task
-    logger  = Logger.new(logfile.path, Logger::DEBUG)
-    job     = Ubiquo::Cron::Job.new(logger)
+    logfile       = Tempfile.new task
+    logger        = Logger.new(logfile.path, Logger::DEBUG)
+    recipients    = Ubiquo::Cron::Crontab.instance.mailto
+    job           = Ubiquo::Cron::Job.new(
+      :logger     => logger,
+      :debug      => false,
+      :recipients => recipients
+    )
     assert_difference 'ActionMailer::Base.deliveries.size', +1 do
       job.run task
     end
@@ -127,7 +113,7 @@ class Ubiquo::Cron::JobTest < ActiveSupport::TestCase
     recipients = nil
     logfile    = Tempfile.new task
     logger     = Logger.new(logfile.path, Logger::DEBUG)
-    job        = Ubiquo::Cron::Job.new(logger,recipients)
+    job        = Ubiquo::Cron::Job.new(:logger => logger, :recipients => recipients)
     assert_no_difference 'ActionMailer::Base.deliveries.size' do
       job.run(task,:script)
     end
@@ -137,16 +123,11 @@ class Ubiquo::Cron::JobTest < ActiveSupport::TestCase
     task = 'a = 3 * 2; puts a'
     logfile = Tempfile.new task
     logger  = Logger.new(logfile.path, Logger::DEBUG)
-    job = Ubiquo::Cron::Job.new(logger)
+    job     = Ubiquo::Cron::Job.new(:logger => logger, :debug => true)
     assert job.run(task, :script)
-    assert_equal '6', job.stdout.strip
+    assert_match /^    6$/, File.read(logfile.path)
   end
 
-  # TODO: Let the directory for locks to be configurable
-  # TODO: Refactor crontab.instance and job interface
-  # TODO: Comment public methods
   # TODO: Refactor tests
-  # TODO: Deal with multiple environments
-  # TODO: Install with capistrano
 
 end

@@ -6,14 +6,18 @@ namespace :ubiquo do
       task       = ENV.delete('task')
       type       = ENV.delete('type')
       debug      = ENV.delete('debug') || false
-      type       = (type.strip.to_sym if type) || :task
+      type       = (type.strip.to_sym if type) || :rake
       crontab    = Ubiquo::Cron::Crontab.instance
       recipients = crontab.mailto
       logfile    = crontab.logfile
 
       File.new(logfile, 'w') unless File.exist? logfile
       logger     = Logger.new(logfile, Logger::DEBUG)
-      job = Ubiquo::Cron::Job.new(logger, debug, recipients)
+      job = Ubiquo::Cron::Job.new(
+        :logger => logger,
+        :debug  => debug,
+        :recipients => recipients
+      )
       job.run(task,type)
     end
 
