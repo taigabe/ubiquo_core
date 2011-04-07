@@ -44,13 +44,11 @@ module Ubiquo
           related_objects = url_craft_settings object_class_name, selector_type, options
           # Finally, output is generated
           if selector_type.to_sym == :select
-            output = content_tag(:p, html_options) do
-              inst_name = options[:name] || object.class.human_attribute_name(key)
-              caption = options[:required] == true ? "#{inst_name} *" : inst_name
-              content_tag(:label, caption) +
-                send("relation_#{selector_type}_selector",
-                object, object_name, key, related_objects, humanized_field, relation_type, options)
-            end
+            inst_name = options[:name] || object.class.human_attribute_name(key)
+            caption = options[:required] == true ? "#{inst_name} *" : inst_name
+            output = content_tag(:label, caption) +
+              send("relation_#{selector_type}_selector",
+              object, object_name, key, related_objects, humanized_field, relation_type, options)
           else
             output = content_tag(:fieldset, html_options) do
               inst_name = options[:name] || object.class.human_attribute_name(key)
