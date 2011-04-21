@@ -11,6 +11,12 @@ module Ubiquo
     end # Last tab"
   end
 
+  # Adds required rake dependencies to be able to call rake tasks from ubiquo_scaffold
+  def self.require_rake
+    libs = %w[ rake rake/testtask rake/rdoctask tasks/rails ]
+    libs.each { |lib| require lib}
+  end
+
   module Extensions
     module RailsGenerator
       module Create
@@ -57,8 +63,7 @@ module Ubiquo
         end
 
         def ubiquo_migration
-          libs = %w[ rake rake/testtask rake/rdoctask tasks/rails ]
-          libs.each { |lib| require lib}
+          Ubiquo::require_rake
           Rake::Task['db:migrate'].execute(nil)
         end
       end
@@ -88,6 +93,7 @@ module Ubiquo
         end
 
         def ubiquo_migration
+          Ubiquo::require_rake
           Rake::Task['db:rollback'].execute(nil)
         end
       end
