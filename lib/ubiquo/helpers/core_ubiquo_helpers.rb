@@ -169,6 +169,13 @@ module Ubiquo
         end
       end
 
+      # Method to activate the usage of the ubiquo form builder
+      def ubiquo_form_for(record_or_name_or_array, *args, &proc)
+        opts = (args.last || {})
+        opts[:builder] = UbiquoFormBuilder
+        args << opts if !args.last
+        form_for(record_or_name_or_array, *args, &proc)
+      end
     end
   end
 end

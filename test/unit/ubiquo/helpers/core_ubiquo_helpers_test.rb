@@ -31,4 +31,12 @@ class Ubiquo::Helpers::CoreUbiquoHelpersTest < ActionView::TestCase
     assert_select result.root, "div[class=sidebar_box test]#myid > div[class=content]", "body"
   end
 
+  test "ubiquo_form_for uses the builder" do
+    self.expects(:form_for).with("/hello",{
+        :builder => Ubiquo::Helpers::UbiquoFormBuilder}).returns("form result")
+    result = ubiquo_form_for( "/hello") do
+    end
+    assert_equal "form result", result
+  end
+
 end
