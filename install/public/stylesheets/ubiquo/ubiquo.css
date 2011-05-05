@@ -137,12 +137,12 @@ table, th, td { border: none;}
 /*--- central ---*/
 #central {
 	position: relative;
-	padding: 2em 1em;
+	padding: 2em;
 }
 	/*--- content ---*/
 	#content {
     float: left;
-    width: 72%;
+    width: 74%;
 		background: #FFF;
 		/*border-right: 1px solid #b1b1b1;
 		border-bottom: 1px solid #b1b1b1;*/
@@ -221,8 +221,8 @@ table, th, td { border: none;}
 	#sidebar {
 		/*padding-top: 2em;*/
 		float: left;
-		margin-left: 15px;
-		width: 25%;
+		margin-left: 1.5%;
+		width: 24.5%;
 	}
 		#sidebar .sidebar_box {
             position: relative;
@@ -579,7 +579,7 @@ a.new, #content .form-item-submit input.bt-create {
 	border-right: 1px solid #FFF;
 	border-bottom: 1px solid #FFF;
 }
-#content th:last-child, #content td:last-child {
+#content th:last-child, #content td:last-child, #content th.actions, #content td.actions {
 	border-right: none;
 }
 #content th {
@@ -616,22 +616,27 @@ a.new, #content .form-item-submit input.bt-create {
 	}
 #content td {
 	font-size: 1.4em;
-	padding: .5em;
+	padding: .8em .5em .7em;
 }
 	#content td td, #content td p, #content td li {
 		font-size: 1em;
 	}
+	#content td img {
+  	vertical-align: bottom;
+  }
 #content tr.odd td, #menu_items_list table.odd {
 	background-color: #f6f6f6;
 }
-#content tr:hover {
-	background: #F0BB47;
+#content tr th.delete, #content tr td.delete, #content tr.hover th.delete, #content tr.hover td.delete {
+	background-color: #FFF;
 }
-	#content tr:hover td {
-		background: none;
-	}
+  #content tr:hover td, #content tr.hover td {
+  	background: #F0BB47;
+  	border-bottom-color: #F0BB47;
+  	cursor: pointer;
+  }
 	#content td .state_true, #content td .state_false {
-		text-indent: -5000px;
+		text-indent: -500em;
 		display: block;
 		margin: 0 auto;
 	}
@@ -645,25 +650,55 @@ a.new, #content .form-item-submit input.bt-create {
 		height: 18px;
 		background: url(../../images/ubiquo/ico-no.png) no-repeat center center;
 	}
-	#content td.actions a {
-		/*display: block;
-		float: left;*/
-		display: inline-block;
+	#content td.actions {
+	  height: 1.3em;
 	}
-	#content td.actions a, form a.view, form a.select, form a.delete, form a.change, form a.add, form a.new, form a.action {
-		padding: .2em .5em;
-		margin: 0 .5em .4em 0;
-		font-size: .9em;
-		color: #000;
-		text-transform: lowercase;
-		text-decoration: none;
-		background: #e9e9e9;
-		-moz-border-radius: 6px;
-		-webkit-border-radius: 6px;
-		border-radius: 6px;
-		border: 1px solid #AAA;
-		background: url(../../images/ubiquo/bg-button.png) no-repeat left bottom;
+	#content th.delete, #content td.delete {
+	  width: 34px;
+	  padding: 0;
+	  border: none;
 	}
+	  #content td.actions a {
+  		text-align: right;
+      font-size: .85em;
+      margin-left: .3em;
+      background: #FFF;
+      padding: .1em .3em;
+      -moz-border-radius: 4px;
+    	-webkit-border-radius: 4px;
+    	border-radius: 4px;
+  	}
+  	#content tr.hover td.actions a {
+  	  color: #881B20;
+	  }
+  	#content td.actions a:hover {
+  	  background-color: #EEE;
+  	}
+  	#content td a.btn-delete {
+	}
+	  #content td.delete a.btn-delete {
+  	    float: right;
+  	    display: block;
+  	    background: url(../../images/ubiquo/ico-delete-off.gif) no-repeat center center;
+  	    -moz-border-radius: 0;
+    	    -webkit-border-radius: 0;
+    	    border-radius: 0;
+  	    -webkit-border-top-right-radius: 6px;
+            -webkit-border-bottom-right-radius: 6px;
+            -moz-border-radius-topright: 6px;
+            -moz-border-radius-bottomright: 6px;
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 6px;
+	    padding: 2px 0 0;
+	    width: 34px;
+  	    height: 39px;
+	  }
+	  #content td a.btn-delete:hover, #content tr.hover td a.btn-delete {
+	    background: #F0BB47 url(../../images/ubiquo/ico-delete.gif) no-repeat center center;
+          }
+	    #content a.btn-delete span {
+	      display: none;
+            }
 
 /*--- llistat de caixes (llistat usuaris..) ---*/
 .box_list {
@@ -1067,6 +1102,17 @@ form label {
 					display: inline;
 				}
 					#sidebar .version-box .version .options li a {}
+
+/*--- Blank page ---*/
+body#blank #content {
+        width: 100%;
+}
+body#blank #sidebar, body#blank #content h2 {
+	display: none;
+}
+body#blank #footer {
+	right: 1%;
+}
 
 /*--- Preview ---*/
 

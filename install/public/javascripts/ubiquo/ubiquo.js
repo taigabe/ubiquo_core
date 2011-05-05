@@ -1,20 +1,46 @@
 document.observe("dom:loaded", function() {
-  //content corners
-  /*if ($('content')){
-	$('content').insert({bottom: '<span class="corner_tl"></span><span class="corner_tr"></span><span class="corner_bl"></span><span class="corner_br"></span>'});
-  }
-  //form_box corners
-  if ($$('.form_box').first()) {
-	$$('.form_box').each(function(f) {
-      f.insert({bottom: '<span class="corner_tl"></span><span class="corner_tr"></span><span class="corner_bl"></span><span class="corner_br"></span>'});
+  //action buttons
+  var num_buttons = 0;
+  $$('#content tr').each(function(e,index) {
+    if(index == 0){
+      //first row (headers)
+      e.insert({
+        bottom: '<th class="delete">&nbsp;</th>'
+      });
+    }else{
+      var edit_btn = e.down('.btn-edit');
+      edit_btn.hide();
+      var del_btn = e.down('.btn-delete');
+      del_btn.update('<span>'+del_btn.text+'</span>');
+      del_btn.remove();
+      e.insert('<td class="delete"></td>');
+      e.down('td.delete').insert(del_btn);
+      del_btn.observe('click', function(ev){
+        Event.stop(ev);
+      });
+      
+      var edit_url = null;
+      if(edit_btn != undefined) edit_url = edit_btn.readAttribute('href');
+      
+      e.writeAttribute('title',edit_btn.readAttribute('title'));
+      
+      e.observe('mouseover', function(ev){
+        e.addClassName('hover');
+      });
+      e.observe('mouseout', function(ev){
+        e.removeClassName('hover');
+      });
+      e.observe('click', function(ev){
+        if (edit_url != null) window.location.href = edit_url;
+      });
+      num_buttons = e.down('.actions').childElements().length;
+    }
+  });
+  if(num_buttons < 2){
+    $$('#content tr .actions').each(function(e){
+      e.remove();
     });
   }
-  //version box corners
-  if ($$('#sidebar .version, #sidebar .version_selected').first()) {
-    $$('#sidebar .version, #sidebar .version_selected').each(function(f) {
-      f.insert({bottom: '<span class="se"></span><span class="sd"></span><span class="ie"></span><span class="id"></span>'});
-    });
-  }*/
 
   //ubiquo_authentication
   if($('send_confirm_creation') && $("welcome_message_block")) {

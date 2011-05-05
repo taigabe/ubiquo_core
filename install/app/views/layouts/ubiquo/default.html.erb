@@ -15,7 +15,7 @@
     <%= csrf_meta_tag %>
     <%= yield :head %>
   </head>
-  <body>
+  <body id="<%= yield(:body_id) || 'basic' %>">
     <div id="wrapper">
       <div id="header">
         <div id="controls">

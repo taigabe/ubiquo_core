@@ -3,56 +3,46 @@
 	clear: both;
 }
 
+.balloon_wrapper { 
+    width: 60%;
+    margin: 4em auto;
+}
+
+.balloon_content {
+    
+}
+
 img.list_example {
 	float: left;
-	height: 264px;
-	margin-right: 10px;
+	margin-right: 5%;
+	width: 49.5%;
+	max-width: 37em;
 }
 
 #balloon_list {
 	position: relative;
 	float: left;
-	width: 318px;
+	width: 45%;
 	text-align: center;	
-	background-color: #ecf5f4;
-	padding: 20px;
 }
+   #balloon_list a.new {
+     width: 14em;
+     margin: 2em auto; 
+   }
 
-#balloon_list h4 {
-	font-size: 30px;
-	font-weight: bold;
-}
+  #balloon_list h4 {
+  	font-size: 2.8em;
+  	font-weight: bold;
+  	margin-bottom: .3em;
+  }
 
-#balloon_list p {
-	font-size: 24px;
-}
+  #balloon_list p {
+  	font-size: 2.4em;
+  	line-height: 1.5;
+  }
 
-#balloon_list .balloon_triangle {
-	position: absolute;
-	width: 29px;
-	min-height: 28px;
-	bottom: -28px;
-	left: 20px;
-	background: url("../../images/ubiquo/balloon-triangle.gif") top left no-repeat;
-}
-
-#balloon_actions {
-	margin: 2em 0 4em;
-}
-
-	#balloon_actions a.new {
-	    float: none;
-		margin: 0 auto;
-	}
-
-.balloon_wrapper { 
-    float: left;
-    position: relative;
-    left: 50%;
-}
-
-.balloon_content {
-    float: left;
-    position: relative;
-    left: -50%;
+/*-------------- Clearfix --------------*/
+.balloon_content:after
+{ 
+	content: "."; display: block; height: 0; clear: both; visibility: hidden;
 }
