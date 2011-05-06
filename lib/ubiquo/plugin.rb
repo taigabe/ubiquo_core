@@ -4,12 +4,22 @@ module Ubiquo
     cattr_accessor :registered
     
     self.registered ||= {}
-    
+   
+    def setting(*args)      
+      Ubiquo::Settings.add(args)
+    end
+
     def self.register(name,path,config,&block)
       self.add_plugin_loadpaths(path,config)
-      Ubiquo::Config.create_context(name)
-      Ubiquo::Config.context(name, &block)
+      if name.present?
+        Ubiquo::Settings.create_context(name)
+        Ubiquo::Settings.context(name, &block)      
+      else
+        yield Ubiquo::Settings if block_given
+    
+      end
       self.registered[name] = name
+   
     end
     
     def self.add_plugin_loadpaths(path,config)

@@ -21,6 +21,7 @@ optionals:
 
 model ||= name.classify
 model = model.to_s.constantize
+hide_headers ||= false
 hide_actions ||= false
 link_to_new ||= ""
 table_id ||= name.pluralize + "-list"
@@ -31,14 +32,16 @@ table_id ||= name.pluralize + "-list"
 	<%= link_to_new %>
   <% end %>
   <table id="<%= table_id %>" width="100%" border="1" cellspacing="0" cellpadding="3">
-    <tr>
-      <% headers.each do |column| %>
-        <th><%= ubiquo_table_headerfy column, name %></th>
-      <% end %>
-      <% unless hide_actions %>
-        <th class="actions"><%= t('ubiquo.base.actions') %></th>
-      <% end %>
-      </tr>
+    <% unless hide_headers %>
+    <tr>      
+        <% headers.each do |column| %>
+          <th><%= ubiquo_table_headerfy column, name %></th>
+        <% end %>
+        <% unless hide_actions %>
+          <th class="actions"><%= t('ubiquo.base.actions') %></th>
+        <% end %>      
+    </tr>
+    <% end %>
       <% rows.each do |row| %>
         <tr class="<%= cycle('even', 'odd') %>" id="<%= name %>_<%= row[:id] %>">
           <% row[:columns].each do |col| %>

@@ -1,5 +1,15 @@
 ca:
   ubiquo:
+    setting:
+      index:
+        title: "Configuración"
+        confirm_restore_default: "Està segur de voler tornar al valor por defecte?"
+        restore_default: "Restaurar valor por defecto"
+        save: "Guardar"
+        save_all: "Guardar tots"        
+        translatable: "T"        
+        not_value_for_locale: "No existeix valor per aquest idioma, generat d'un altre"
+      title: "Configuración"        
     language: "Idioma"
     create: "Crear"
     edit: "Editar"

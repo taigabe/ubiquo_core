@@ -36,3 +36,7 @@ Ubiquo::Extensions::Loader.append_extend(:UbiquoController, Ubiquo::Extensions::
 Ubiquo::Extensions::Loader.append_include(:UbiquoController, Ubiquo::Extensions::ConfigCaller)
 ActionView::Base.send(:include, Ubiquo::Extensions::ConfigCaller)
 ActionView::Base.send(:extend, Ubiquo::Extensions::ConfigCaller)
+
+
+ActionController::Base.helper(Ubiquo::Extensions::Helper)
+ActionView::Base.send(:include, Ubiquo::Extensions::Helper)

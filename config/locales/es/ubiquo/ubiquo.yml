@@ -1,5 +1,15 @@
 es:
   ubiquo:
+    setting:
+      index:
+        title: "Configuración"
+        confirm_restore_default: "¿Estás seguro de querer restaurar el valor por defecto?"
+        restore_default: "Restaurar valores por defecto"
+        save: "Guardar"
+        save_all: "Guardar todos"        
+        translatable: "T"        
+        not_value_for_locale: "No existe valor para este idioma, generado a partir de otro"
+      title: "Configuración"        
     language: "Idioma"
     create: "Crear"
     edit: "Editar"

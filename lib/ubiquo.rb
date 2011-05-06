@@ -9,14 +9,14 @@ require 'ubiquo/filtered_search'
 require 'ubiquo/adapters'
 require 'ubiquo/relation_selector'
 
-Ubiquo::Config.add(:supported_locales, [ :ca, :es, :en ])
-Ubiquo::Config.add(:default_locale, :ca)
+Ubiquo::Settings.add(:supported_locales, [ :ca, :es, :en ])
+Ubiquo::Settings.add(:default_locale, :ca)
 
 module Ubiquo
   def self.supported_locales
-    Ubiquo::Config.get :supported_locales
+    Ubiquo::Settings.get :supported_locales
   end
   def self.default_locale
-    Ubiquo::Config.get :default_locale
+    Ubiquo::Settings.get :default_locale
   end
 end

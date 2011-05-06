@@ -1,5 +1,15 @@
 en:
   ubiquo:
+    setting:
+      index:
+        title: "Settings"
+        confirm_restore_default: "Are you sure you want to return to the default?"
+        restore_default: "Restore default value"
+        save: "Save"
+        save_all: "Save all"        
+        translatable: "T"        
+        not_value_for_locale: "Don't exists a value for the current locale, value generated from another"
+      title: "Settings"        
     language: "Language"
     create: "Create"
     edit: "Edit"

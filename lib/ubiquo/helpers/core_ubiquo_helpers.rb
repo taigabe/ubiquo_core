@@ -66,7 +66,7 @@ module Ubiquo
 
       # Returns the path for an ubiquo image
       def ubiquo_image_path(name)
-        "#{Ubiquo::Config.get(:ubiquo_path)}/#{name}"
+        "#{Ubiquo::Settings.get(:ubiquo_path)}/#{name}"
       end
 
       # Returns a "tick" or "cross" image, useful to display boolean values

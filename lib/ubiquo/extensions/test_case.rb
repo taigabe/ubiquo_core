@@ -104,11 +104,11 @@ module Ubiquo
         alias_method :teardown, :teardown_with_fixture_set
 
         # Tests all the test methods inside the given block for each of the available +plugin+ connectors
-        # You must have a Ubiquo::Config key :available_connectors for your plugin
+        # You must have a Ubiquo::Settings key :available_connectors for your plugin
         # in order to use this. Also, the convention is that your connectors will
         # be in a +plugin+.camelize::Connectors module
         def test_each_connector(plugin)
-          Ubiquo::Config.context(plugin).get(:available_connectors).each do |conn|
+          Ubiquo::Settings.context(plugin).get(:available_connectors).each do |conn|
 
             (class << self; self end).class_eval do
               eval <<-CONN

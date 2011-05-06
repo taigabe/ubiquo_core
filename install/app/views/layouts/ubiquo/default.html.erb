@@ -2,10 +2,10 @@
 		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
   <head>
-    <title>Ubiquo: <%= Ubiquo::Config.get(:app_title) %></title>
+    <title>Ubiquo: <%= Ubiquo::Settings.get(:app_title) %></title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="" />
-    <meta name="description" content="<%= Ubiquo::Config.get(:app_description) %>" />
+    <meta name="description" content="<%= Ubiquo::Settings.get(:app_description) %>" />
     <meta name="DC.creator" content="" />
     <meta name="DC.subject" content="" />
     <link rel="shortcut icon" type="image/ico" href="/images/ubiquo/favicon.ico" />
@@ -25,7 +25,7 @@
         <div id="header_central">
           <h1>
             <%#= ubiquo_image_tag "app_logo.png" %>
-            <%= link_to Ubiquo::Config.get(:app_title), ubiquo_home_path %>
+            <%= link_to Ubiquo::Settings.get(:app_title), ubiquo_home_path %>
           </h1>
           <%= locale_selector if respond_to?(:locale_selector) %>
         </div>

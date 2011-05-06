@@ -1,5 +1,5 @@
 module Ubiquo
-  module Extensions
+  module Extensions    
     # This is a hook module to include anything to UbiquoAreaController
     # DEPRECATED: This module has been subsumed into Loader and will be removed in 0.9
     module UbiquoAreaController

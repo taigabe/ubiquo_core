@@ -7,7 +7,7 @@ class Ubiquo::Helpers::CoreUbiquoHelpersTest < ActionView::TestCase
   end
 
   test 'ubiquo_image_path uses :ubiquo_path value' do
-    Ubiquo::Config.set(:ubiquo_path, 'new_path')
+    Ubiquo::Settings.set(:ubiquo_path, 'new_path')
     assert_equal 'new_path/image.png', ubiquo_image_path('image.png')
   end
 
