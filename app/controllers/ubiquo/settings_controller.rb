@@ -7,7 +7,7 @@ class Ubiquo::SettingsController < UbiquoController
   # GET /settings.json
   def index
     
-    @contexts = uhook_index
+    @contexts = Ubiquo::Settings.overridable? ? uhook_index : {}
     
     respond_to do |format|
       format.html # index.html.erb  
