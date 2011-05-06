@@ -418,7 +418,7 @@ module Ubiquo
           end     
 
           def uhook_print_key_label setting
-            result = label_tag(setting.key)
+            result = label_tag(translate_key_name(setting.context, setting.key))
             result += content_tag(:span,"(#{t('ubiquo.setting.index.translatable')})", :class => :translatable) if setting.translatable?
             result += content_tag(:p, "(#{t('ubiquo.setting.index.not_value_for_locale')})") if setting.generated_from_another_value?
             result

@@ -58,7 +58,7 @@
 
 <div id="contexts">
   <% @contexts.each do |context, settings| %>
-    <h3 class="context-header"><%= context %></h3>
+    <h3 class="context-header"><%= translate_context_name(context) %></h3>
     <%= setting_list(context, settings) %>
   <% end %>
 </div>

@@ -51,5 +51,13 @@ module Ubiquo::SettingsHelper
   def print_key_label setting
     uhook_print_key_label setting
   end
+  
+  def translate_key_name context, key
+    I18n.t!("ubiquo.settings.#{context}.#{key}.name") rescue key
+  end
+  
+  def translate_context_name context
+    I18n.t!("ubiquo.settings.#{context}.name") rescue context
+  end  
 
 end

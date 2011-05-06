@@ -243,7 +243,7 @@ module Ubiquo
           end
 
           def uhook_print_key_label setting
-            label_tag(setting.key)
+            label_tag(translate_key_name(setting.context, setting.key))            
           end            
 
         end
