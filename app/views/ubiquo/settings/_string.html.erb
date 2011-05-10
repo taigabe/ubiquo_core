@@ -1,9 +1,0 @@
-<% if setting.allowed_values.blank? %>
-  <% unless setting.text? %>
-    <%= text_field_tag setting.key, setting.value  %>
-  <% else %>
-    <%= text_area_tag setting.key, setting.value, {:rows => 10} %>
-  <% end %>
-<% else %>
-  <%= select_tag setting.key, options_for_select(setting.allowed_values, setting.value) %>
-<% end  %>

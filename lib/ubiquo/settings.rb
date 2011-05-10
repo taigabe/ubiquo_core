@@ -70,7 +70,7 @@ module Ubiquo
 
     #Load all user overrides from backend
     def self.load_from_backend!
-      uhook_load_from_backend!
+      uhook_load_from_backend! rescue 0
     end
 
     #Check if a setting value can be nil
@@ -170,37 +170,37 @@ module Ubiquo
     end
 
     def self.boolean(name = nil, default_value = nil, options = {}, &block)
-      options.merge!(:value_type => BooleanSetting)
+      options.merge!(:value_type => UbiquoBooleanSetting)
       uhook_add(name, default_value, options, &block)
     end
 
     def self.integer(name = nil, default_value = nil, options = {}, &block)
-      options.merge!(:value_type => IntegerSetting)
+      options.merge!(:value_type => UbiquoIntegerSetting)
       uhook_add(name, default_value, options, &block)
     end
 
     def self.string(name = nil, default_value = nil, options = {}, &block)
-      options.merge!(:value_type => StringSetting)
+      options.merge!(:value_type => UbiquoStringSetting)
       uhook_add(name, default_value, options, &block)
     end
 
     def self.symbol(name = nil, default_value = nil, options = {}, &block)
-      options.merge!(:value_type => SymbolSetting)
+      options.merge!(:value_type => UbiquoSymbolSetting)
       uhook_add(name, default_value, options, &block)
     end
 
     def self.email(name = nil, default_value = nil, options = {}, &block)
-      options.merge!(:value_type => EmailSetting)
+      options.merge!(:value_type => UbiquoEmailSetting)
       uhook_add(name, default_value, options, &block)
     end
 
     def self.password(name = nil, default_value = nil, options = {}, &block)
-      options.merge!(:value_type => PasswordSetting)
+      options.merge!(:value_type => UbiquoPasswordSetting)
       uhook_add(name, default_value, options, &block)
     end
 
     def self.list(name = nil, default_value = nil, options = {}, &block)
-      options.merge!(:value_type => ListSetting)
+      options.merge!(:value_type => UbiquoListSetting)
       uhook_add(name, default_value, options, &block)
     end
 
@@ -451,13 +451,13 @@ module Ubiquo
       uhook_default_options
     end
 
-    class InvalidBooleanSettingValue < StandardError; end
-    class InvalidIntegerSettingValue < StandardError; end
-    class InvalidStringSettingValue < StandardError; end
-    class InvalidSymbolSettingValue < StandardError; end
-    class InvalidEmailSettingValue < StandardError; end
-    class InvalidPasswordSettingValue < StandardError; end
-    class InvalidListSettingValue < StandardError; end
+    class InvalidUbiquoBooleanSettingValue < StandardError; end
+    class InvalidUbiquoIntegerSettingValue < StandardError; end
+    class InvalidUbiquoStringSettingValue < StandardError; end
+    class InvalidUbiquoSymbolSettingValue < StandardError; end
+    class InvalidUbiquoEmailSettingValue < StandardError; end
+    class InvalidUbiquoPasswordSettingValue < StandardError; end
+    class InvalidUbiquoListSettingValue < StandardError; end
     class InvalidOptionName < StandardError; end
     class InvalidContextName < StandardError; end
     class InvalidValue < StandardError; end

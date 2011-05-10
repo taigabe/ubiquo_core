@@ -1,9 +1,9 @@
 <%
     navigator_section = create_link_navigator(:class => 'submenu') do |navigator|
       navigator.add_link do |link|
-        link.text = (t('ubiquo.setting.index.title'))
-        link.url = ubiquo_settings_path
-        link.highlights_on({:controller => "ubiquo/settings"})
+        link.text = (t('ubiquo.ubiquo_setting.index.title'))
+        link.url = ubiquo_ubiquo_settings_path
+        link.highlights_on({:controller => "ubiquo/ubiquo_settings"})
       end
     end
 %>

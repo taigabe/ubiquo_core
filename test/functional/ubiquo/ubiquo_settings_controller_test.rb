@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../../test_helper'
 
-class Ubiquo::SettingsControllerTest < ActionController::TestCase
+class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
   use_ubiquo_fixtures
   
   def setup
@@ -41,11 +41,11 @@ class Ubiquo::SettingsControllerTest < ActionController::TestCase
     assert_select '#controller_test input[name="test_index"][value="yes please"]', 1
     
 
-    assert_difference('Setting.count') do
-      post_setting :controller_test, :test_index, "no"
+    assert_difference('UbiquoSetting.count') do
+      post_ubiquo_setting :controller_test, :test_index, "no"
     end
     assert_equal 'no', Ubiquo::Settings[:controller_test][:test_index]
-    assert_redirected_to ubiquo_settings_url
+    assert_redirected_to ubiquo_ubiquo_settings_url
     
     get :index
     assert_select '#controller_test input[name="test_index"][value="no"]', 1    
@@ -58,10 +58,10 @@ class Ubiquo::SettingsControllerTest < ActionController::TestCase
       :is_nullable => false
     )
     
-    assert_no_difference('Setting.count') do
-      post_setting :controller_test, :test_index, ""
+    assert_no_difference('UbiquoSetting.count') do
+      post_ubiquo_setting :controller_test, :test_index, ""
     end
-    assert_redirected_to ubiquo_settings_url
+    assert_redirected_to ubiquo_ubiquo_settings_url
     
     get :index
     assert_select '#controller_test input[name="test_index"][value="yes please"]', 1    
@@ -72,10 +72,10 @@ class Ubiquo::SettingsControllerTest < ActionController::TestCase
       :is_nullable => true
     )
     
-    assert_difference('Setting.count') do
-      post_setting :controller_test, :test_index, "no"
+    assert_difference('UbiquoSetting.count') do
+      post_ubiquo_setting :controller_test, :test_index, "no"
     end
-    assert_redirected_to ubiquo_settings_url
+    assert_redirected_to ubiquo_ubiquo_settings_url
     
     get :index
     assert_select '#controller_test input[name="test_index"][value="yes please"]', 0      
@@ -89,19 +89,19 @@ class Ubiquo::SettingsControllerTest < ActionController::TestCase
     )
     
     # try with string for integer
-    assert_no_difference('Setting.count') do
-      post_setting :controller_test, :test_index, "foo"
+    assert_no_difference('UbiquoSetting.count') do
+      post_ubiquo_setting :controller_test, :test_index, "foo"
     end
-    assert_redirected_to ubiquo_settings_url
+    assert_redirected_to ubiquo_ubiquo_settings_url
     
     get :index
     assert_select '#controller_test input[name="test_index"][value="1"]', 1    
 
     # try with nil for integer
-    assert_no_difference('Setting.count') do
-      post_setting :controller_test, :test_index, ""      
+    assert_no_difference('UbiquoSetting.count') do
+      post_ubiquo_setting :controller_test, :test_index, ""
     end
-    assert_redirected_to ubiquo_settings_url
+    assert_redirected_to ubiquo_ubiquo_settings_url
     
     get :index
     assert_select '#controller_test input[name="test_index"][value="1"]', 1        
@@ -113,10 +113,10 @@ class Ubiquo::SettingsControllerTest < ActionController::TestCase
       :allowed_values => [1,2,4,5]
     )
     
-    assert_no_difference('Setting.count') do
-      post_setting :controller_test, :test_index, "10"      
+    assert_no_difference('UbiquoSetting.count') do
+      post_ubiquo_setting :controller_test, :test_index, "10"
     end
-    assert_redirected_to ubiquo_settings_url
+    assert_redirected_to ubiquo_ubiquo_settings_url
     
     get :index
     assert_select '#controller_test select[name="test_index"] option[value="1"][selected="selected"]', 1   
@@ -127,10 +127,10 @@ class Ubiquo::SettingsControllerTest < ActionController::TestCase
       :allowed_values => [1,2,4,5]
     )
     
-    assert_difference('Setting.count') do
-      post_setting :controller_test, :test_index, "2"      
+    assert_difference('UbiquoSetting.count') do
+      post_ubiquo_setting :controller_test, :test_index, "2"
     end
-    assert_redirected_to ubiquo_settings_url
+    assert_redirected_to ubiquo_ubiquo_settings_url
     
     get :index
     assert_select '#controller_test select[name="test_index"] option[value="2"][selected="selected"]', 1       
@@ -154,8 +154,8 @@ class Ubiquo::SettingsControllerTest < ActionController::TestCase
                   :is_nullable => false
     )        
     
-    assert_difference('Setting.count', 3) do
-      post_settings :controller_test => {
+    assert_difference('UbiquoSetting.count', 3) do
+      post_ubiquo_settings :controller_test => {
         :test_index_1 => {
           :not_used => 11,
         },
@@ -175,7 +175,7 @@ class Ubiquo::SettingsControllerTest < ActionController::TestCase
         },
       }        
     end
-    assert_redirected_to ubiquo_settings_url
+    assert_redirected_to ubiquo_ubiquo_settings_url
     
     get :index
     assert_select '#controller_test input[name="test_index_1"][value="11"]', 1        
@@ -191,12 +191,12 @@ class Ubiquo::SettingsControllerTest < ActionController::TestCase
 
   # destroy = restore default
   # Destroy Setting and set the default_value for  the setting
-  def test_should_destroy_setting
+  def test_should_destroy_ubiquo_setting
     Ubiquo::Settings[:controller_test].add(:test_index, 'yes please',
       :is_editable => true
     )    
     assert_equal 'yes please', Ubiquo::Settings[:controller_test][:test_index]    
-    setting = StringSetting.create :context => :controller_test,
+    setting = UbiquoStringSetting.create :context => :controller_test,
                           :key => :test_index,
                           :value => 'yes please overrided'
     assert_equal 'yes please overrided', Ubiquo::Settings[:controller_test][:test_index]
@@ -204,10 +204,10 @@ class Ubiquo::SettingsControllerTest < ActionController::TestCase
     get :index    
     assert_select '#controller_test input[name="test_index"][value="yes please overrided"]', 1
     
-    assert_difference('Setting.count', -1) do
+    assert_difference('UbiquoSetting.count', -1) do
       delete :destroy, :id => setting.id
     end
-    assert_redirected_to ubiquo_settings_url
+    assert_redirected_to ubiquo_ubiquo_settings_url
     
     assert_equal 'yes please', Ubiquo::Settings[:controller_test][:test_index]    
     get :index
@@ -224,13 +224,13 @@ class Ubiquo::SettingsControllerTest < ActionController::TestCase
     assert_select '#controller_test input[name="test_index"][type="checkbox"][value="1"]', 1    
     
     ["0", 0, false, "false", nil, "nil"].each do |value|
-      BooleanSetting.destroy_all
-      assert_difference('Setting.count') do
-        post_setting :controller_test, :test_index, value
+      UbiquoBooleanSetting.destroy_all
+      assert_difference('UbiquoSetting.count') do
+        post_ubiquo_setting :controller_test, :test_index, value
       end
 
       assert_equal false, Ubiquo::Settings[:controller_test][:test_index]
-      assert_redirected_to ubiquo_settings_url
+      assert_redirected_to ubiquo_ubiquo_settings_url
 
       get :index
       assert_select '#controller_test input[name="test_index"][type="checkbox"]:not([checked="checked"])', 1
@@ -238,17 +238,17 @@ class Ubiquo::SettingsControllerTest < ActionController::TestCase
 
     enable_settings_override
     ["1", 1, true, "true"].each do |value|
-      BooleanSetting.destroy_all
+      UbiquoBooleanSetting.destroy_all
       Ubiquo::Settings.settings[:controller_test].delete(:test_index)
       Ubiquo::Settings[:controller_test].add(:test_index, false,
         :is_editable => true
       )
-      assert_difference('Setting.count') do
-        post_setting :controller_test, :test_index, value
+      assert_difference('UbiquoSetting.count') do
+        post_ubiquo_setting :controller_test, :test_index, value
       end
 
       assert_equal true, Ubiquo::Settings[:controller_test][:test_index]
-      assert_redirected_to ubiquo_settings_url
+      assert_redirected_to ubiquo_ubiquo_settings_url
 
       get :index
       assert_select '#controller_test input[name="test_index"][type="checkbox"][value="1"]', 1          
@@ -277,11 +277,11 @@ class Ubiquo::SettingsControllerTest < ActionController::TestCase
     assert_select '#controller_test input[type="password"][name="test_index"]:not([value="gnuine"])', 1
     assert_select '#controller_test input[type="password"][name="confirmation_test_index"]:not([value="gnuine"])', 1    
     
-    assert_no_difference(['Setting.count', 'PasswordSetting.count']) do
+    assert_no_difference(['UbiquoSetting.count', 'UbiquoPasswordSetting.count']) do
       # fail, no confirmation
-      post_setting :controller_test, :test_index, "no"      
+      post_ubiquo_setting :controller_test, :test_index, "no"
       # fail, confirmation do not match
-      post_settings :controller_test => {
+      post_ubiquo_settings :controller_test => {
         :test_index => {
           :not_used => 'a',
         },
@@ -291,7 +291,7 @@ class Ubiquo::SettingsControllerTest < ActionController::TestCase
       }      
       # fail, a confirmation and not the handler key
       assert_raise Ubiquo::Settings::OptionNotFound do
-        post_settings :controller_test => {
+        post_ubiquo_settings :controller_test => {
           :confirmation_test_index => {
             :not_used => 'b',
           }        
@@ -300,8 +300,8 @@ class Ubiquo::SettingsControllerTest < ActionController::TestCase
     end    
     assert_equal 'gnuine', Ubiquo::Settings[:controller_test][:test_index]
     
-    assert_difference(['Setting.count', 'PasswordSetting.count'], 1) do
-      post_settings :controller_test => {
+    assert_difference(['UbiquoSetting.count', 'UbiquoPasswordSetting.count'], 1) do
+      post_ubiquo_settings :controller_test => {
         :test_index => {
           :not_used => 'a',
         },
@@ -322,37 +322,37 @@ class Ubiquo::SettingsControllerTest < ActionController::TestCase
 
   private
 
-  def post_settings hash
-    post :create, :format => "html", :settings => hash    
+  def post_ubiquo_settings hash
+    post :create, :format => "html", :ubiquo_settings => hash
   end
   
-  def post_setting context, setting, value
-    post_settings(
+  def post_ubiquo_setting context, ubiquo_setting, value
+    post_ubiquo_settings(
       context => {
-        setting => {
+        ubiquo_setting => {
           'not-used' => value
         }
       }     
     )
   end
   
-  def setting_attributes(options = {})
+  def ubiquo_setting_attributes(options = {})
     default_options = {
     }
     default_options.merge(options)
   end
   
-  def create_setting(subtype, options = {})
-    subtype.create(setting_attributes(options))
+  def create_ubiquo_setting(subtype, options = {})
+    subtype.create(ubiquo_setting_attributes(options))
   end 
   
   def save_current_settings  
-    Setting.destroy_all
+    UbiquoSetting.destroy_all
     @old_configuration = Ubiquo::Settings.settings.clone    
   end  
   
   def clear_settings
-    Setting.destroy_all
+    UbiquoSetting.destroy_all
     Ubiquo::Settings.settings = @old_configuration.clone
   end
     

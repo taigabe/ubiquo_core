@@ -1,5 +1,0 @@
-<% if setting.allowed_values.blank? %>
-  <%= text_field_tag setting.key, setting.value, :class => "number"  %>
-<% else %>
-  <%= select_tag setting.key, options_for_select(setting.allowed_values, setting.value) %>
-<% end  %>

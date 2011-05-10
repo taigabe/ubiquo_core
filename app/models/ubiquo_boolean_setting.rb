@@ -1,4 +1,4 @@
-class BooleanSetting < Setting 
+class UbiquoBooleanSetting < UbiquoSetting 
 
   serialize :value
   validate :validate_boolean

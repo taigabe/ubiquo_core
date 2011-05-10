@@ -20,7 +20,7 @@ Ubiquo::Plugin.register(:ubiquo, directory, config) do |setting|
     access_control :DEFAULT => "settings_management"
   }
   setting.add :settings_permit, lambda{
-    permit?("settings_management")
+    permit?("ubiquo_settings_management")
   }  
 end
 

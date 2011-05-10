@@ -1,4 +1,4 @@
-class Setting < ActiveRecord::Base
+class UbiquoSetting < ActiveRecord::Base
 
   serialize :value
   serialize :options
@@ -139,11 +139,15 @@ class Setting < ActiveRecord::Base
   end
 
   def self.generate_type context, key
-    value = Ubiquo::Settings[context.to_sym].get(key.to_sym, :any_value => true)
-    return PasswordSetting if value.class == String && Ubiquo::Settings[context.to_sym].options(key.to_sym)[:is_password]
-    return BooleanSetting if value == true || value == false
-    return IntegerSetting if value.class == Fixnum
-    "#{value.class}Setting".constantize rescue Setting
+    if Ubiquo::Settings.settings[context.to_sym][key][:options][:value_type]
+      Ubiquo::Settings.settings[context.to_sym][key][:options][:value_type]
+    else
+      value = Ubiquo::Settings[context.to_sym].get(key.to_sym, :any_value => true)
+      return UbiquoPasswordSetting if value.class == String && Ubiquo::Settings[context.to_sym].options(key.to_sym)[:is_password]
+      return UbiquoBooleanSetting if value == true || value == false
+      return UbiquoIntegerSetting if value.class == Fixnum
+      "Ubiquo#{value.class}Setting".constantize rescue UbiquoSetting
+    end
   end
   
   def generated_from_another_value?

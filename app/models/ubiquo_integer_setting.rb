@@ -1,4 +1,4 @@
-class IntegerSetting < Setting
+class UbiquoIntegerSetting < UbiquoSetting
 
   serialize :value #, Integer
   validates_numericality_of :value, :only_integer => true, :allow_nil => true

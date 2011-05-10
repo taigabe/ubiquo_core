@@ -1,0 +1,9 @@
+<% if ubiquo_setting.allowed_values.blank? %>
+  <% unless ubiquo_setting.text? %>
+    <%= text_field_tag ubiquo_setting.key, ubiquo_setting.value  %>
+  <% else %>
+    <%= text_area_tag ubiquo_setting.key, ubiquo_setting.value, {:rows => 10} %>
+  <% end %>
+<% else %>
+  <%= select_tag ubiquo_setting.key, options_for_select(ubiquo_setting.allowed_values, ubiquo_setting.value) %>
+<% end  %>

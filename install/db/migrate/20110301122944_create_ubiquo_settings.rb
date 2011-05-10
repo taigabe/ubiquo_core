@@ -1,6 +1,6 @@
-class CreateSettings < ActiveRecord::Migration
+class CreateUbiquoSettings < ActiveRecord::Migration
   def self.up
-    uhook_create_settings_table do |t|
+    uhook_create_ubiquo_settings_table do |t|
       t.string :key
       t.string :context
       t.string :type

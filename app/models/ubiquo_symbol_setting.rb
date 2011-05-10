@@ -1,4 +1,4 @@
-class SymbolSetting < Setting
+class UbiquoSymbolSetting < UbiquoSetting
 
   serialize :value, Symbol
 

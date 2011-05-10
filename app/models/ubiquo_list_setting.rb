@@ -1,4 +1,4 @@
-class ListSetting < Setting
+class UbiquoListSetting < UbiquoSetting
 
   serialize :value, Array
 

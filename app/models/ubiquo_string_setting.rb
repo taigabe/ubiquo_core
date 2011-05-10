@@ -1,4 +1,4 @@
-class StringSetting < Setting
+class UbiquoStringSetting < UbiquoSetting
 
   serialize :value, String
   before_validation :assign_blank_values_to_nil

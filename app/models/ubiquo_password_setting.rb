@@ -1,4 +1,4 @@
-class PasswordSetting < StringSetting
+class UbiquoPasswordSetting < UbiquoStringSetting
 
   serialize :value, String
 

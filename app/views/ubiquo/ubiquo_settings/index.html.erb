@@ -59,7 +59,7 @@
 <div id="contexts">
   <% @contexts.each do |context, settings| %>
     <h3 class="context-header"><%= translate_context_name(context) %></h3>
-    <%= setting_list(context, settings) %>
+    <%= ubiquo_setting_list(context, settings) %>
   <% end %>
 </div>
 
@@ -74,7 +74,7 @@
         var settingsRows = $(contexts[i]).getElementsBySelector('tbody tr');
         for(var j = 0; j < settingsRows.length; ++j){
           var settingKey = settingsRows[j].readAttribute('id');          
-          settingKey = settingKey.replace('setting_','');
+          settingKey = settingKey.replace('ubiquo_setting_','');
           if(selectedSettingKey == null || settingKey == selectedSettingKey){        
               
             var settingValue;
@@ -114,7 +114,7 @@
       for(var settingKey in settings[context]) {
         var hiddenField = document.createElement("input");
         hiddenField.setAttribute("type", "hidden");
-        hiddenField.setAttribute("name", "settings" + "[" + context + "[" + settingKey + "] ]");
+        hiddenField.setAttribute("name", "ubiquo_settings" + "[" + context + "[" + settingKey + "] ]");
         hiddenField.setAttribute("value", settings[context][settingKey]);
 
         $(form).appendChild(hiddenField);
@@ -125,12 +125,12 @@
 <% end %>
 
 
-<% form_tag ubiquo_settings_path, {:onSubmit  => "return collectAndSendValues();", 
+<% form_tag ubiquo_ubiquo_settings_path, {:onSubmit  => "return collectAndSendValues();",
                                     :id => "bulk_submit"} do %>
-  <%= submit_tag t('ubiquo.setting.index.save_all')  %>
+  <%= submit_tag t('ubiquo.ubiquo_setting.index.save_all')  %>
 <% end %>
 
 <% content_for :sidebar do %>
   <%# show_filters %>
-  <%# help_block_sidebar t("ubiquo.setting.index.help_message") %>
+  <%# help_block_sidebar t("ubiquo.ubiquo_setting.index.help_message") %>
 <% end %>

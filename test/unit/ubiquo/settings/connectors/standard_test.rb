@@ -16,9 +16,9 @@ module Connectors
         reload_old_settings_connector
       end
 
-      test "i18n is loaded by default when i18n plugin accesible" do
-        assert Ubiquo::SettingsConnectors::Standard, Ubiquo::SettingsConnectors::Base.current_connector
-      end
+#      test "i18n is loaded by default when i18n plugin accesible" do
+#        assert Ubiquo::SettingsConnectors::Standard, Ubiquo::SettingsConnectors::Base.current_connector
+#      end
 
       test "should load values from database backend" do
         
@@ -32,9 +32,9 @@ module Connectors
         }
 
         create_overrides_test_case = lambda {
-          StringSetting.create(:context => :foo, :key => 'first', :value => 'value1_redefinido')
-          StringSetting.create(:context => :foo, :key => 'second', :value => 'value2_redefinido')
-          StringSetting.create(:context => :foo2, :key => 'first', :value => 'value3_redefinido')
+          UbiquoStringSetting.create(:context => :foo, :key => 'first', :value => 'value1_redefinido')
+          UbiquoStringSetting.create(:context => :foo, :key => 'second', :value => 'value2_redefinido')
+          UbiquoStringSetting.create(:context => :foo2, :key => 'first', :value => 'value3_redefinido')
         }
 
         Ubiquo::Settings[:ubiquo][:settings_overridable] = true        
@@ -56,10 +56,10 @@ module Connectors
         clear_settings
         assert !Ubiquo::Settings.context_exists?(:foo)
                 
-        StringSetting.any_instance.stubs(:apply).returns(false)
+        UbiquoStringSetting.any_instance.stubs(:apply).returns(false)
         create_settings_test_case.call
         
-        StringSetting.create(:context => :foo, :key => 'first', :value => 'value1_redefinido')
+        UbiquoStringSetting.create(:context => :foo, :key => 'first', :value => 'value1_redefinido')
         assert_equal 'value1', Ubiquo::Settings[:foo][:first]
         enable_settings_override
         Ubiquo::Settings.load_from_backend!     
@@ -67,8 +67,8 @@ module Connectors
       end
 
       test "create settings migration" do
-        ActiveRecord::Migration.expects(:create_table).with(:settings).once
-        ActiveRecord::Migration.uhook_create_settings_table
+        ActiveRecord::Migration.expects(:create_table).with(:ubiquo_settings).once
+        ActiveRecord::Migration.uhook_create_ubiquo_settings_table
       end
 
       test "should accept a override if setting is editable" do
@@ -81,7 +81,7 @@ module Connectors
                                            :is_editable => false,
                                          })
                         
-        s1 = StringSetting.create(:context => :foo_context_1, :key => :new_setting, :value => 'hola_redefinido')
+        s1 = UbiquoStringSetting.create(:context => :foo_context_1, :key => :new_setting, :value => 'hola_redefinido')
         assert s1.errors
 
         Ubiquo::Settings[:foo_context_1].set(:new_setting, 
@@ -89,7 +89,7 @@ module Connectors
                                          {
                                            :is_editable => true,
                                          })
-        s1 = StringSetting.create(:context => :foo_context_1, :key => :new_setting, :value => 'hola_redefinido')
+        s1 = UbiquoStringSetting.create(:context => :foo_context_1, :key => :new_setting, :value => 'hola_redefinido')
         assert_equal 'hola_redefinido', Ubiquo::Settings[:foo_context_1][:new_setting]
       end
 
@@ -110,7 +110,7 @@ module Connectors
     end
 
     def clear_settings
-      Setting.destroy_all
+      UbiquoSetting.destroy_all
       Ubiquo::Settings.settings[:ubiquo] = @old_configuration.clone
       Ubiquo::Settings.settings.reject! { |k, v| !@initial_contexts.include?(k)}
     end

@@ -1,6 +1,6 @@
 ca:
   ubiquo:
-    setting:
+    ubiquo_setting:
       index:
         title: "Configuración"
         confirm_restore_default: "Està segur de voler tornar al valor por defecte?"

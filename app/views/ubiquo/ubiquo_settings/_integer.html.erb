@@ -1,0 +1,5 @@
+<% if ubiquo_setting.allowed_values.blank? %>
+  <%= text_field_tag ubiquo_setting.key, ubiquo_setting.value, :class => "number"  %>
+<% else %>
+  <%= select_tag ubiquo_setting.key, options_for_select(ubiquo_setting.allowed_values, ubiquo_setting.value) %>
+<% end  %>

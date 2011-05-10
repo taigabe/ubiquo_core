@@ -3,5 +3,5 @@ map.namespace :ubiquo do |ubiquo|
   ubiquo.with_options :controller => "attachment", :action => "show", :conditions => {:method => :get} do |attachment|
     attachment.attachment "/attachment/*path"
   end
-  ubiquo.resources :settings
+  ubiquo.resources :ubiquo_settings
 end

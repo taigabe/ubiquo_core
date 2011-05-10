@@ -20,7 +20,7 @@ module Ubiquo
           # Returns the options for the setting
           def uhook_options(name = nil, options = {})
             return settings[current_context][name][:options].reject{|k,_|
-              [:is_editable, :inherits, :type_value,
+              [:is_editable, :inherits, :value_type,
                 :locale, :is_nullable,
                 :default_value, :is_translatable,
                 :allowed_values, :original_parameters].include?(k)
@@ -39,11 +39,11 @@ module Ubiquo
 
           def uhook_load_from_backend!
             return 0 if !overridable?
-            ::Setting.all.map{|s| add(s)}.length            
+            ::UbiquoSetting.all.map{|s| add(s)}.length
           end
 
           def uhook_add(name = nil, default_value = nil, options = {}, &block)
-            if name.is_a?(Setting)
+            if name.is_a?(UbiquoSetting)
               return nil if !overridable?
               context(name.context).set(name.key, name.value)
               name
@@ -143,7 +143,7 @@ module Ubiquo
           end            
         end
       end
-      module Setting
+      module UbiquoSetting
 
         def self.included(klass)
           klass.send(:include, InstanceMethods)
@@ -154,14 +154,14 @@ module Ubiquo
 
         module ClassMethods
           def uhook_find_or_build context, key
-            setting = ::Setting.find(:first,
+            setting = ::UbiquoSetting.find(:first,
                                     :conditions => ["context = ? AND key = ? ",
                                                     context, key])
             setting ||= uhook_generate_instance(context, key)
           end
 
           def uhook_generate_instance context, key, options = {}
-            klass = ::Setting.generate_type(context, key)
+            klass = ::UbiquoSetting.generate_type(context, key)
             value = Ubiquo::Settings[context].default_value(key, options)
             allowed_values = Ubiquo::Settings[context].allowed_values(key, options)
             options = Ubiquo::Settings[context].options(key, options)
@@ -180,12 +180,12 @@ module Ubiquo
           end
 
           # Returns an identifier value for a given +setting_key+ in this set
-          def uhook_setting_identifier_for_key setting_key
+          def uhook_ubiquo_setting_identifier_for_key setting_key
             self.select_fittest(setting_key).content_id rescue 0
           end
 
-          # Returns the fittest setting in the requested locale
-          def uhook_select_fittest setting, options = {}
+          # Returns the fittest ubiquo_setting in the requested locale
+          def uhook_select_fittest ubiquo_setting, options = {}
           end
 
           def uhook_config_value_same?
@@ -206,46 +206,47 @@ module Ubiquo
 
         module Helper
           # Receives a filter_set to add extra filters
-          def uhook_setting_filters filter_set
+          def uhook_ubiquo_setting_filters filter_set
           end
 
-          # Returns content to show in the sidebar when editing a setting
-          def uhook_edit_setting_sidebar setting
+          # Returns content to show in the sidebar when editing a ubiquo_setting
+          def uhook_edit_ubiquo_setting_sidebar ubiquo_setting
             ''
           end
 
-          # Returns content to show in the sidebar when creating a setting
-          def uhook_new_setting_sidebar setting
+          # Returns content to show in the sidebar when creating a ubiquo_setting
+          def uhook_new_ubiquo_setting_sidebar ubiquo_setting
             ''
           end
 
-          # Returns the available actions links for a given setting
-          def uhook_setting_index_actions setting
+          # Returns the available actions links for a given ubiquo_setting
+          def uhook_setting_index_actions ubiquo_setting
             actions = []
-            actions << link_to_function(t('ubiquo.setting.index.save'), "collectAndSendValues('#{setting.context}', '#{setting.key}')")
-            if setting.id
-              actions << link_to(t('ubiquo.setting.index.restore_default'), 
-                          ubiquo_setting_path(setting),
-                          :confirm => t('ubiquo.setting.index.confirm_restore_default'), :method => :delete)
+            actions << link_to_function(t('ubiquo.ubiquo_setting.index.save'),
+              "collectAndSendValues('#{ubiquo_setting.context}', '#{ubiquo_setting.key}')")
+            if ubiquo_setting.id
+              actions << link_to(t('ubiquo.ubiquo_setting.index.restore_default'),
+                          ubiquo_setting_path(ubiquo_setting),
+                          :confirm => t('ubiquo.ubiquo_setting.index.confirm_restore_default'), :method => :delete)
             end
             actions
           end
 
-          # Returns any necessary extra code to be inserted in the setting form
-          def uhook_setting_form form
+          # Returns any necessary extra code to be inserted in the ubiquo_setting form
+          def uhook_ubiquo_setting_form form
             ''
           end
 
-          def uhook_setting_value context, key
+          def uhook_ubiquo_setting_value context, key
             Ubiquo::Settings[:context][:key]
           end
 
-          def uhook_get_setting(context, setting_key)
-            ::Setting.find_or_build(context,setting_key)
+          def uhook_get_ubiquo_setting(context, setting_key)
+            ::UbiquoSetting.find_or_build(context, setting_key)
           end
 
-          def uhook_print_key_label setting
-            label_tag(translate_key_name(setting.context, setting.key))            
+          def uhook_print_key_label ubiquo_setting
+            label_tag(translate_key_name(ubiquo_setting.context, ubiquo_setting.key))
           end            
 
         end
@@ -263,7 +264,7 @@ module Ubiquo
           end
 
           def uhook_is_setting_overriden? context, key
-            Ubiquo::Settings[:context].options_exists?(key)
+            Ubiquo::Settings[context].options_exists?(key)
           end
 
           # Returns a hash with extra filters to apply
@@ -271,14 +272,14 @@ module Ubiquo
             {}
           end
 
-          # Initializes a new instance of setting.
-          def uhook_new_setting
-            ::Setting.new
+          # Initializes a new instance of ubiquo_setting.
+          def uhook_new_ubiquo_setting
+            ::UbiquoSetting.new
           end
 
-          # Performs any required action on setting when in edit
+          # Performs any required action on ubiquo_setting when in edit
           # Edit action will not continue if this hook returns false
-          def uhook_edit_setting setting
+          def uhook_edit_ubiquo_setting ubiquo_setting
             true
           end
 
@@ -288,30 +289,30 @@ module Ubiquo
             !(key !~ /^confirmation_/)  && data.keys.find{|k| k == key.gsub('confirmation_','')}.present?
           end          
 
-          # Create or update a new instance of setting.
-          def uhook_create_setting
+          # Create or update a new instance of ubiquo_setting.
+          def uhook_create_ubiquo_setting
             valids = []
             errors = []
-            params[:settings].each do |context, data|
+            params[:ubiquo_settings].each do |context, data|
               data.each do |key, value_array|
                 if confirmation?(key, data)
-                  setting = ::Setting.find_or_build(context, key)
-                  setting.handle_confirmation(data) if setting.respond_to?(:handle_confirmation)
-                  setting.value = value_array.first[1]         
-                  if setting.config_value_same? || setting.save
-                    valids << setting
+                  ubiquo_setting = ::UbiquoSetting.find_or_build(context, key)
+                  ubiquo_setting.handle_confirmation(data) if ubiquo_setting.respond_to?(:handle_confirmation)
+                  ubiquo_setting.value = value_array.first[1]
+                  if ubiquo_setting.config_value_same? || ubiquo_setting.save
+                    valids << ubiquo_setting
                   else                    
-                    errors << setting
+                    errors << ubiquo_setting
                   end
                 end
               end
-            end if params[:settings].present?
+            end if params[:ubiquo_settings].present?
             {:valids => valids, :errors => errors}
           end
 
-         #destroys a setting instance. returns a boolean that means if the destroy was done.
-          def uhook_destroy_setting(setting)
-            setting.destroy 
+         #destroys a ubiquo_setting instance. returns a boolean that means if the destroy was done.
+          def uhook_destroy_ubiquo_setting(ubiquo_setting)
+            ubiquo_setting.destroy
           end
         end
       end
@@ -324,8 +325,8 @@ module Ubiquo
         end
 
         module ClassMethods
-          def uhook_create_settings_table
-            create_table :settings do |t|
+          def uhook_create_ubiquo_settings_table
+            create_table :ubiquo_settings do |t|
               yield t
             end
           end

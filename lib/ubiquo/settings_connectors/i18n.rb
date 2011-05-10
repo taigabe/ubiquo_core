@@ -12,8 +12,8 @@ module Ubiquo
             return false
           end
         end
-        if ::Setting.table_exists?
-          setting_columns = ::Setting.columns.map(&:name).map(&:to_sym)
+        if ::UbiquoSetting.table_exists?
+          setting_columns = ::UbiquoSetting.columns.map(&:name).map(&:to_sym)
           unless [:locale, :content_id].all?{|field| setting_columns.include? field}
             if Rails.env.test?
               ::ActiveRecord::Base.connection.change_table(:settings, :translatable => true){}
@@ -22,7 +22,7 @@ module Ubiquo
                 ::ActiveRecord::Base.connection.begin_db_transaction
                 ::ActiveRecord::Base.connection.create_savepoint
               end
-              ::Setting.reset_column_information
+              ::UbiquoSetting.reset_column_information
             else
               raise ConnectorRequirementError,
               "The settings table does not have the i18n fields. " +
@@ -33,7 +33,7 @@ module Ubiquo
       end
 
       def self.unload!
-        ::Setting.instance_variable_set :@translatable, false
+        ::UbiquoSetting.instance_variable_set :@translatable, false
 
       end
 
@@ -92,7 +92,7 @@ module Ubiquo
           def uhook_load_from_backend!
             regenerate_settings
             return 0 if !overridable?              
-            ::Setting.all.map{|s| 
+            ::UbiquoSetting.all.map{|s|
               context(s.context).add(s)                  
             }.length            
           end
@@ -114,7 +114,7 @@ module Ubiquo
           #
           def uhook_add(name = nil, default_value = nil, options = {}, &block)
             # override
-            if name.is_a?(Setting)              
+            if name.is_a?(UbiquoSetting)
               return nil if !overridable?
               raise Ubiquo::Settings::InvalidOptionName if options[:is_translatable] && !name.locale 
               value = name.value
@@ -307,7 +307,7 @@ module Ubiquo
         end          
       end
 
-      module Setting
+      module UbiquoSetting
 
         def self.included(klass)
           klass.send :translatable, :value
@@ -321,11 +321,11 @@ module Ubiquo
         module ClassMethods
           def uhook_find_or_build context, key, options = {}
             if Ubiquo::Settings[context].translatable?(key)
-              setting = ::Setting.locale(options[:locale].to_s).find(:first,
+              setting = ::UbiquoSetting.locale(options[:locale].to_s).find(:first,
                                       :conditions => ["context = ? AND key = ? ",
                                                       context.to_s, key.to_s])
             else
-              setting = ::Setting.find(:first,
+              setting = ::UbiquoSetting.find(:first,
                                         :conditions => ["context = ? AND key = ? ",
                                                       context.to_s, key.to_s])                
             end
@@ -335,7 +335,7 @@ module Ubiquo
           end
 
           def uhook_generate_instance context, key, options = {}
-            klass = ::Setting.generate_type(context, key)
+            klass = ::UbiquoSetting.generate_type(context, key)
             locale, value = Ubiquo::Settings[context].default_value(key, options)
             allowed_values = Ubiquo::Settings[context].allowed_values(key, options)
             options = Ubiquo::Settings[context].options(key, options)
@@ -365,7 +365,7 @@ module Ubiquo
             if self.config_exists? &&
                 !Ubiquo::Settings[self.context].translatable?(self.key) &&
                 (self.translations.present? || 
-                ::Setting.find(:first, :conditions => ["context = ? AND key = ? AND locale <> ?",
+                ::UbiquoSetting.find(:first, :conditions => ["context = ? AND key = ? AND locale <> ?",
                                                         context.to_s, key.to_s, locale.to_s]))
               self.errors.add :key, "not translatable setting"
             end
@@ -390,45 +390,46 @@ module Ubiquo
 
         module Helper
           # Adds a locale filter to the received filter_set
-          def uhook_setting_filters filter_set
+          def uhook_ubiquo_setting_filters filter_set
             filter_set.locale
           end
 
-          # Returns content to show in the sidebar when editing an setting
-          def uhook_edit_setting_sidebar setting
-            show_translations(setting)
+          # Returns content to show in the sidebar when editing an ubiquo_setting
+          def uhook_edit_ubiquo_setting_sidebar ubiquo_setting
+            show_translations(ubiquo_setting)
           end
 
-          # Returns content to show in the sidebar when creating an setting
-          def uhook_new_setting_sidebar setting
-            show_translations(setting)
+          # Returns content to show in the sidebar when creating an ubiquo_setting
+          def uhook_new_ubiquo_setting_sidebar ubiquo_setting
+            show_translations(ubiquo_setting)
           end
 
-          # Returns the available actions links for a given setting
-          def uhook_setting_index_actions setting
+          # Returns the available actions links for a given ubiquo_setting
+          def uhook_ubiquo_setting_index_actions ubiquo_setting
             actions = []
-            actions << link_to_function(t('ubiquo.setting.index.save'), "collectAndSendValues('#{setting.context}', '#{setting.key}')")
-            if setting.id && !setting.generated_from_another_value?
-              actions << link_to(t('ubiquo.setting.index.restore_default'), 
-                          ubiquo_setting_path(setting),
-                          :confirm => t('ubiquo.setting.index.confirm_restore_default'), :method => :delete)
+            actions << link_to_function(t('ubiquo.ubiquo_setting.index.save'),
+                        "collectAndSendValues('#{ubiquo_setting.context}', '#{ubiquo_setting.key}')")
+            if ubiquo_setting.id && !ubiquo_setting.generated_from_another_value?
+              actions << link_to(t('ubiquo.ubiquo_setting.index.restore_default'),
+                          ubiquo_ubiquo_setting_path(ubiquo_setting),
+                          :confirm => t('ubiquo.ubiquo_setting.index.confirm_restore_default'), :method => :delete)
             end
             actions
           end
 
-          # Returns any necessary extra code to be inserted in the setting form
-          def uhook_setting_form form
+          # Returns any necessary extra code to be inserted in the ubiquo_setting form
+          def uhook_ubiquo_setting_form form
             (form.hidden_field :content_id) + (hidden_field_tag(:from, params[:from]))
           end            
 
-          def uhook_get_setting(context, setting_key)
-            ::Setting.find_or_build(context, setting_key, :locale => current_locale.to_sym)
+          def uhook_get_ubiquo_setting(context, setting_key)
+            ::UbiquoSetting.find_or_build(context, setting_key, :locale => current_locale.to_sym)
           end     
 
-          def uhook_print_key_label setting
-            result = label_tag(translate_key_name(setting.context, setting.key))
-            result += content_tag(:span,"(#{t('ubiquo.setting.index.translatable')})", :class => :translatable) if setting.translatable?
-            result += content_tag(:p, "(#{t('ubiquo.setting.index.not_value_for_locale')})") if setting.generated_from_another_value?
+          def uhook_print_key_label ubiquo_setting
+            result = label_tag(translate_key_name(ubiquo_setting.context, ubiquo_setting.key))
+            result += content_tag(:span,"(#{t('ubiquo.ubiquo_setting.index.translatable')})", :class => :translatable) if ubiquo_setting.translatable?
+            result += content_tag(:p, "(#{t('ubiquo.ubiquo_setting.index.not_value_for_locale')})") if ubiquo_setting.generated_from_another_value?
             result
           end            
         end
@@ -448,7 +449,7 @@ module Ubiquo
             end
           end
 
-          def uhook_is_setting_overriden? context, key
+          def uhook_is_ubiquo_setting_overriden? context, key
             Ubiquo::Settings[context].options_exists?(key) &&
               Ubiquo::Settings[context].translation_exists?(key, current_locale)
           end
@@ -460,9 +461,9 @@ module Ubiquo
 
 
           # Performs any required action on setting when in edit
-          def uhook_edit_setting setting
-            unless setting.in_locale?(current_locale)
-              redirect_to(ubiquo_settings_path)
+          def uhook_edit_ubiquo_setting ubiquo_setting
+            unless ubiquo_setting.in_locale?(current_locale)
+              redirect_to(ubiquo_ubiquo_settings_path)
               false
             end
           end
@@ -474,33 +475,33 @@ module Ubiquo
           end            
 
           # Creates or updates a new instance of setting.
-          def uhook_create_setting
+          def uhook_create_ubiquo_setting
             valids = []
             errors = []
-            params[:settings].each do |context, data|
+            params[:ubiquo_settings].each do |context, data|
               data.each do |key, value_array|                  
                  unless confirmation?(key, data)
-                  setting = ::Setting.find_or_build(context, key, :locale => current_locale)
-                  setting.handle_confirmation(data) if setting.respond_to?(:handle_confirmation)
-                  setting.value = value_array.first[1]         
-                  if setting.config_value_same? || setting.save
-                    valids << setting
+                  ubiquo_setting = ::UbiquoSetting.find_or_build(context, key, :locale => current_locale)
+                  ubiquo_setting.handle_confirmation(data) if ubiquo_setting.respond_to?(:handle_confirmation)
+                  ubiquo_setting.value = value_array.first[1]
+                  if ubiquo_setting.config_value_same? || ubiquo_setting.save
+                    valids << ubiquo_setting
                   else                    
-                    errors << setting
+                    errors << ubiquo_setting
                   end
                 end
               end
-            end if params[:settings].present?
+            end if params[:ubiquo_settings].present?
             {:valids => valids, :errors => errors}
           end
 
           #destroys an setting instance. returns a boolean that means if the destroy was done.
-          def uhook_destroy_setting(setting)
+          def uhook_destroy_ubiquo_setting(ubiquo_setting)
             destroyed = false
             if params[:destroy_content]
-              destroyed = setting.destroy_content
+              destroyed = ubiquo_setting.destroy_content
             else
-              destroyed = setting.destroy
+              destroyed = ubiquo_setting.destroy
             end
             destroyed
           end
@@ -515,8 +516,8 @@ module Ubiquo
         end
 
         module ClassMethods
-          def uhook_create_settings_table
-            create_table :settings, :translatable => true do |t|
+          def uhook_create_ubiquo_settings_table
+            create_table :ubiquo_settings, :translatable => true do |t|
               yield t
             end
           end
@@ -548,9 +549,9 @@ module Ubiquo
       def self.prepare_mocks
         add_mock_helper_stubs({
           :show_translations => '', 
-          :ubiquo_setting_path => '', :current_locale => '',
-          :content_tag => '', :hidden_field_tag => '', :locale => Setting,
-          :new_ubiquo_setting_path => ''
+          :ubiquo_ubiquo_setting_path => '', :current_locale => '',
+          :content_tag => '', :hidden_field_tag => '', :locale => UbiquoSetting,
+          :new_ubiquo_ubiquo_setting_path => ''
         })
       end
     end

@@ -240,12 +240,12 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
     enable_settings_override
     assert Ubiquo::Settings.overridable?
     assert_not_nil Ubiquo::Settings.load_from_backend!
-    assert Ubiquo::Settings.add(Setting.create(:key => 'one', :value => 'catch22'))
+    assert Ubiquo::Settings.add(UbiquoSetting.create(:key => 'one', :value => 'catch22'))
 
     disable_settings_override
     assert !Ubiquo::Settings.overridable?
     assert_equal 0, Ubiquo::Settings.load_from_backend!
-    assert !Ubiquo::Settings.add(Setting.create(:key => 'one', :value => 'catch24'))
+    assert !Ubiquo::Settings.add(UbiquoSetting.create(:key => 'one', :value => 'catch24'))
   end
   
   def test_load_from_backend!
@@ -257,8 +257,8 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
     initial_s2_value = 'catch12'
     Ubiquo::Settings.add(:one, initial_s1_value, :is_editable => true)
     Ubiquo::Settings.add(:two, initial_s2_value, :is_editable => true)
-    s1 = StringSetting.create(:key => 'one', :value => 'catch22')
-    s2 = StringSetting.create(:key => 'two', :value => 'catch24')
+    s1 = UbiquoStringSetting.create(:key => 'one', :value => 'catch22')
+    s2 = UbiquoStringSetting.create(:key => 'two', :value => 'catch24')
     assert_equal initial_s1_value, Ubiquo::Settings.get(:one)
     assert_equal initial_s2_value, Ubiquo::Settings.get(:two)
 
@@ -274,8 +274,8 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
     initial_s2_value = 'catch12'
     Ubiquo::Settings.add(:one, initial_s1_value, :is_editable => true)
     Ubiquo::Settings.add(:two, initial_s2_value, :is_editable => true)
-    s1 = Setting.create(:key => 'one', :value => 'catch22')
-    s2 = Setting.create(:key => 'two', :value => 'catch24')
+    s1 = UbiquoSetting.create(:key => 'one', :value => 'catch22')
+    s2 = UbiquoSetting.create(:key => 'two', :value => 'catch24')
     assert_equal initial_s1_value, Ubiquo::Settings.get(:one)
     assert_equal initial_s2_value, Ubiquo::Settings.get(:two)
 
@@ -393,44 +393,44 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
       assert_equal 'gnuine', setting[:five]
     end
 
-    assert_equal IntegerSetting, Ubiquo::Settings.settings[:foo_context][:one][:options][:value_type]
-    assert_equal StringSetting, Ubiquo::Settings.settings[:foo_context][:two][:options][:value_type]
-    assert_equal SymbolSetting, Ubiquo::Settings.settings[:foo_context][:three][:options][:value_type]
-    assert_equal EmailSetting, Ubiquo::Settings.settings[:foo_context][:four][:options][:value_type]
-    assert_equal PasswordSetting, Ubiquo::Settings.settings[:foo_context][:five][:options][:value_type]
+    assert_equal UbiquoIntegerSetting, Ubiquo::Settings.settings[:foo_context][:one][:options][:value_type]
+    assert_equal UbiquoStringSetting, Ubiquo::Settings.settings[:foo_context][:two][:options][:value_type]
+    assert_equal UbiquoSymbolSetting, Ubiquo::Settings.settings[:foo_context][:three][:options][:value_type]
+    assert_equal UbiquoEmailSetting, Ubiquo::Settings.settings[:foo_context][:four][:options][:value_type]
+    assert_equal UbiquoPasswordSetting, Ubiquo::Settings.settings[:foo_context][:five][:options][:value_type]
     
     Ubiquo::Settings.context(:foo_context) do |setting|
-      assert_raise Ubiquo::Settings::InvalidIntegerSettingValue do
+      assert_raise Ubiquo::Settings::InvalidUbiquoIntegerSettingValue do
         setting[:one] = "1"
       end
-      assert_raise Ubiquo::Settings::InvalidStringSettingValue do
+      assert_raise Ubiquo::Settings::InvalidUbiquoStringSettingValue do
         setting[:two] = 1
       end
-      assert_raise Ubiquo::Settings::InvalidSymbolSettingValue do
+      assert_raise Ubiquo::Settings::InvalidUbiquoSymbolSettingValue do
         setting[:three] = "1"
       end
-      assert_raise Ubiquo::Settings::InvalidEmailSettingValue do
+      assert_raise Ubiquo::Settings::InvalidUbiquoEmailSettingValue do
         setting[:four] = "withoutEmailFormat"
       end
-      assert_raise Ubiquo::Settings::InvalidPasswordSettingValue do
+      assert_raise Ubiquo::Settings::InvalidUbiquoPasswordSettingValue do
         setting[:five] = 1
       end
     end
 
     Ubiquo::Settings.context(:foo_context) do |setting|
-      assert_raise Ubiquo::Settings::InvalidIntegerSettingValue do
+      assert_raise Ubiquo::Settings::InvalidUbiquoIntegerSettingValue do
         setting.integer :one_bis, "1"
       end
-      assert_raise Ubiquo::Settings::InvalidStringSettingValue do
+      assert_raise Ubiquo::Settings::InvalidUbiquoStringSettingValue do
         setting.string :two_bis, 1
       end
-      assert_raise Ubiquo::Settings::InvalidSymbolSettingValue do
+      assert_raise Ubiquo::Settings::InvalidUbiquoSymbolSettingValue do
         setting.symbol :three_bis, 1
       end
-      assert_raise Ubiquo::Settings::InvalidEmailSettingValue do
+      assert_raise Ubiquo::Settings::InvalidUbiquoEmailSettingValue do
         setting.email :four_bis, "withoutEmailFormat"
       end
-      assert_raise Ubiquo::Settings::InvalidPasswordSettingValue do
+      assert_raise Ubiquo::Settings::InvalidUbiquoPasswordSettingValue do
         setting.password :five_bis, 1
       end
     end
@@ -444,7 +444,7 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
   protected
 
   def clear_settings
-    Setting.destroy_all
+    UbiquoSetting.destroy_all
     Ubiquo::Settings.settings[:ubiquo] = @old_configuration.clone
     Ubiquo::Settings.settings.reject! { |k, v| !@initial_contexts.include?(k)}      
   end

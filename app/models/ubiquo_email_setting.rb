@@ -1,4 +1,4 @@
-class EmailSetting < Setting
+class UbiquoEmailSetting < UbiquoSetting
 # es podra espeficar n llistat separat per comes, sempre, mai un de sol
   serialize :value, String
   validates_format_of :value, :with => /^.+@.+\..+$/, :allow_nil => true

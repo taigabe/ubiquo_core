@@ -15,8 +15,8 @@ module Ubiquo
 
         preload!
 
-        ::Setting.reset_column_information
-        ::Setting.send(:include, self::Setting)
+        ::UbiquoSetting.reset_column_information
+        ::UbiquoSetting.send(:include, self::UbiquoSetting)
 
         return if validate_requirements == false
         prepare_mocks if Rails.env.test?
@@ -24,7 +24,7 @@ module Ubiquo
         #Ubiquo::Settings.initialize
         ::ActiveRecord::Base.send(:include, self::ActiveRecord::Base)
         #::Ubiquo::Extensions::UbiquoAreaController.send(:include, self::UbiquoHelpers)
-        ::Ubiquo::SettingsController.send(:include, self::UbiquoSettingsController)
+        ::Ubiquo::UbiquoSettingsController.send(:include, self::UbiquoSettingsController)
         ::ActiveRecord::Migration.send(:include, self::Migration)
 
         #::UbiquoConfig::Filters::SettingFilter.send(:include, self::UbiquoHelpers::Helper)

@@ -1,6 +1,6 @@
 en:
   ubiquo:
-    setting:
+    ubiquo_setting:
       index:
         title: "Settings"
         confirm_restore_default: "Are you sure you want to return to the default?"
