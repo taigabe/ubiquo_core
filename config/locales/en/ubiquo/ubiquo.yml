@@ -1,6 +1,8 @@
 en:
   ubiquo:
     ubiquo_setting:
+      empty_list_title: "List of settings"
+      empty_list_message: 'Here you can see all the editable records and create, edit or delete them.'
       index:
         title: "Settings"
         confirm_restore_default: "Are you sure you want to return to the default?"

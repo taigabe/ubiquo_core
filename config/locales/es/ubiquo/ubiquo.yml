@@ -1,6 +1,8 @@
 es:
   ubiquo:
     ubiquo_setting:
+      empty_list_title: "Listado de parámetros de configuración"
+      empty_list_message: "Desde este apartado puedes ver una lista de todos los recursos existentes editables. Podrás crear nuevos, editarlos o borrarlos."
       index:
         title: "Configuración"
         confirm_restore_default: "¿Estás seguro de querer restaurar el valor por defecto?"

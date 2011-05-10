@@ -25,6 +25,14 @@ module Ubiquo::UbiquoSettingsHelper
     })
   end
 
+  def render_empty_list_message
+    render(:partial => "shared/ubiquo/lists/empty", :locals => {
+        :model => UbiquoSetting,
+        :name => 'ubiquo_setting',
+        :link_to_new => ''
+    })
+  end
+
   def render_template_type ubiquo_setting
     type = ubiquo_setting.class.name.gsub('Setting', '').gsub('Ubiquo', '').underscore
     type = UbiquoSetting.name.underscore if type.blank?

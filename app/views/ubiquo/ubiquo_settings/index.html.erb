@@ -56,80 +56,83 @@
 <% # = show_filter_info
 %>
 
-<div id="contexts">
-  <% @contexts.each do |context, settings| %>
-    <h3 class="context-header"><%= translate_context_name(context) %></h3>
-    <%= ubiquo_setting_list(context, settings) %>
-  <% end %>
-</div>
+<% if @contexts.present? %>
+  <div id="contexts">
+    <% @contexts.each do |context, settings| %>
+      <h3 class="context-header"><%= translate_context_name(context) %></h3>
+      <%= ubiquo_setting_list(context, settings) %>
+    <% end %>
+  </div>
 
-<% javascript_tag do -%>
-  function collectAndSendValues(selectedContext, selectedSettingKey){
-    var settings = {}
-    var contexts = $$('#contexts > table');
-    for(var i = 0; i < contexts.length; ++i){
-      var contextKey = $(contexts[i]).readAttribute('id')
-      if(selectedContext == null || contextKey == selectedContext ){
-        settings[contextKey] = {}
-        var settingsRows = $(contexts[i]).getElementsBySelector('tbody tr');
-        for(var j = 0; j < settingsRows.length; ++j){
-          var settingKey = settingsRows[j].readAttribute('id');          
-          settingKey = settingKey.replace('ubiquo_setting_','');
-          if(selectedSettingKey == null || settingKey == selectedSettingKey){        
-              
-            var settingValue;
-            // Is a select 
-            if(settingsRows[j].getElementsBySelector('input[name="' + settingKey + '"]').length == 0 &&
-                settingsRows[j].getElementsBySelector('select[name="' + settingKey + '"]').length){
-              settingValue = settingsRows[j].getElementsBySelector('select[name="' + settingKey + '"]').first().value;  
-            }
-            // Is a textarea
-            else if(settingsRows[j].getElementsBySelector('textarea[name="' + settingKey + '"]').length){
-              settingValue = settingsRows[j].getElementsBySelector('textarea[name="' + settingKey + '"]').first().value;  
-            }
-            // Is a input
-            else {    
-              settingValue = settingsRows[j].getElementsBySelector('input[name="' + settingKey + '"]').first().value;
-              // Is a checkbox
-              if(settingsRows[j].getElementsBySelector('input[name="' + settingKey + '"]').first().type == 'checkbox'
-                 && settingsRows[j].getElementsBySelector('input[name="' + settingKey + '"]').first().checked == false){
-                settingValue = false;
-              }     
-              // Is a password
-              if(settingsRows[j].getElementsBySelector('input[name="' + settingKey + '"]').first().type == 'password'
-                 && settingsRows[j].getElementsBySelector('input[name="confirmation_' + settingKey + '"]').length){
+  <% javascript_tag do -%>
+    function collectAndSendValues(selectedContext, selectedSettingKey){
+      var settings = {}
+      var contexts = $$('#contexts > table');
+      for(var i = 0; i < contexts.length; ++i){
+        var contextKey = $(contexts[i]).readAttribute('id')
+        if(selectedContext == null || contextKey == selectedContext ){
+          settings[contextKey] = {}
+          var settingsRows = $(contexts[i]).getElementsBySelector('tbody tr');
+          for(var j = 0; j < settingsRows.length; ++j){
+            var settingKey = settingsRows[j].readAttribute('id');
+            settingKey = settingKey.replace('ubiquo_setting_','');
+            if(selectedSettingKey == null || settingKey == selectedSettingKey){
 
-                var confirmationKey = "confirmation_" + settingKey
-                var confirmationValue = settingsRows[j].getElementsBySelector('input[name="confirmation_' + settingKey + '"]').first().value
-                settings[contextKey][confirmationKey] = confirmationValue;
-              }                   
+              var settingValue;
+              // Is a select
+              if(settingsRows[j].getElementsBySelector('input[name="' + settingKey + '"]').length == 0 &&
+                  settingsRows[j].getElementsBySelector('select[name="' + settingKey + '"]').length){
+                settingValue = settingsRows[j].getElementsBySelector('select[name="' + settingKey + '"]').first().value;
+              }
+              // Is a textarea
+              else if(settingsRows[j].getElementsBySelector('textarea[name="' + settingKey + '"]').length){
+                settingValue = settingsRows[j].getElementsBySelector('textarea[name="' + settingKey + '"]').first().value;
+              }
+              // Is a input
+              else {
+                settingValue = settingsRows[j].getElementsBySelector('input[name="' + settingKey + '"]').first().value;
+                // Is a checkbox
+                if(settingsRows[j].getElementsBySelector('input[name="' + settingKey + '"]').first().type == 'checkbox'
+                   && settingsRows[j].getElementsBySelector('input[name="' + settingKey + '"]').first().checked == false){
+                  settingValue = false;
+                }
+                // Is a password
+                if(settingsRows[j].getElementsBySelector('input[name="' + settingKey + '"]').first().type == 'password'
+                   && settingsRows[j].getElementsBySelector('input[name="confirmation_' + settingKey + '"]').length){
+
+                  var confirmationKey = "confirmation_" + settingKey
+                  var confirmationValue = settingsRows[j].getElementsBySelector('input[name="confirmation_' + settingKey + '"]').first().value
+                  settings[contextKey][confirmationKey] = confirmationValue;
+                }
+              }
+              settings[contextKey][settingKey] = settingValue;
             }
-            settings[contextKey][settingKey] = settingValue;
           }
         }
       }
-    }
-    var form = $('bulk_submit');
-    for(var context in settings) {
-      for(var settingKey in settings[context]) {
-        var hiddenField = document.createElement("input");
-        hiddenField.setAttribute("type", "hidden");
-        hiddenField.setAttribute("name", "ubiquo_settings" + "[" + context + "[" + settingKey + "] ]");
-        hiddenField.setAttribute("value", settings[context][settingKey]);
+      var form = $('bulk_submit');
+      for(var context in settings) {
+        for(var settingKey in settings[context]) {
+          var hiddenField = document.createElement("input");
+          hiddenField.setAttribute("type", "hidden");
+          hiddenField.setAttribute("name", "ubiquo_settings" + "[" + context + "[" + settingKey + "] ]");
+          hiddenField.setAttribute("value", settings[context][settingKey]);
 
-        $(form).appendChild(hiddenField);
+          $(form).appendChild(hiddenField);
+        }
       }
+      form.submit();
     }
-    form.submit();
-  }
+  <% end %>
+
+  <% form_tag ubiquo_ubiquo_settings_path, {:onSubmit  => "return collectAndSendValues();",
+                                      :id => "bulk_submit"} do %>
+    <%= submit_tag t('ubiquo.ubiquo_setting.index.save_all')  %>
+  <% end %>
+<% else %>
+  <%= render_empty_list_message %>
+
 <% end %>
-
-
-<% form_tag ubiquo_ubiquo_settings_path, {:onSubmit  => "return collectAndSendValues();",
-                                    :id => "bulk_submit"} do %>
-  <%= submit_tag t('ubiquo.ubiquo_setting.index.save_all')  %>
-<% end %>
-
 <% content_for :sidebar do %>
   <%# show_filters %>
   <%# help_block_sidebar t("ubiquo.ubiquo_setting.index.help_message") %>

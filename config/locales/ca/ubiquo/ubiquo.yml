@@ -1,10 +1,12 @@
 ca:
   ubiquo:
     ubiquo_setting:
+      empty_list_title: "Llistat de paràmetres de configuració"
+      empty_list_message: "Des d'aquest apartat pots veure una llista de tots els recursos existents editables. Podrás crear-los, editar-los o esborrar-los."
       index:
-        title: "Configuración"
+        title: "Configuració"
         confirm_restore_default: "Està segur de voler tornar al valor por defecte?"
-        restore_default: "Restaurar valor por defecto"
+        restore_default: "Restaurar valor por defecte"
         save: "Guardar"
         save_all: "Guardar tots"        
         translatable: "T"        
