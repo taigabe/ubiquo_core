@@ -47,7 +47,7 @@ module Ubiquo
     cattr_accessor :settings
 
     #New API
-    
+
     #Check if settings can be overriden by users on the backend
     def self.overridable?
       settings[default_context][default_overridable_key][:value]
@@ -56,12 +56,12 @@ module Ubiquo
     # Returns the options for the setting
     def self.options(name = nil, options = {})
       uhook_options(name.to_sym, options)
-    end  
+    end
 
     # Returns the allowed values for the setting
     def self.allowed_values(name = nil, options = {})
       uhook_allowed_values(name.to_sym, options)
-    end  
+    end
 
     # Returns the default value for the setting
     def self.default_value(name = nil, options = {})
@@ -100,7 +100,7 @@ module Ubiquo
       # current_context = media
       # key = design
       # setting at [:ubiquo][key] don't exists
-      #     -> return context ubuquo_design 
+      #     -> return context ubuquo_design
       return context(key.to_sym) if context_exists?(key)
       raise OptionNotFound
     end
@@ -128,7 +128,7 @@ module Ubiquo
             original_parameters = value[:options][:original_parameters]
             original_options = value[:options][:original_parameters][:options]
             original_options.merge!(:is_a_connector_reload => true)
-            self.context(context).add original_parameters[:name], 
+            self.context(context).add original_parameters[:name],
                                       original_parameters[:default_value],
                                       original_options
           end
@@ -152,13 +152,13 @@ module Ubiquo
     def self.nullable?(name)
       raise OptionNotFound if !self.option_exists?(name)
       settings[current_context][name][:options][:is_nullable]
-    end  
+    end
 
     # Check if a value can be overrided
     def self.editable?(name)
       raise OptionNotFound if !self.option_exists?(name)
       settings[current_context][name][:options][:is_editable]
-    end   
+    end
 
     # Reset all values to the status before backend overriding
     def self.reset_overrides
@@ -169,12 +169,52 @@ module Ubiquo
       end
     end
 
+    def self.boolean(name = nil, default_value = nil, options = {}, &block)
+      options.merge!(:value_type => BooleanSetting)
+      uhook_add(name, default_value, options, &block)
+    end
+
+    def self.integer(name = nil, default_value = nil, options = {}, &block)
+      options.merge!(:value_type => IntegerSetting)
+      uhook_add(name, default_value, options, &block)
+    end
+
+    def self.string(name = nil, default_value = nil, options = {}, &block)
+      options.merge!(:value_type => StringSetting)
+      uhook_add(name, default_value, options, &block)
+    end
+
+    def self.symbol(name = nil, default_value = nil, options = {}, &block)
+      options.merge!(:value_type => SymbolSetting)
+      uhook_add(name, default_value, options, &block)
+    end
+
+    def self.email(name = nil, default_value = nil, options = {}, &block)
+      options.merge!(:value_type => EmailSetting)
+      uhook_add(name, default_value, options, &block)
+    end
+
+    def self.password(name = nil, default_value = nil, options = {}, &block)
+      options.merge!(:value_type => PasswordSetting)
+      uhook_add(name, default_value, options, &block)
+    end
+
+    def self.list(name = nil, default_value = nil, options = {}, &block)
+      options.merge!(:value_type => ListSetting)
+      uhook_add(name, default_value, options, &block)
+    end
+
+    def self.check_type(klass, values)
+      raise class_eval("Invalid#{klass}Value") if !klass.check_values(Array(values))
+      true
+    end
+
     #Old API
 
     #Adds an option to the current context (default :ubiquo). Default value is optional.
     #options parameter was added to support the new schema
     def self.add(name = nil, default_value = nil, options = {}, &block)
-      uhook_add(name, default_value, options, &block) 
+      uhook_add(name, default_value, options, &block)
     end
 
     # example inherited_value format = 'ubiquo.elements_per_page'
@@ -182,12 +222,12 @@ module Ubiquo
       raise InvalidOptionName if !check_valid_name(name)
       raise OptionNotFound if !self.option_exists?(name)
       name = name.to_sym
-      settings[self.current_context][name][:options][:inherits] = inherited_value    
+      settings[self.current_context][name][:options][:inherits] = inherited_value
     end
 
 
     #
-    # Deprecated: It was not used in any plugin. the default values were always set by  
+    # Deprecated: It was not used in any plugin. the default values were always set by
     # the 'add' method
     #
     #Set a default value to an existent option of the current context( default :ubiquo).
@@ -246,8 +286,8 @@ module Ubiquo
     #  >> Ubiquo::Settings.set(:a, 2)
     #  >> Ubiquo::Settings.get(:a)
     #  => 2
-    def self.get(name, options = {}) 
-      uhook_get(name, options)  
+    def self.get(name, options = {})
+      uhook_get(name, options)
     end
 
     def self.call(name, run_in, options = {})
@@ -332,7 +372,7 @@ module Ubiquo
       if options.is_a?(Hash) && options.present?
         context = options[:context]
       elsif options.present?
-        context = options      
+        context = options
       else
         context = current_context
       end
@@ -352,11 +392,11 @@ module Ubiquo
         !name.to_s.empty?
       else
         false
-      end
+      end || !@loaded
     end
 
     def self.check_valid_context_name(name)
-      self.check_valid_name(name)
+      self.check_valid_name(name) || !@loaded
     end
 
     def self.block_assignment(&block)
@@ -368,7 +408,7 @@ module Ubiquo
     def self.default_context
       :ubiquo
     end
-    
+
     def self.default_overridable_key
       :settings_overridable
     end
@@ -379,7 +419,7 @@ module Ubiquo
     end
 
     #
-    # Deprecated: It was not used in any plugin. the default values were always set by  
+    # Deprecated: It was not used in any plugin. the default values were always set by
     # the 'add' method
     #
     def self.new_context_options(name = self.current_context)
@@ -405,12 +445,19 @@ module Ubiquo
     #    :is_editable => false,
     #    :is_translatable => false,
     #    :locale => default_locale
-    #  } 
+    #  }
     #
-    def self.default_options 
+    def self.default_options
       uhook_default_options
     end
 
+    class InvalidBooleanSettingValue < StandardError; end
+    class InvalidIntegerSettingValue < StandardError; end
+    class InvalidStringSettingValue < StandardError; end
+    class InvalidSymbolSettingValue < StandardError; end
+    class InvalidEmailSettingValue < StandardError; end
+    class InvalidPasswordSettingValue < StandardError; end
+    class InvalidListSettingValue < StandardError; end
     class InvalidOptionName < StandardError; end
     class InvalidContextName < StandardError; end
     class InvalidValue < StandardError; end
@@ -427,20 +474,23 @@ module Ubiquo
           my_method_missing(method, args, block)
       end
     end
+
+    class << self; attr_accessor :loaded end
+    @@loaded = false
   end
 end
 
 class Settings
-  def self.method_missing(method, *args, &block)      
+  def self.method_missing(method, *args, &block)
     Ubiquo::Settings.send(method, *args, &block)
   end
   def self.const_missing(sym)
     Ubiquo::Settings.const_get sym
-  end  
+  end
 end
 module Ubiquo
   class Config
-    def self.method_missing(method, *args, &block)      
+    def self.method_missing(method, *args, &block)
       if !defined?@@deprecation
         @@deprecation = true
         ActiveSupport::Deprecation.warn(%{
@@ -448,7 +498,7 @@ module Ubiquo
         -----------------------------------------------------------
         -----------------------------------------------------------
         -----------------------------------------------------------
-        Ubiquo::Config is deprecated! Use instead: 
+        Ubiquo::Config is deprecated! Use instead:
         -------Ubiquo::Settings for plugins -----------------------
         -------Settings         for application -------------------
         -----------------------------------------------------------

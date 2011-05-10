@@ -7,8 +7,17 @@ class BooleanSetting < Setting
   
   def value
     self[:value] == "true" ? true : false
-  end  
-  
+  end
+
+  def self.check_values values
+    values.each do |v|
+      if !v.nil? && v != true && v != false
+        return false
+      end
+    end
+    true
+  end
+
   protected
 
   def parse_value

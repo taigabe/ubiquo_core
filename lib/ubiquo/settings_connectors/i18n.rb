@@ -159,7 +159,12 @@ module Ubiquo
                     value = { locale.to_sym => value }
                     options.merge!(:default_value => { locale.to_sym => default_value })
                   end
+                  check_type(options[:value_type], value.values) if loaded && options[:value_type]
+                else
+                  check_type(options[:value_type], value) if
+                  loaded && options[:value_type]
                 end
+                
                 settings[self.current_context][name] = {
                   :options => options,
                   :value => value                    
@@ -184,6 +189,9 @@ module Ubiquo
               options = settings[current_context][name][:options].merge(options) 
               if options[:is_translatable]
                 value = settings[current_context][name][:value].merge({ locale => value })
+                check_type(options[:value_type], value.values) if loaded && options[:value_type]
+              else
+                check_type(options[:value_type], value) if loaded && options[:value_type]
               end
               options.merge!(:default_value => value) if !options.delete(:is_a_override)
               options.delete(:inherits)

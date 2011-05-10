@@ -21,4 +21,14 @@ class PasswordSetting < StringSetting
   def handle_confirmation data
     self.confirmation = data.find{|k,v| k.to_sym == confirmation_key}.last.first.last rescue nil
   end
+
+  def self.check_values values
+    values.each do |v|
+      if !v.nil? &&
+          v.class != String
+        return false
+      end
+    end
+    true
+  end
 end

@@ -11,7 +11,8 @@ class Setting < ActiveRecord::Base
   validate :check_is_editable
   validate :check_config_existence
   validate :check_config_value_same
-  validate :check_config_acceptance  
+  validate :check_config_acceptance
+  validate :check_config_value_acceptance
 
  #before_validation :try_setting_type
   before_validation :set_default_context
@@ -59,6 +60,13 @@ class Setting < ActiveRecord::Base
   
   def check_config_value_same
     self.errors.add :value, 'cannot override a value with the same' if config_value_same?
+  end
+
+  def check_config_value_acceptance
+    if self.class.respond_to?(:check_values) &&
+        !self.class.check_values(Array(self.value))
+      self.errors.add :value, "#{self.value} is not allowed"
+    end
   end
 
   # Validate a setting

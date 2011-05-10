@@ -375,7 +375,67 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
     assert_equal [:eight, :seven], Ubiquo::Settings.context(Ubiquo::Settings.default_context).get_editable_settings
 
   end
-  
+
+  def test_type_restricted_settings
+    Ubiquo::Settings.create_context(:foo_context) do |setting|
+      setting.integer :one, 1
+      setting.string :two, "1"
+      setting.symbol :three, :a
+      setting.email :four, 'a@b.com'
+      setting.password :five, 'gnuine'
+    end
+
+    Ubiquo::Settings.context(:foo_context) do |setting|
+      assert_equal 1, setting[:one]
+      assert_equal "1", setting[:two]
+      assert_equal :a, setting[:three]
+      assert_equal 'a@b.com', setting[:four]
+      assert_equal 'gnuine', setting[:five]
+    end
+
+    assert_equal IntegerSetting, Ubiquo::Settings.settings[:foo_context][:one][:options][:value_type]
+    assert_equal StringSetting, Ubiquo::Settings.settings[:foo_context][:two][:options][:value_type]
+    assert_equal SymbolSetting, Ubiquo::Settings.settings[:foo_context][:three][:options][:value_type]
+    assert_equal EmailSetting, Ubiquo::Settings.settings[:foo_context][:four][:options][:value_type]
+    assert_equal PasswordSetting, Ubiquo::Settings.settings[:foo_context][:five][:options][:value_type]
+    
+    Ubiquo::Settings.context(:foo_context) do |setting|
+      assert_raise Ubiquo::Settings::InvalidIntegerSettingValue do
+        setting[:one] = "1"
+      end
+      assert_raise Ubiquo::Settings::InvalidStringSettingValue do
+        setting[:two] = 1
+      end
+      assert_raise Ubiquo::Settings::InvalidSymbolSettingValue do
+        setting[:three] = "1"
+      end
+      assert_raise Ubiquo::Settings::InvalidEmailSettingValue do
+        setting[:four] = "withoutEmailFormat"
+      end
+      assert_raise Ubiquo::Settings::InvalidPasswordSettingValue do
+        setting[:five] = 1
+      end
+    end
+
+    Ubiquo::Settings.context(:foo_context) do |setting|
+      assert_raise Ubiquo::Settings::InvalidIntegerSettingValue do
+        setting.integer :one_bis, "1"
+      end
+      assert_raise Ubiquo::Settings::InvalidStringSettingValue do
+        setting.string :two_bis, 1
+      end
+      assert_raise Ubiquo::Settings::InvalidSymbolSettingValue do
+        setting.symbol :three_bis, 1
+      end
+      assert_raise Ubiquo::Settings::InvalidEmailSettingValue do
+        setting.email :four_bis, "withoutEmailFormat"
+      end
+      assert_raise Ubiquo::Settings::InvalidPasswordSettingValue do
+        setting.password :five_bis, 1
+      end
+    end
+  end
+
   def dummy_method(options = {})
     options = {:word => "world"}.merge(options)
     "hello #{options[:word]}"

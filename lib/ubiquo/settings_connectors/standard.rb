@@ -20,7 +20,7 @@ module Ubiquo
           # Returns the options for the setting
           def uhook_options(name = nil, options = {})
             return settings[current_context][name][:options].reject{|k,_|
-              [:is_editable, :inherits, 
+              [:is_editable, :inherits, :type_value,
                 :locale, :is_nullable,
                 :default_value, :is_translatable,
                 :allowed_values, :original_parameters].include?(k)
@@ -68,7 +68,8 @@ module Ubiquo
                     :default_value => default_value,
                     :options => options
                   }
-                )                  
+                )
+                check_type(options[:value_type], default_value) if @loaded && options[:value_type]
                 settings[self.current_context][name] = {
                   :options => options,
                   :value => default_value
@@ -86,6 +87,7 @@ module Ubiquo
               raise Ubiquo::Settings::InvalidOptionName if !check_valid_name(name)
               raise Ubiquo::Settings::OptionNotFound if !self.option_exists?(name)
               name = name.to_sym
+              check_type(options[:value_type], value) if @loaded && options[:value_type]
               settings[self.current_context][name] = {
                 :options => options.merge(:default_value => value),
                 :value => value

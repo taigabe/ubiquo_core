@@ -7,7 +7,7 @@ module Ubiquo
           current.unload!
         end
         Ubiquo::SettingsConnectors::Base.set_current_connector self
-
+        
         Ubiquo::Settings.send(:include, self::Settings)
       end
 
@@ -28,7 +28,7 @@ module Ubiquo
         ::ActiveRecord::Migration.send(:include, self::Migration)
 
         #::UbiquoConfig::Filters::SettingFilter.send(:include, self::UbiquoHelpers::Helper)
-
+        Ubiquo::Settings.loaded = true
         Ubiquo::Settings.regenerate_settings    
         Ubiquo::Settings.load_from_backend!
       end

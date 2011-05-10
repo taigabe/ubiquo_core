@@ -6,6 +6,7 @@ module Connectors
       def setup
         save_current_settings_connector 
         Ubiquo::Settings[:settings_connector] = :standard
+        clean_translatable_settings
         Ubiquo::SettingsConnectors.load!
         Ubiquo::Settings.regenerate_settings
       end
@@ -36,7 +37,7 @@ module Connectors
           StringSetting.create(:context => :foo2, :key => 'first', :value => 'value3_redefinido')
         }
 
-        enable_settings_override        
+        Ubiquo::Settings[:ubiquo][:settings_overridable] = true        
         create_settings_test_case.call
         create_overrides_test_case.call
         
@@ -44,7 +45,7 @@ module Connectors
 
         Ubiquo::Settings.reset_overrides
         clear_settings
-        enable_settings_override        
+        Ubiquo::Settings[:ubiquo][:settings_overridable] = true        
         create_settings_test_case.call
 
         assert_equal 'value1', Ubiquo::Settings[:foo][:first]
@@ -71,7 +72,8 @@ module Connectors
       end
 
       test "should accept a override if setting is editable" do
-        enable_settings_override
+
+        Ubiquo::Settings[:ubiquo][:settings_overridable] = true
         Ubiquo::Settings.create_context(:foo_context_1)
         Ubiquo::Settings[:foo_context_1].add(:new_setting, 
                                          'hola',
@@ -126,5 +128,12 @@ module Connectors
       @old_connector.load!      
     end
 
+    def clean_translatable_settings
+      Ubiquo::Settings.get_contexts.each do |context_key|
+        Ubiquo::Settings.settings[context_key].each do |key, value|
+          Ubiquo::Settings.settings[context_key].delete(key) if value[:options][:is_translatable] == true
+        end
+      end
+    end
   end
 end

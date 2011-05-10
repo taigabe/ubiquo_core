@@ -18,6 +18,7 @@ class SettingTest < ActiveSupport::TestCase
       BooleanSetting => true,
       EmailSetting => "a@b.com",
       ListSetting => [1,'a',:s]}.each do |subtype, value|
+
       # ubiquo:config.add .....
       key = "#{subtype}_key"
       Ubiquo::Settings.add(key.to_sym, nil, {:is_nullable => true,
