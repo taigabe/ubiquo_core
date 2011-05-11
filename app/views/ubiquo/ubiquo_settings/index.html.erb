@@ -1,55 +1,5 @@
-<style type="text/css">
-  #contexts table td:first-child{
-    width:20%;
-  }
-  .context-header{
-     font-size: 1.2em;
-     font-weight: bolder;
-      background:#ECF5F4;
-  }
-  #contexts form{
-    padding:0;
-  }
-  #contexts .form-item {
-    margin:0;
-  }
-  #contexts .form-item fieldset{
-    margin:0.1em 0.1em 0.1em 0.1em;
-    padding:0;
-  }  
-  #contexts .form-item .number{
-    background:#F0BB47;
-    width:15%;
-  }
-  #contexts tr:hover{
-    background:inherit;
-  }
-  #contexts form{
-    border: 0;
-  }
-  #contexts form input, #contexts form textarea, #contexts form select{
-    padding: 0.1em;
-  }
-  
-  #contexts textarea, #contexts input{
-    width: 100% !important;
-  }
-  #bulk_submit input{
-    margin-left:90%;    
-  }
-  #contexts .translatable{
-    
-  }
-  
-
-</style>
-<h1>
-  <%= render :partial => 'title' %>
-</h1>
-
-<h2>
-  <%= render :partial => 'submenu' %>
-</h2>
+<h1><%= render :partial => 'title' %></h1>
+<h2><%= render :partial => 'submenu' %></h2>
 
 <%= render :partial => "shared/ubiquo/feedback" %>
 
@@ -127,7 +77,9 @@
 
   <% form_tag ubiquo_ubiquo_settings_path, {:onSubmit  => "return collectAndSendValues();",
                                       :id => "bulk_submit"} do %>
+    <div class="form-item-submit">
     <%= submit_tag t('ubiquo.ubiquo_setting.index.save_all')  %>
+    </div>
   <% end %>
 <% else %>
   <%= render_empty_list_message %>
