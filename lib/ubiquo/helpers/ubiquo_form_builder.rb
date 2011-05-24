@@ -56,6 +56,9 @@ module Ubiquo
           group_options = ( options.has_key?(:group) ? options.delete( :group ) : {} )
           group_options = group_options.dup if group_options.is_a? Hash
 
+          translatable = options.delete(:translatable)
+          description = options.delete(:description)
+
           label_name = options.delete(:label) || @object.class.human_attribute_name(field)
           label = ""
           if options[:label_as_legend]
@@ -68,6 +71,13 @@ module Ubiquo
           args << options unless args.last.is_a?(Hash)
           
           super_result = super( field, *args )
+          super_result += group(:type => :translatable) do
+            ( translatable === true ? @template.t("ubiquo.translatable_field") : translatable )
+          end if translatable
+          super_result += group(:type => :description) do
+            description
+          end if description
+
           if group_options
             group(group_options) do
               label + super_result

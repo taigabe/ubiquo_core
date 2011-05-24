@@ -944,10 +944,15 @@ form label {
 			clear: both;
 			padding: .4em 0 0 11em;
 		}
-		#content .form-item p.description {
+		#content .form-item p.description, #content .form-item p.translation-info {
 			font-size: .9em;
 			padding-left: 12.2em;
+		}
+		#content .form-item p.description {
 			color: #666;
+		}
+		#content .form-item p.translation-info {
+			color: green;
 		}
 	#content .form-item-submit {
 		text-align: right;
@@ -961,6 +966,9 @@ form label {
 			width: 10em;
 			margin: 0 1em 0 0;
 		}
+		#content .form-item-inline label {
+      margin-right: .3em;
+  	}
 		#content .form-item .required_field {
 			font-weight: bold;
 		}

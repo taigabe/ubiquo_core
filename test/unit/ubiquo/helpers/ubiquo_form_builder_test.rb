@@ -149,6 +149,43 @@ class UbiquoFormBuilderTest < ActionView::TestCase
       end
     }
   end
+
+  test "show description and translatable hints" do
+    self.expects(:t).with("ubiquo.translatable_field").returns("ubiquo.translatable_field")
+    the_form do |form|
+      concat( form.group(:class => "a0") do
+        concat( form.text_field :lastname, :translatable => true )
+      end)
+      concat( form.group(:class => "a1") do
+        concat( form.text_field :lastname, :class=> "alter", :translatable => "foo" )
+      end)
+      concat( form.group(:class => "a2") do
+        concat( form.text_field :lastname, :class=> "alter2", :description => "foo2" )
+      end )
+      concat( form.group(:class => "a3") do
+        concat( form.text_field :lastname, :class=> "alter3", :translatable => "foo3", :description => "bar" )
+      end )
+    end
+    assert_select "form" do |list|
+      assert_equal "/ubiquo/users/1", list.first.attributes["action"]
+      assert_select ".a0" do
+        assert_select "p.translation-info", "ubiquo.translatable_field"
+        assert_select "p.description",0
+      end
+      assert_select ".a1" do
+        assert_select "p.translation-info", "foo"
+        assert_select "p.description",0
+      end 
+      assert_select ".a2" do
+        assert_select "p.translation-info",0
+        assert_select "p.description", "foo2"
+      end
+      assert_select ".a3" do
+        assert_select "p.translation-info","foo3"
+        assert_select "p.description", "bar"
+      end 
+    end
+  end
   protected
 
   # helper to build a ubiquo form to test
