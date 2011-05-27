@@ -186,6 +186,36 @@ class UbiquoFormBuilderTest < ActionView::TestCase
       end 
     end
   end
+
+  test "show checkox correctly" do
+    the_form do |form|
+      concat( form.group(:class => "a0") do
+        concat( form.check_box :is_admin )
+      end )
+      
+      concat( form.group(:class => "a1") do
+        concat( form.check_box :is_admin, :translatable => true )
+      end )
+    end
+
+    assert_select "form" do |list|
+      assert_select ".a0" do
+        assert_select ".form-item-inline" do
+          assert_equal ["input", "input","label"], css_select(".form-item-inline *").map(&:name)
+
+          assert_select "input[label_on_bottom='true']", 0
+        end
+      end
+
+      assert_select ".a1" do
+        assert_select ".form-item-inline" do
+          assert_equal ["input", "input","label","p"], css_select(".form-item-inline *").map(&:name)
+          assert_select "input[label_on_bottom='true']", 0
+        end
+      end
+    end
+
+  end
   protected
 
   # helper to build a ubiquo form to test
@@ -210,8 +240,15 @@ class User
     "Bar"
   end
 
+  def is_admin
+    true
+  end
+
   def self.human_attribute_name( attr )
-    "Bar"
+    {
+      :lastname => "Bar",
+      :is_admin => "Is admin"
+     }[ attr.to_sym ] || attr.to_s
   end
 end
 
