@@ -1,5 +1,6 @@
 class Ubiquo::UbiquoSettingsController < UbiquoController
 
+  include Ubiquo::Extensions::UbiquoSettingsController
   #ubiquo_config_call :setting_access_control, {:context => :ubiquo_setting}
   
   # GET /settings

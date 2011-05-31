@@ -24,7 +24,8 @@ module Ubiquo
         #Ubiquo::Settings.initialize
         ::ActiveRecord::Base.send(:include, self::ActiveRecord::Base)
         #::Ubiquo::Extensions::UbiquoAreaController.send(:include, self::UbiquoHelpers)
-        ::Ubiquo::UbiquoSettingsController.send(:include, self::UbiquoSettingsController)
+        ::Ubiquo::Extensions::Loader.append_include(:UbiquoSettingsController, self::UbiquoSettingsController)
+#        ::Ubiquo::UbiquoSettingsController.send(:include, self::UbiquoSettingsController)
         ::ActiveRecord::Migration.send(:include, self::Migration)
 
         #::UbiquoConfig::Filters::SettingFilter.send(:include, self::UbiquoHelpers::Helper)
