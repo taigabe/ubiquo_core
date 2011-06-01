@@ -2,7 +2,7 @@ module Ubiquo
   module Helpers
 
     # Form Builder that allows to dry our ubiquo forms. It is used by
-    # #ubiquo_for_for, but can be used with:
+    # #ubiquo_form_for, but can be used with:
     #
     #   form_for( @actor, :builder => Ubiquo::Helpers::UbiquoFormBuider )
     #
