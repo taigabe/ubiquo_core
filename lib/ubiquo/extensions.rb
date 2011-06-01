@@ -3,12 +3,10 @@ require "rails_generator"
 module Ubiquo::Extensions
   autoload :Loader, 'ubiquo/extensions/loader'
 
-  # Applies any defined extension for +sym+
-  def self.const_missing(sym)
-    if Loader.has_extensions?(sym)
-      const_set(sym, Loader.extensions_for(sym))
-    else
-      super
+  # Load the defined extensions for +klass+ into +recipient+
+  def self.load_extensions_for klass, recipient = klass
+    if Loader.has_extensions?(klass.name)
+      recipient.send :include, Loader.extensions_for(klass.name)
     end
   end
 end
