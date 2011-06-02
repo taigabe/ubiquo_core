@@ -335,6 +335,7 @@ lightwindow.prototype = {
         this._loadWindow();
         // Add content
         var content = this._getInternalElem("contents");
+        Event.stop(e);
         this.contentStack.push({
             link:link,
             id:content.identify()

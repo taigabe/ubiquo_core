@@ -39,6 +39,7 @@ es:
     text: "texto"
     or: "o"
     new_relation: "Nuevo elemento"
+    translatable_field: "Campo traducible"
     # Filters
     filter: "Filtrar por %{thing}"
     filters:

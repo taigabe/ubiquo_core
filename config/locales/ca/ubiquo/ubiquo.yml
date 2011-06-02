@@ -39,6 +39,7 @@ ca:
     text: "text"
     or: "o"
     new_relation: "Nou element"
+    translatable_field: "Camp traduïble"
     # Filters
     filter: "Filtrar per %{thing}"
     filters:

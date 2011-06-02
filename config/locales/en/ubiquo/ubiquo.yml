@@ -39,6 +39,7 @@ en:
     text: "text"
     or: "or"
     new_relation: "New item"
+    translatable_field: "Translatable field"
     # Filters
     filter: "Filter by %{thing}"
     filters:
