@@ -93,6 +93,12 @@ module Connectors
         assert_equal 'hola_redefinido', Ubiquo::Settings[:foo_context_1][:new_setting]
       end
 
+      test 'uhook_edit_ubiquo_setting should return true' do
+        assert Ubiquo::UbiquoSettingsController.new.uhook_edit_ubiquo_setting(UbiquoSetting.new)
+      end
+
+      # TODO add more tests for the controller methods
+
     private
 
     def create_setting options = {}

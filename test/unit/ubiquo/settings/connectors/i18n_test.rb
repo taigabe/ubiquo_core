@@ -161,8 +161,16 @@ module Connectors
         assert s3.errors.present?
         
       end
-    end
 
+      test 'uhook_edit_ubiquo_setting should redirect if not current locale' do
+        Ubiquo::UbiquoSettingsController.any_instance.expects(:current_locale).at_least_once.returns('ca')
+        Ubiquo::UbiquoSettingsController.any_instance.expects(:ubiquo_ubiquo_settings_path).at_least_once.returns('')
+        Ubiquo::UbiquoSettingsController.any_instance.expects(:redirect_to).at_least_once
+        assert_equal false, Ubiquo::UbiquoSettingsController.new.uhook_edit_ubiquo_setting(UbiquoSetting.new(:locale => 'en'))
+      end
+
+      # TODO add more tests for the controller methods
+    end
 
     private
 
