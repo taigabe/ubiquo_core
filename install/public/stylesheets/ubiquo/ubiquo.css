@@ -966,10 +966,7 @@ form label {
 			width: 10em;
 			margin: 0 1em 0 0;
 		}
-		#content .form-item-inline label {
-      margin-right: .3em;
-  	}
-		#content .form-item .required_field {
+                #content .form-item .required_field {
 			font-weight: bold;
 		}
 		#content .form-item input, #content .form-item select, #content .form-item textarea, #content .form-item .mceEditor {
@@ -977,11 +974,66 @@ form label {
 			float: left;
 			width: 40%;
 		}
-		#content .form-item-inline input, #content .form-item-inline select, #content .datetime select {
+                /* help popup */
+		.form-help {
+                        margin-left: .4em;
+                        float: left;
+                        position: relative;
+		}
+		.form-help .btn-help {
+                        outline: none;
+                        padding-top: .4em;
+                        display: block;
+                        text-indent: -500em;
+                        width: 18px;
+                        height: 18px;
+                        background: url("/images/ubiquo/btn-help.png") no-repeat center center;
+		  }
+		  .form-help .content {
+                        display: none;
+                        position: absolute;
+                        top: 0;
+                        left: 3em;
+                        width: 16em;
+                        font-size: .71em;
+                        padding: .5em .7em;
+                        background: #FFF;
+                        border: 1px solid #a9ac9a;
+                        -moz-box-shadow: 1px 1px 2px #777;
+                        -webkit-box-shadow: 1px 1px 2px #777;
+                        box-shadow: 1px 1px 2px #777;
+                        -moz-border-radius: 4px;
+                        -webkit-border-radius: 4px;
+                        border-radius: 4px;
+		  }
+		  .form-help.active .content {
+                        display: block;
+		  }
+		  .form-help .content .arrow {
+                        display: block;
+                        position: absolute;
+                        top: 4px;
+                        left: -10px;
+                        text-indent: -500em;
+                        width: 10px;
+                        height: 13px;
+                        background: url(/images/ubiquo/bg-form-help-arrow.png) no-repeat center center;
+                  }
+		  #content .form-help .content p {
+                        clear: none;
+                        color: #555;
+                        font-size: 1.2em;
+                        margin: 0 0 .2em;
+                        padding: 0;
+                  }
+                  /* ---------- */
+
+                  #content .datetime select {
 			display: inline;
 			float: none;
 			width: auto;
-		}
+                  }
+
     input[type="hidden"] {
       display: none!important;
 			/*width: 40%;
@@ -996,6 +1048,10 @@ form label {
 		#content input.checkbox, #content input.radio {
 			width: auto;
 			padding-top: .2em;
+                        margin-right: .5em;
+		}
+                #content .form-item-inline input.checkbox, #content .form-item-inline input.radio {
+                        margin-right: 2em;
 		}
 		#content .form-item .mceEditor {
 			width: 78%;

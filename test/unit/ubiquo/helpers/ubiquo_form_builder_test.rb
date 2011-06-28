@@ -149,9 +149,9 @@ class UbiquoFormBuilderTest < ActionView::TestCase
       end
     }
   end
-
-  test "show description and translatable hints" do
+  test "show description, help info and translatable hints" do
     self.expects(:t).with("ubiquo.translatable_field").returns("ubiquo.translatable_field")
+
     the_form do |form|
       concat( form.group(:class => "a0") do
         concat( form.text_field :lastname, :translatable => true )
@@ -160,12 +160,14 @@ class UbiquoFormBuilderTest < ActionView::TestCase
         concat( form.text_field :lastname, :class=> "alter", :translatable => "foo" )
       end)
       concat( form.group(:class => "a2") do
-        concat( form.text_field :lastname, :class=> "alter2", :description => "foo2" )
+        concat( form.text_field :lastname, :class=> "alter2", :description => "foo2", :help => "Info text")
       end )
       concat( form.group(:class => "a3") do
         concat( form.text_field :lastname, :class=> "alter3", :translatable => "foo3", :description => "bar" )
       end )
+
     end
+
     assert_select "form" do |list|
       assert_equal "/ubiquo/users/1", list.first.attributes["action"]
       assert_select ".a0" do
@@ -175,15 +177,28 @@ class UbiquoFormBuilderTest < ActionView::TestCase
       assert_select ".a1" do
         assert_select "p.translation-info", "foo"
         assert_select "p.description",0
-      end 
+      end
       assert_select ".a2" do
         assert_select "p.translation-info",0
         assert_select "p.description", "foo2"
+        assert_select "div.form-help" do
+          assert_select "a.btn-help" do |link|
+            assert_equal link.first.attributes["onclick"],
+              "this.getOffsetParent().toggleClassName('active'); return false;",
+              "Should have a js method to assign 'active' class to parent <div>"
+            assert_equal link.first.attributes["tabindex"], "100",
+              "Should have a big 'tabindex' attribute to jump <a> " +
+              "tag when navigating with TAB key within the form."
+          end
+          assert_select "div.content" do
+            assert_select "p", "Info text"
+          end
+        end
       end
       assert_select ".a3" do
         assert_select "p.translation-info","foo3"
         assert_select "p.description", "bar"
-      end 
+      end
     end
   end
 
@@ -200,17 +215,17 @@ class UbiquoFormBuilderTest < ActionView::TestCase
 
     assert_select "form" do |list|
       assert_select ".a0" do
-        assert_select ".form-item-inline" do
-          assert_equal ["input", "input","label"], css_select(".form-item-inline *").map(&:name)
+        assert_select ".form-item" do
+          assert_equal ["label", "input","input"], css_select(".form-item *").map(&:name)
 
-          assert_select "input[label_on_bottom='true']", 0
+          assert_select "input[label_on_bottom='false']", 0
         end
       end
 
       assert_select ".a1" do
-        assert_select ".form-item-inline" do
-          assert_equal ["input", "input","label","p"], css_select(".form-item-inline *").map(&:name)
-          assert_select "input[label_on_bottom='true']", 0
+        assert_select ".form-item" do
+          assert_equal ["label", "input","input","p"], css_select(".form-item *").map(&:name)
+          assert_select "input[label_on_bottom='false']", 0
         end
       end
     end
@@ -224,6 +239,7 @@ class UbiquoFormBuilderTest < ActionView::TestCase
     options[:builder] = Ubiquo::Helpers::UbiquoFormBuilder
     user = User.new
     form_for([:ubiquo,user], options, &proc)
+    @rendered = ""
   end
 
 end

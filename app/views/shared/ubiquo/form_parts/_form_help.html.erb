@@ -1,0 +1,16 @@
+<div class="form-help">
+  <%= link_to "?", "/", {
+        :title => t("ubiquo.form_help_title"),
+        :class => "btn-help",
+        :onclick => "this.getOffsetParent().toggleClassName('active'); return false;",
+        :tabindex => 100
+      }
+  %>
+  <div class="content">
+    <p><%= content %></p>
+  </div>
+</div>
+<!--
+  This HTML code will use javascript code declared in ubiquo.js
+  to show/hide help info.
+-->

@@ -45,6 +45,8 @@ module Ubiquo
       #     markup to use it. It accepts boolean or a string that will be rendered on the field
       #   +description+: expects a string that will be shown around the field to
       #     describe the meaning of the field.
+      #   +help+: expects a string that will be shown as a visual tip when user clicks on
+      #   a question mark icon.
       #   +label+: the text that the label will show or the full options passed
       #     to the #label method.
       #   +label_at_bottom+: positions the label after the input
@@ -54,7 +56,6 @@ module Ubiquo
 
       def self.initialize_method( name, tag_options = nil )
         default_tag_options[name.to_sym] = tag_options if tag_options
-
         define_method(name) do |field, *args|
           return super unless self.class.enabled
           options = args.last.is_a?(Hash) ? args.pop : {}
@@ -69,6 +70,7 @@ module Ubiquo
 
           translatable = options.delete(:translatable)
           description = options.delete(:description)
+          help = options.delete(:help)
 
           label_name = options.delete(:label) || @object.class.human_attribute_name(field)
           label = ""
@@ -81,18 +83,19 @@ module Ubiquo
           label_at_bottom = options.delete(:label_at_bottom)
 
           args << options unless args.last.is_a?(Hash)
-          
           super_result = super( field, *args )
-          
+
           pre = ""
           post = ""
-          
           if( label_at_bottom )
             post += label
           else
             pre += label
           end
 
+          post += group(:type => :help) do
+            help
+          end if help
           post += group(:type => :translatable) do
             ( translatable === true ? @template.t("ubiquo.translatable_field") : translatable )
           end if translatable
@@ -123,26 +126,33 @@ module Ubiquo
       #   +:callbacks+: allow to add content before and after with the string
       #     generated with a proc. A hash with :before and :after keys.
       #   +:legend+: to give the text for the legend field.
+      #   +:partial+: allow to render custom partial to represent the info
       # 
       def group(options = {}, &block)
         return yield unless self.class.enabled
 
         type = options.delete(:type) ||
           Ubiquo::Config.context(:ubiquo_form_builder).get(:default_group_type)
-
         options = options.reverse_merge( groups_configuration[type] || {})
-        options[:class] = [
-            options[:class],
-            options.delete(:append_class)
-        ].delete_if(&:blank?).join(" ")
-        tag = options.delete(:content_tag) # Delete it before sending to content_tag
-        callbacks = options.delete(:callbacks) || {}
-        result = @template.content_tag(tag, options) do
-          out = ""
-          out += callbacks[:before].call( binding, options ).to_s if callbacks[:before].respond_to?(:call)
-          out += @template.capture( &block ).to_s
-          out += callbacks[:after].call( binding, options ).to_s if callbacks[:after].respond_to?(:call)
-          out
+
+        if options[:partial]
+          result = @template.render :partial => options[:partial],
+            :locals => options.merge(:content => @template.capture(&block).to_s)
+        else
+          options[:class] = [
+              options[:class],
+              options.delete(:append_class)
+          ].delete_if(&:blank?).compact.join(" ")
+
+          tag = options.delete(:content_tag) # Delete it before sending to content_tag
+          callbacks = options.delete(:callbacks) || {}
+          result = @template.content_tag(tag, options) do
+            out = ""
+            out += callbacks[:before].call( binding, options ).to_s if callbacks[:before].respond_to?(:call)
+            out += @template.capture( &block ).to_s
+            out += callbacks[:after].call( binding, options ).to_s if callbacks[:after].respond_to?(:call)
+            out
+          end
         end
         # Any method here that accepts a block must check before concat
         manage_result( result, block )
