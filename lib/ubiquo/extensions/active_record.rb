@@ -84,8 +84,8 @@ module Ubiquo
         end
 
         has_attached_file field,
-          :url => url,
-          :path => path,
+          :url => options[:url] || url,
+          :path => options[:path] || path,
           :styles => styles,
           :processors => processors,
           :whiny => false,
