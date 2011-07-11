@@ -95,7 +95,8 @@ module Ubiquo
             :secret_access_key => s3[:secret],
             :bucket => s3[:bucket],
           },
-          :s3_host_alias => s3[:s3_host_alias]
+          :s3_host_alias => s3[:s3_host_alias],
+          :s3_headers => options[:s3_headers] || {}
       end
 
       # Function for apply an array of scopes.
