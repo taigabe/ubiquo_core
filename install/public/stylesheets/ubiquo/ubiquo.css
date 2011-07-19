@@ -338,32 +338,40 @@ table, th, td { border: none;}
 		#tag_filter_content li a.size4 {
 			font-size: 2.8em;
 		}
-	#date_filter_content {
-		
-	}
-	#date_filter_content p {
-		margin-bottom: .4em;
-	}
-	#date_filter_content form {
-		margin-bottom: -34px;
-	}
-		#date_filter_content label {
-			display: block;
-			float: left;
-			width: 3em;
-			padding-top: .3em;
-		}
-		#date_filter_content .form-item input {
-			margin-right: .4em;
-			width: 7.5em;
-		}
-		#date_filter_content .form-item img {
-			float: left;
-		}
-		#date_filter_content .form-item-submit {
-			position: relative;
-			top: -34px;
-		}
+
+	#date_filter_content {}
+	  #date_filter_content p {
+  		margin-bottom: .4em;
+  	}
+  	#date_filter_content form {
+  		position: relative;
+  	}
+  		#date_filter_content label {
+  			display: block;
+  			float: left;
+  			width: 3em;
+  			padding-top: .3em;
+  		}
+  		#date_filter_content .form-item {
+			
+  		}
+  		  #date_filter_content .form-item input {
+    			margin-right: .4em;
+    			width: 7.5em;
+    		}
+    		#date_filter_content .form-item img {
+    			float: left;
+    		}
+  		#date_filter_content .form-item-submit {
+  			position: absolute;
+  			bottom: 0;
+  			right: 0;
+  			width: 21%;
+  		}
+  		  #date_filter_content .form-item-submit input.bt-filter-submit {
+    			width: 100%;
+    			float: none;
+    		}
 
 /*--- footer ---*/
 
