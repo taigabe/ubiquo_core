@@ -51,6 +51,7 @@ namespace :ubiquo do
       include Ubiquo::Tasks::Database
       ActiveRecord::Base.establish_connection
       tables = join_table_names(ENV['TABLES'], ENV['MODELS'], ENV['GROUPS'])
+      tables = ActiveRecord::Base.connection.tables if tables.blank?
       puts tables.inspect
       fix_sequence_consistency(tables)
     end
