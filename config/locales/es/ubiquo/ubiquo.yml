@@ -1,16 +1,24 @@
 es:
   ubiquo:
     ubiquo_setting:
+      created: "parámetro de configuración guardado"
+      createds: "parámetros de configuración guardados"
+      destroy_error: "Error restaurando un parámetro de configuración"
+      destroyed: "Restaurado el valor por defecto del parámetro %{key} del ámbito %{context}"
       empty_list_title: "Listado de parámetros de configuración"
       empty_list_message: "Desde este apartado puedes ver una lista de todos los recursos existentes editables. Podrás crear nuevos, editarlos o borrarlos."
       index:
         title: "Configuración"
+        add_value: "Añadir valor"
+        remove_value: "Eliminar valor"
         confirm_restore_default: "¿Estás seguro de querer restaurar el valor por defecto?"
         restore_default: "Restaurar valores por defecto"
         save: "Guardar"
         save_all: "Guardar todos"        
         translatable: "T"        
         not_value_for_locale: "No existe valor para este idioma, generado a partir de otro"
+      error: "parámetro de configuración con errores"
+      errors: "parámetros de configuración con errores"
       title: "Configuración"        
     language: "Idioma"
     create: "Crear"

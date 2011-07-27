@@ -1,16 +1,24 @@
 en:
   ubiquo:
     ubiquo_setting:
+      created: "setting saved"
+      createds: "settings saved"
+      destroy_error: "Error restoring a setting"
+      destroyed: "Restored the default value of the setting %{key} of context %{context}"
       empty_list_title: "List of settings"
       empty_list_message: 'Here you can see all the editable records and create, edit or delete them.'
       index:
         title: "Settings"
+        add_value: "Add value"
+        remove_value: "Delete value"
         confirm_restore_default: "Are you sure you want to return to the default?"
         restore_default: "Restore default value"
         save: "Save"
         save_all: "Save all"        
         translatable: "T"        
         not_value_for_locale: "Don't exists a value for the current locale, value generated from another"
+      error: "setting with error"
+      errors: "settings with errors"
       title: "Settings"        
     language: "Language"
     create: "Create"
