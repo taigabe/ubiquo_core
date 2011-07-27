@@ -20,8 +20,7 @@ module Ubiquo
           # Returns the options for the setting
           def uhook_options(name = nil, options = {})
             return settings[current_context][name][:options].reject{|k,_|
-              [:is_editable, :inherits, :value_type,
-                :locale, :is_nullable,
+              [:is_editable, :inherits, :value_type, :is_nullable,
                 :default_value, :is_translatable,
                 :allowed_values, :original_parameters].include?(k)
             }
@@ -246,7 +245,7 @@ module Ubiquo
           end
 
           def uhook_print_key_label ubiquo_setting
-            label_tag(translate_key_name(ubiquo_setting.context, ubiquo_setting.key))
+            label_tag(ubiquo_setting.key_translated)
           end            
 
         end
@@ -298,7 +297,7 @@ module Ubiquo
                 if confirmation?(key, data)
                   ubiquo_setting = ::UbiquoSetting.find_or_build(context, key)
                   ubiquo_setting.handle_confirmation(data) if ubiquo_setting.respond_to?(:handle_confirmation)
-                  ubiquo_setting.value = value_array.first[1]
+                  ubiquo_setting.value = value_array
                   if ubiquo_setting.config_value_same? || ubiquo_setting.save
                     valids << ubiquo_setting
                   else                    

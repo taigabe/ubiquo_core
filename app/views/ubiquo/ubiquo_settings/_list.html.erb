@@ -1,0 +1,18 @@
+ <% if ubiquo_setting.allowed_values.blank? %>
+  <div>
+    <% ubiquo_setting.value.each do |v| %>
+      <span>
+        <%= text_field_tag "#{ubiquo_setting.key}[]", v, :class => error_class(ubiquo_setting) %>
+        <%= link_to_function t("ubiquo.ubiquo_setting.index.remove_value"), "removeSettingValue(this)", :class => "inline_link" %>
+      </span>
+    <% end %>
+    <span class="add-value"><%= link_to_function t("ubiquo.ubiquo_setting.index.add_value"), "addSettingValue(this)" %></span>
+  </div>
+
+<% else %>
+  <%= select_tag "#{ubiquo_setting.key}[]",
+                options_for_select(ubiquo_setting.allowed_values.map(&:to_s), ubiquo_setting.value.map(&:to_s)),
+                :multiple => true,
+                :class => error_class(ubiquo_setting) %>
+<% end  %>
+

@@ -24,37 +24,16 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
       Ubiquo::Settings.add(:new_option)
     end
 
-    assert_raises(Ubiquo::Settings::AlreadyExistingOption) do
+    assert_raise(Ubiquo::Settings::AlreadyExistingOption) do
       Ubiquo::Settings.add(:new_option)
     end
   end
-
-  #
-  #def test_needs_to_add_for_setting_a_value
-  #  assert_raises(Ubiquo::Settings::OptionNotFound) do
-  #    Ubiquo::Settings.set(:new_option, 1)
-  #  end
-  #end
-
-  #def test_needs_to_add_for_setting_a_default_value
-  #  assert_raises(Ubiquo::Settings::OptionNotFound) do
-  #    Ubiquo::Settings.set_default(:new_option, 1)
-  #  end
-  #end
-
-#def test_usage_of_default_value
-#   assert_nothing_raised do
-#     Ubiquo::Settings.add(:new_option)
-#     Ubiquo::Settings.set_default(:new_option, 1)
-#     assert_equal Ubiquo::Settings.get(:new_option), 1
-#
-#     Ubiquo::Settings.set(:new_option, 2)
-#     assert_equal Ubiquo::Settings.get(:new_option), 2
-#
-#     Ubiquo::Settings.set_default(:new_option, 3)
-#     assert_equal Ubiquo::Settings.get(:new_option), 2
-#   end
-# end
+  
+  def test_needs_to_add_for_setting_a_value
+    assert_raise(Ubiquo::Settings::OptionNotFound) do
+      Ubiquo::Settings.set(:new_option, 1)
+    end
+  end
 
   def test_massive_add
     assert_nothing_raised do
@@ -106,7 +85,7 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
   
   def test_context_creation_required_to_use_it
     assert !Ubiquo::Settings.context_exists?(:new_context)
-    assert_raises(Ubiquo::Settings::ContextNotFound) do
+    assert_raise(Ubiquo::Settings::ContextNotFound) do
        Ubiquo::Settings.context(:new_context).add(:a)
     end
   end
@@ -175,7 +154,7 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
   def test_inheritance
     Ubiquo::Settings.add(:a, "hello")
     Ubiquo::Settings.add(:b)
-    assert_raises(Ubiquo::Settings::ValueNeverSet) do
+    assert_raise(Ubiquo::Settings::ValueNeverSet) do
       Ubiquo::Settings.get(:b)
     end
     Ubiquo::Settings.add_inheritance(:b, :a)
@@ -202,7 +181,7 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
     Ubiquo::Settings.context(:new_context_1).add(:a, "hello")
     Ubiquo::Settings.context(:new_context_2).add(:b)    
 
-    assert_raises(Ubiquo::Settings::ValueNeverSet) do
+    assert_raise(Ubiquo::Settings::ValueNeverSet) do
       Ubiquo::Settings.context(:new_context_2).get(:b)
     end
     Ubiquo::Settings.context(:new_context_2).add_inheritance(:b, :new_context_1 =>:a)
@@ -217,7 +196,7 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
     Ubiquo::Settings.add(:a, "hello")
     Ubiquo::Settings.context(:foo_context).add(:b)    
 
-    assert_raises(Ubiquo::Settings::ValueNeverSet) do
+    assert_raise(Ubiquo::Settings::ValueNeverSet) do
       Ubiquo::Settings.context(:foo_context).get(:b)
     end
     Ubiquo::Settings.context(:foo_context).add_inheritance(:b, :a)
@@ -286,26 +265,26 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
     assert_equal initial_s2_value, Ubiquo::Settings.get(:two)
   end
 
-  def test_is_nullable
+  def test_nullable?
     Ubiquo::Settings.add(:one)
-    assert_raises Ubiquo::Settings::OptionNotFound do
-      Ubiquo::Settings.is_nullable?(:i_dont_exists)
+    assert_raise Ubiquo::Settings::OptionNotFound do
+      Ubiquo::Settings.nullable?(:i_dont_exists)
     end
-    assert !Ubiquo::Settings.is_nullable?(:one)
+    assert !Ubiquo::Settings.nullable?(:one)
     Ubiquo::Settings.add(:two, nil, {:is_nullable => false})
-    assert !Ubiquo::Settings.is_nullable?(:two)
+    assert !Ubiquo::Settings.nullable?(:two)
     Ubiquo::Settings.add(:three, 1, {:is_nullable => false})
-    assert !Ubiquo::Settings.is_nullable?(:three)
+    assert !Ubiquo::Settings.nullable?(:three)
 
     Ubiquo::Settings.add(:four, 0, {:is_nullable => true})
-    assert Ubiquo::Settings.is_nullable?(:four)
+    assert Ubiquo::Settings.nullable?(:four)
     Ubiquo::Settings.add(:five, nil, {:is_nullable => true})
-    assert Ubiquo::Settings.is_nullable?(:five)
+    assert Ubiquo::Settings.nullable?(:five)
   end
 
-  def test_is_editable
+  def test_editable
     Ubiquo::Settings.add(:one)
-    assert_raises Ubiquo::Settings::OptionNotFound do
+    assert_raise Ubiquo::Settings::OptionNotFound do
       Ubiquo::Settings.editable?(:i_dont_exists)
     end
     assert !Ubiquo::Settings.editable?(:one)
@@ -331,7 +310,7 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
     assert_equal 22, Ubiquo::Settings[:foo_context][:one]
     assert_equal Ubiquo::Settings.context(:foo_context)[:one], Ubiquo::Settings[:foo_context][:one]
   
-    assert_raises Ubiquo::Settings::OptionNotFound do
+    assert_raise Ubiquo::Settings::OptionNotFound do
       Ubiquo::Settings[:i_dont_exist]
     end
   end
@@ -350,7 +329,7 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
 
     assert_equal 46, Ubiquo::Settings[:two]
 
-    assert_raises Ubiquo::Settings::InvalidOptionName do
+    assert_raise Ubiquo::Settings::InvalidOptionName do
       Ubiquo::Settings[:i_dont_exist] = 2
     end
 
@@ -436,6 +415,125 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
     end
   end
 
+  def test_overridable?
+
+    default_overridable_key = Ubiquo::Settings.default_overridable_key
+    default_context = Ubiquo::Settings.default_context
+    assert_equal false, Ubiquo::Settings[default_overridable_key]
+    assert_equal Ubiquo::Settings.settings[default_context][default_overridable_key][:value], 
+                Ubiquo::Settings[default_overridable_key]    
+    assert_equal Ubiquo::Settings[default_overridable_key], Ubiquo::Settings[default_context][default_overridable_key]
+    assert !Ubiquo::Settings.overridable?
+
+    Ubiquo::Settings[default_overridable_key] = true
+
+    assert Ubiquo::Settings.overridable?
+    assert Ubiquo::Settings.settings[default_context][default_overridable_key][:value]
+  end
+
+  def test_options
+    default_context = Ubiquo::Settings.default_context
+
+    # do not show is_editable
+    Ubiquo::Settings.string :a, 'abc', :is_editable => true,
+      :invented_option => 2
+    assert !Ubiquo::Settings.options(:a).include?(:is_editable)
+    assert Ubiquo::Settings.options(:a).include?(:invented_option)
+    assert({ :invented_option => 2 }, Ubiquo::Settings.options(:a))
+    assert_equal 2, Ubiquo::Settings.options(:a)[:invented_option]
+    assert Ubiquo::Settings.settings[default_context][:a][:options].include?(:is_editable)
+
+    # do not show inherits
+    Ubiquo::Settings.string :b
+    Ubiquo::Settings.add_inheritance(:b, :a)
+    assert !Ubiquo::Settings.options(:a).include?(:inherits)
+    assert Ubiquo::Settings.settings[default_context][:b][:options].include?(:inherits)
+
+    # do not show value_type
+    Ubiquo::Settings.string(:c, 'bla')
+    assert !Ubiquo::Settings.options(:c).include?(:value_type)
+    assert Ubiquo::Settings.settings[default_context][:c][:options].include?(:value_type)
+    Ubiquo::Settings.add(:d, 'cla')
+    assert !Ubiquo::Settings.options(:d).include?(:value_type)
+    assert !Ubiquo::Settings.settings[default_context][:d][:options].include?(:value_type)
+
+    # do not show is_translatable
+    Ubiquo::Settings.string(:e, 
+                            { 'en_US' => 'dungeon',
+                              'es_ES' => 'mazmorra',
+                              'ca_ES' => 'masmorra',
+                            },
+                            :is_translatable => true
+                            )
+    assert !Ubiquo::Settings.options(:a).include?(:is_translatable)
+
+    # do not show default_value
+    Ubiquo::Settings.add(:f, true)
+    Ubiquo::Settings.add(:g)
+    assert !Ubiquo::Settings.options(:f).include?(:default_value)
+    assert Ubiquo::Settings.settings[default_context][:f][:options][:default_value]
+    assert !Ubiquo::Settings.options(:g).include?(:default_value)
+    assert_equal nil, Ubiquo::Settings.settings[default_context][:g][:options][:default_value]
+
+    # do not show allowed_values
+    Ubiquo::Settings.add(:h, 1, :allowed_values => [1,2,3,4,5])
+    assert !Ubiquo::Settings.options(:h).include?(:allowed_values)
+    assert_equal [1,2,3,4,5], Ubiquo::Settings.settings[default_context][:h][:options][:allowed_values]
+
+    # do not show original parameters
+    Ubiquo::Settings.add(:i, 1, :is_editable => true, :allowed_values => [6,7,8])
+    assert !Ubiquo::Settings.options(:i).include?(:allowed_values)
+    assert_equal [6,7,8], Ubiquo::Settings.settings[default_context][:i][:options][:original_parameters][:options][:allowed_values]
+
+  end
+
+  def should_return_allowed_values
+    Ubiquo::Settings.add(:a, 1)
+    assert !Ubiquo::Settings.allowed_values(:a)
+
+    Ubiquo::Settings.add(:b, 1, :allowed_values => [1,2,3,4,5])
+    assert_equal [1,2,3,4,5], Ubiquo::Settings.allowed_values(:b)
+    
+    Ubiquo::Settings.create_context(:another).add(:c, 1, :allowed_values => [6,7,8,9,10])
+    assert_equal [6,7,8,9,10], Ubiquo::Settings.allowed_values(:c)
+    assert_equal [6,7,8,9,10], Ubiquo::Settings[:another].allowed_values(:c)
+  end
+
+  def should_return_default_value
+    Ubiquo::Settings.add(:a)
+    assert !Ubiquo::Settings.default_value(:a)
+
+    Ubiquo::Settings.add(:b, 1)
+    assert_equal 1, Ubiquo::Settings.allowed_values(:b)
+
+    Ubiquo::Settings.create_context(:another).add(:c, 2)
+    assert_equal 2, Ubiquo::Settings.default_value(:c)
+    assert_equal 2, Ubiquo::Settings[:another].default_value(:c)
+    assert_equal 2, Ubiquo::Settings[:another][:c][:options][:default_value]
+  end
+
+  def test_get_editable_settings
+    Ubiquo::Settings.create_context(:another) do |setting|
+      setting.integer :a, 1
+      setting.integer :c, 2, :is_editable => true
+      setting.integer :b, 3, :is_editable => true
+      setting.integer :d, 4, :is_editable => true
+      setting.integer :e, 5, :is_editable => false
+    end
+    
+    assert_equal [:b, :c, :d], Ubiquo::Settings[:another].get_editable_settings
+    assert_equal [3,2,4], Ubiquo::Settings[:another].get_editable_settings.map{|v| Ubiquo::Settings[:another][v] }
+  end
+
+  def test_get_contexts
+    Ubiquo::Settings.create_context(:foo_first)
+    Ubiquo::Settings.create_context(:foo_third)
+    Ubiquo::Settings.create_context(:foo_second)    
+
+    index = Ubiquo::Settings.get_contexts.index(:foo_first)
+    assert_equal [:foo_first, :foo_second, :foo_third], Ubiquo::Settings.get_contexts[index..(index+2)]
+  end
+  
   def dummy_method(options = {})
     options = {:word => "world"}.merge(options)
     "hello #{options[:word]}"

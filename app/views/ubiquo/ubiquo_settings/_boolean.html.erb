@@ -1,1 +1,5 @@
-<%= check_box_tag ubiquo_setting.key, 1, ubiquo_setting.value  %>
+
+<%= check_box_tag ubiquo_setting.key,
+                    1,
+                    ubiquo_setting.value,
+                    :class => error_class(ubiquo_setting)  %>

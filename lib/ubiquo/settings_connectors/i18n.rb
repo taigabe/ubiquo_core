@@ -86,15 +86,15 @@ module Ubiquo
             else
               return settings[current_context][name][:options][:allowed_values]
             end
-          end            
+          end
 
           # Load all settings from a i18n database backend
           def uhook_load_from_backend!
             regenerate_settings
-            return 0 if !overridable?              
+            return 0 if !overridable?
             ::UbiquoSetting.all.map{|s|
-              context(s.context).add(s)                  
-            }.length            
+              context(s.context).add(s)
+            }.length
           end
 
           # Add a Setting
@@ -116,20 +116,20 @@ module Ubiquo
             # override
             if name.is_a?(UbiquoSetting)
               return nil if !overridable?
-              raise Ubiquo::Settings::InvalidOptionName if options[:is_translatable] && !name.locale 
+              raise Ubiquo::Settings::InvalidOptionName if options[:is_translatable] && !name.locale
               value = name.value
               options = {
-                :is_a_override => true                
+                :is_a_override => true
               }
               options.merge!(:locale => name.locale)  if translatable?(name.key)
-              set(name.key, value, options) 
+              set(name.key, value, options)
             elsif name.is_a?(Hash)
               return nil if !overridable?
-              raise Ubiquo::Settings::InvalidOptionName if options[:is_translatable] && !name.locale 
-              if options[:is_translatable]                  
+              raise Ubiquo::Settings::InvalidOptionName if options[:is_translatable] && !name.locale
+              if options[:is_translatable]
                 context(name[:context]).set(name[:key], value, :locale => name.locale)
               else
-                context(name[:context]).set(name[:key], value) 
+                context(name[:context]).set(name[:key], value)
               end
               name
             else
@@ -155,7 +155,7 @@ module Ubiquo
                   if default_value.is_a?(Hash)
                     value = default_value
                   else
-                    locale = options.delete(:locale) || default_locale  
+                    locale = options.delete(:locale) || default_locale
                     value = { locale.to_sym => value }
                     options.merge!(:default_value => { locale.to_sym => default_value })
                   end
@@ -164,13 +164,13 @@ module Ubiquo
                   check_type(options[:value_type], value) if
                   loaded && options[:value_type]
                 end
-                
+
                 settings[self.current_context][name] = {
                   :options => options,
-                  :value => value                    
-                }  
+                  :value => value
+                }
               end
-            end    
+            end
           end
 
           # Update a value of a setting
@@ -181,12 +181,12 @@ module Ubiquo
               end
             else
               raise Ubiquo::Settings::InvalidOptionName if !check_valid_name(name)
-              raise Ubiquo::Settings::OptionNotFound if !self.option_exists?(name)                
+              raise Ubiquo::Settings::OptionNotFound if !self.option_exists?(name)
 
               locale = options[:locale] ? options.delete(:locale).to_sym : nil
 
               name = name.to_sym
-              options = settings[current_context][name][:options].merge(options) 
+              options = settings[current_context][name][:options].merge(options)
               if options[:is_translatable]
                 value = settings[current_context][name][:value].merge({ locale => value })
                 check_type(options[:value_type], value.values) if loaded && options[:value_type]
@@ -197,7 +197,7 @@ module Ubiquo
               options.delete(:inherits)
               settings[current_context][name] = {
                 :options => options,
-                :value => value       
+                :value => value
               }
             end
           end
@@ -211,8 +211,8 @@ module Ubiquo
           #
           def translation_exists?(name, locale = default_locale)
             raise Ubiquo::Settings::OptionNotFound if !self.option_exists?(name) || !translatable?(name)
-            settings[current_context][name][:value].is_a?(Hash) && 
-            (settings[current_context][name][:value].keys.include?(locale.to_sym) || 
+            settings[current_context][name][:value].is_a?(Hash) &&
+            (settings[current_context][name][:value].keys.include?(locale.to_sym) ||
               settings[current_context][name][:value].keys.include?(locale[:locale].to_sym) rescue false
              )
           end
@@ -245,25 +245,25 @@ module Ubiquo
               end
               self.context(inherited_context).get(inherited_key)
             else
-              if translatable?(name)                  
+              if translatable?(name)
                 if options.is_a?(Hash)
                   locale = options[:locale]
-                  locale = default_or_first_locale(name) if !locale && options[:any_value]   
+                  locale = default_or_first_locale(name) if !locale && options[:any_value]
                 else
                   locale = options
                 end
                 locale ||= default_locale
                 locale = locale.to_sym
-                raise Ubiquo::Settings::ValueNeverSet if (settings[self.current_context][name][:value].nil? || 
-                                                        settings[self.current_context][name][:value].nil?) && 
-                                                        !is_nullable?(name) ||!translation_exists?(name, locale)
+                raise Ubiquo::Settings::ValueNeverSet if (settings[self.current_context][name][:value].nil? ||
+                                                        settings[self.current_context][name][:value].nil?) &&
+                                                        !nullable?(name) ||!translation_exists?(name, locale)
                 if overridable?
                   settings[self.current_context][name][:value][locale]
                 else
                   settings[self.current_context][name][:options][:default_value][locale]
                 end
               else
-                raise Ubiquo::Settings::ValueNeverSet if settings[self.current_context][name][:value].nil? && !is_nullable?(name) 
+                raise Ubiquo::Settings::ValueNeverSet if settings[self.current_context][name][:value].nil? && !nullable?(name)
                 if overridable?
                   settings[self.current_context][name][:value]
                 else
@@ -280,7 +280,7 @@ module Ubiquo
               else
                 settings[self.current_context][name][:value].keys.first
               end
-            end              
+            end
           end
 
           def default_locale
@@ -293,18 +293,18 @@ module Ubiquo
           end
 
           def uhook_reinitialize options = {}
-            self.overridable = options[:settings_overridable].present? 
+            self.overridable = options[:settings_overridable].present?
           end
 
-          def uhook_default_options 
+          def uhook_default_options
             {
               :is_nullable => false,
               :is_editable => false,
               :is_translatable => false,
               :locale => default_locale
-            } 
-          end            
-        end          
+            }
+          end
+        end
       end
 
       module UbiquoSetting
@@ -327,7 +327,7 @@ module Ubiquo
             else
               setting = ::UbiquoSetting.find(:first,
                                         :conditions => ["context = ? AND key = ? ",
-                                                      context.to_s, key.to_s])                
+                                                      context.to_s, key.to_s])
             end
             setting ||= uhook_generate_instance(context, key, options)
             setting.locale = options[:locale].to_s
@@ -345,7 +345,7 @@ module Ubiquo
                       :allowed_values => allowed_values,
                       :value => value,
                       :options => options)
-          end            
+          end
         end
         module InstanceMethods
 
@@ -364,7 +364,7 @@ module Ubiquo
           def check_localization_acceptance
             if self.config_exists? &&
                 !Ubiquo::Settings[self.context].translatable?(self.key) &&
-                (self.translations.present? || 
+                (self.translations.present? ||
                 ::UbiquoSetting.find(:first, :conditions => ["context = ? AND key = ? AND locale <> ?",
                                                         context.to_s, key.to_s, locale.to_s]))
               self.errors.add :key, "not translatable setting"
@@ -372,8 +372,8 @@ module Ubiquo
           end
 
           def uhook_config_value_same?
-            !self.id && 
-              config_exists? && 
+            !self.id &&
+              config_exists? &&
               Ubiquo::Settings[self.context].default_value(self.key, self.locale)[1] == self.value
           end
         end
@@ -420,23 +420,23 @@ module Ubiquo
           # Returns any necessary extra code to be inserted in the ubiquo_setting form
           def uhook_ubiquo_setting_form form
             (form.hidden_field :content_id) + (hidden_field_tag(:from, params[:from]))
-          end            
+          end
 
           def uhook_get_ubiquo_setting(context, setting_key)
             ::UbiquoSetting.find_or_build(context, setting_key, :locale => current_locale.to_sym)
-          end     
+          end
 
           def uhook_print_key_label ubiquo_setting
-            result = label_tag(translate_key_name(ubiquo_setting.context, ubiquo_setting.key))
+            result = label_tag(ubiquo_setting.key_translated)
             result += content_tag(:span,"(#{t('ubiquo.ubiquo_setting.index.translatable')})", :class => :translatable) if ubiquo_setting.translatable?
             result += content_tag(:p, "(#{t('ubiquo.ubiquo_setting.index.not_value_for_locale')})") if ubiquo_setting.generated_from_another_value?
             result
-          end            
+          end
         end
 
         module ClassMethods
 
-        end          
+        end
         module InstanceMethods
 
           def uhook_index
@@ -472,21 +472,21 @@ module Ubiquo
           # of the setting and the other with the prefix "confirmation_"
           def confirmation?(key, data)
             !(key !~ /^confirmation_/)  && data.keys.find{|k| k == key.gsub('confirmation_','')}.present?
-          end            
+          end
 
           # Creates or updates a new instance of setting.
           def uhook_create_ubiquo_setting
             valids = []
             errors = []
             params[:ubiquo_settings].each do |context, data|
-              data.each do |key, value_array|                  
+              data.each do |key, value_array|
                  unless confirmation?(key, data)
                   ubiquo_setting = ::UbiquoSetting.find_or_build(context, key, :locale => current_locale)
                   ubiquo_setting.handle_confirmation(data) if ubiquo_setting.respond_to?(:handle_confirmation)
-                  ubiquo_setting.value = value_array.first[1]
+                  ubiquo_setting.value = value_array
                   if ubiquo_setting.config_value_same? || ubiquo_setting.save
                     valids << ubiquo_setting
-                  else                    
+                  else
                     errors << ubiquo_setting
                   end
                 end
@@ -548,7 +548,7 @@ module Ubiquo
 
       def self.prepare_mocks
         add_mock_helper_stubs({
-          :show_translations => '', 
+          :show_translations => '',
           :ubiquo_ubiquo_setting_path => '', :current_locale => '',
           :content_tag => '', :hidden_field_tag => '', :locale => UbiquoSetting,
           :new_ubiquo_ubiquo_setting_path => ''

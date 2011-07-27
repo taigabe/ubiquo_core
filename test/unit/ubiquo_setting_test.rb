@@ -66,7 +66,7 @@ class UbiquoSettingTest < ActiveSupport::TestCase
     key = "not_nullable_setting_clone"
     Ubiquo::Settings.add(key, "Hello!", :is_nullable => false)
     assert_no_difference ['UbiquoSetting.count', 'UbiquoStringSetting.count'] do
-      ubiquo_setting = ubiquo_create_setting(UbiquoStringSetting, :key => key)
+      ubiquo_setting = create_ubiquo_setting(UbiquoStringSetting, :key => key)
       assert ubiquo_setting.errors.on(:value)
     end
 

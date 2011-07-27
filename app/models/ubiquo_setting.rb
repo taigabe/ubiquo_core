@@ -154,6 +154,22 @@ class UbiquoSetting < ActiveRecord::Base
     uhook_generated_from_another_value?
   end
 
+  def key_translated
+    self.class.key_translated(self.context, self.key)
+  end
+
+  def self.key_translated context, key
+    I18n.t!("ubiquo.ubiquo_settings.#{context}.#{key}.name") rescue key
+  end
+
+  def context_translated
+    self.class.context_translated(self.context)
+  end
+
+  def self.context_translated context
+    I18n.t!("ubiquo.ubiquo_settings.#{context}.name") rescue context
+  end
+  
 #  def to_s
 #   "#{key}:#{value}"
 # end

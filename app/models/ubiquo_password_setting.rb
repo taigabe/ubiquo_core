@@ -10,7 +10,7 @@ class UbiquoPasswordSetting < UbiquoStringSetting
     self.errors.add :value, "The password and the confirmation do not match" if !confirmation_match?
   end
   
-  def confirmation_match?    
+  def confirmation_match?
     confirmation == value
   end
   
@@ -19,7 +19,7 @@ class UbiquoPasswordSetting < UbiquoStringSetting
   end
   
   def handle_confirmation data
-    self.confirmation = data.find{|k,v| k.to_sym == confirmation_key}.last.first.last rescue nil
+    self.confirmation = data.find{|k,v| k.to_sym == confirmation_key}.last rescue nil
   end
 
   def self.check_values values
