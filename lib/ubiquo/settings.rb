@@ -73,12 +73,6 @@ module Ubiquo
       uhook_load_from_backend! rescue 0
     end
 
-    #Check if a setting value can be nil
-    def self.is_nullable?(name)
-      raise OptionNotFound if !self.option_exists?(name)
-      settings[current_context][name][:options][:is_nullable] == true
-    end
-
     # Add alias to block assignement in plugin register
     def self.setting(*args)
       add(args)
