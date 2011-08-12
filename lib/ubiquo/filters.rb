@@ -179,19 +179,19 @@ module Ubiquo
       field = options[:field]
       case name
       when :single_date
-        returning(SingleDateFilter.new(model, self)) { |f| f.configure(options) }
+        (SingleDateFilter.new(model, self)).tap { |f| f.configure(options) }
       when :date
-        returning(DateFilter.new(model, self)) { |f| f.configure(options) }
+        (DateFilter.new(model, self)).tap { |f| f.configure(options) }
       when :string
-        returning(TextFilter.new(model, self)) { |f| f.configure(options) }
+        (TextFilter.new(model, self)).tap { |f| f.configure(options) }
       when :select
-        returning(SelectFilter.new(model, self)) { |f| f.configure(field, options[:collection], options) }
+        (SelectFilter.new(model, self)).tap { |f| f.configure(field, options[:collection], options) }
       when :links
-        returning(LinkFilter.new(model, self)) { |f| f.configure(field, options[:collection], options) }
+        (LinkFilter.new(model, self)).tap { |f| f.configure(field, options[:collection], options) }
       when :links_or_select
-        returning(LinksOrSelectFilter.new(model, self)) { |f| f.configure(field, options[:collection], options) }
+        (LinksOrSelectFilter.new(model, self)).tap { |f| f.configure(field, options[:collection], options) }
       when :boolean
-        returning(BooleanFilter.new(model, self)) { |f| f.configure(field, options)}
+        (BooleanFilter.new(model, self)).tap { |f| f.configure(field, options)}
       end
     end
 
