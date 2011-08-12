@@ -74,7 +74,11 @@ module Ubiquo
           elsif sample_obj.respond_to?(:title)
             humanized_field = :title
           else
-            raise RelationSelector::NeedNameField.new("Need a name_field for #{class_name} because no one convention name found")
+            raise RelationSelector::NeedNameField.new(
+              "You need to specify a :name_field for #{class_name} because " +
+              "it was not deduced by convention (i.e. #{class_name} " +
+              "does not respond to 'name', 'title'..)"
+            )
           end
         else
           humanized_field = options[:name_field]
