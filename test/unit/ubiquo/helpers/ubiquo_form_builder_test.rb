@@ -124,12 +124,12 @@ class UbiquoFormBuilderTest < ActionView::TestCase
 
   test "custom_block" do
     the_form do |form|
-      form.custom_block do
+      concat( form.custom_block do
         concat( '<div class="custom-form-item">' )
         concat( form.label :lastname, "imalabel")
         concat( form.text_field :lastname)
         concat("</div>")
-      end
+     end )
     end
 
     assert_select "form > div.form-item", 0

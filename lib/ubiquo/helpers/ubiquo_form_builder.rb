@@ -163,7 +163,7 @@ module Ubiquo
         last_status = self.class.enabled
         self.class.enabled = false
         begin
-          manage_result( yield, block )
+          manage_result( @template.capture( &block ).to_s, block )          
         ensure
           self.class.enabled = last_status
         end
