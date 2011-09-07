@@ -226,14 +226,12 @@ module Ubiquo
       end
 
       def open_struct_from_model(objects, id_field, key_field)
-        ret = []
-        objects.to_a.each do |obj|
-          ret << OpenStruct.new(
+        [objects].flatten.compact.map do |obj|
+          OpenStruct.new(
             id_field.to_sym => obj.send(id_field),
             key_field.to_sym => obj.send(key_field)
           )
-        end
-        ret.to_json
+        end.to_json
       end
 
       def new_relation_controls(type, object_name, key)
