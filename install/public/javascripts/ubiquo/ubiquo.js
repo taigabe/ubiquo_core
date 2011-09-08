@@ -67,6 +67,19 @@ document.observe("dom:loaded", function() {
       }
     );
   }
+
+  // Prepare Hints with help info for form fields (ubiquo_form_builder)
+  $$('.form-help .content').each(function(div_fh){
+    div_fh.insert("<span class='arrow'></span>");
+  });
+  Event.observe(document, 'keydown', function(event){
+    if(event.keyCode == Event.KEY_ESC){
+      $$('.form-help').each(function(div_fh){
+        div_fh.removeClassName('active');
+      });
+    }
+  })
+
 });
 
 function send_as_form(div_id, url, method) {

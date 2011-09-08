@@ -36,6 +36,7 @@ en:
     search: "Search"
     empty: "There are no results for %{thing}"
     help: "Help"
+    form_help_title: "What's this?"
     back_to_list: "Back to list"
     back_to_index: "Back to index"
     next: "Next"

@@ -96,12 +96,10 @@ module Ubiquo
           ActiveSupport::TestCase.fixture_path = fixture_set_path
           fixture_symbols = fixture_files.map {|f| f.gsub('.yml', '').to_sym}
           fixtures(*fixture_symbols)
+          teardown do
+            ActiveSupport::TestCase.fixture_path = @@original_fixture_path
+          end
         end
-
-        def teardown_with_fixture_set
-          ActiveSupport::TestCase.fixture_path = @@original_fixture_path
-        end
-        alias_method :teardown, :teardown_with_fixture_set
 
         # Tests all the test methods inside the given block for each of the available +plugin+ connectors
         # You must have a Ubiquo::Settings key :available_connectors for your plugin
@@ -112,13 +110,13 @@ module Ubiquo
 
             (class << self; self end).class_eval do
               eval <<-CONN
-              def test_with_connector name, &block
-                block_with_connector_load = Proc.new{
-                  "#{plugin.to_s.camelize}::Connectors::#{conn.to_s.camelize}".constantize.load!
-                  block.bind(self).call
-                }
-                test_without_connector "#{conn}_\#{name}", &block_with_connector_load
-              end
+                def test_with_connector name, &block
+                  block_with_connector_load = Proc.new{
+                    "#{plugin.to_s.camelize}::Connectors::#{conn.to_s.camelize}".constantize.load!
+                    block.bind(self).call
+                  }
+                  test_without_connector "#{conn}_\#{name}", &block_with_connector_load
+                end
               CONN
 
               unless instance_methods.include?('test_without_connector')

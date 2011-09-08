@@ -36,6 +36,7 @@ ca:
     search: "Buscar"
     empty: "No hi ha resultats per %{thing}"
     help: "Ajuda"
+    form_help_title: "Què és això?"
     back_to_list: "Tornar al llistat"
     back_to_index: "Tornar a l'índex"
     next: "Següent"

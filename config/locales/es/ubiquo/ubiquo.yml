@@ -36,6 +36,7 @@ es:
     search: "Buscar"
     empty: "No hay resultados para %{thing}"
     help: "Ayuda"
+    form_help_title: "¿Que es esto?"
     back_to_list: "Volver al listado"
     back_to_index: "Volver al índice"
     next: "Siguiente"

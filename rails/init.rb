@@ -21,16 +21,17 @@ Ubiquo::Plugin.register(:ubiquo, directory, config) do |setting|
   }
   setting.add :settings_permit, lambda{
     permit?("ubiquo_settings_management")
-  }  
+  }
 end
 
-Ubiquo::Settings.create_context(:ubiquo_form_builder) do |setting|
-  setting.add( :default_tag_options, {
+Ubiquo::Config.create_context(:ubiquo_form_builder)
+Ubiquo::Config.context(:ubiquo_form_builder) do |context|
+  context.add( :default_tag_options, {
     :text_area => { :class => "visual_editor" },
     :relation_selector => { :append_class => "relation" },
     :date_select => { :group => {:append_class => "datetime"} },
     :datetime_select => { :group => {:append_class => "datetime"} },
-    :check_box => {:group => {:class => "form-item-inline"}, :label_at_bottom => true },
+    :check_box => {:group => {:class => "form-item"}, :class => "checkbox"},
     :create_button => {
       :i18n_label_key => "ubiquo.create",
       :class => "bt-update",
@@ -41,26 +42,27 @@ Ubiquo::Settings.create_context(:ubiquo_form_builder) do |setting|
     },
     :back_button => {
       :i18n_label_key => "ubiquo.back_to_list",
-    },
+    }
   })
-  setting.add( :groups_configuration,{
-    :div => {:content_tag => :div, :class => "form-item"},
-    :fieldset => {
-      :content_tag => :fieldset, 
-      :callbacks => {
-        :before =>
-          lambda do |context, options|
-            # Render the legend tag
-            legend_options = options[:legend] || options[:label] || {}
-            context.eval("@template").content_tag(:legend, legend_options)
-          end
-      }
-    },
-    :submit_group => {:content_tag => :div, :class => "form-item-submit"},
-    :translatable => {:content_tag => :p, :class => "translation-info"},
-    :description => {:content_tag => :p, :class => "description"}
-  })
-  setting.add( :default_group_type, :div )
+  context.add( :groups_configuration,{
+      :div => {:content_tag => :div, :class => "form-item"},
+      :fieldset => {
+        :content_tag => :fieldset,
+        :callbacks => {
+          :before =>
+            lambda do |context, options|
+              # Render the legend tag
+              legend_options = options[:legend] || options[:label] || {}
+              context.eval("@template").content_tag(:legend, legend_options)
+            end
+        }
+      },
+      :submit_group => {:content_tag => :div, :class => "form-item-submit"},
+      :translatable => {:content_tag => :p, :class => "translation-info"},
+      :description  => {:content_tag => :p, :class => "description"},
+      :help         => {:partial => "/shared/ubiquo/form_parts/form_help"}
+    })
+  context.add( :default_group_type, :div )
 end
 
 require 'ubiquo'

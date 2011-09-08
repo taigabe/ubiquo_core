@@ -72,15 +72,20 @@ module Ubiquo
         end
 
         if options[:storage] == :s3
-          url = ':s3_domain_url'
+          if s3_config[Rails.env]['s3_host_alias']
+            url = ':s3_alias_url'
+            s3[:s3_host_alias] = s3_config[Rails.env]['s3_host_alias']
+          else
+            url = ':s3_domain_url'
+          end
           path = "media/:class/:attachment/:id_partition/:style/:filename"
         else
           url = ":visibility_prefix/media/:class/:attachment/:id_partition/:style/:filename"
         end
 
         has_attached_file field,
-          :url => url,
-          :path => path,
+          :url => options[:url] || url,
+          :path => options[:path] || path,
           :styles => styles,
           :processors => processors,
           :whiny => false,
@@ -88,8 +93,10 @@ module Ubiquo
           :s3_credentials => {
             :access_key_id => s3[:key],
             :secret_access_key => s3[:secret],
-            :bucket => s3[:bucket]
-          }
+            :bucket => s3[:bucket],
+          },
+          :s3_host_alias => s3[:s3_host_alias],
+          :s3_headers => options[:s3_headers] || {}
       end
 
       # Function for apply an array of scopes.
