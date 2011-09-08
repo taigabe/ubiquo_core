@@ -216,6 +216,23 @@ class RelationSelectorTest < ActionView::TestCase
     assert_equal r2.index('relation_new').present?, false
   end
 
+  test "show description" do
+    obj         = TestOnlyModel.create
+    description = 'Description test'
+    [ :select, :checkbox, :autocomplete ].each do |style|
+      rs  = relation_selector( 'test_only_model',
+                               :test_only_model_two,
+                               :object      => obj,
+                               :description => description,
+                               :type        => style )
+
+      doc = HTML::Document.new( content_tag( :body, rs, :class => 'body-test' ) )
+      assert_select doc.root, 'body' do
+        assert_select 'p.description', description
+      end
+    end
+  end
+
   private
 
   def new_ubiquo_test_only_model_url options = {}

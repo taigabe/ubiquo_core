@@ -49,13 +49,15 @@ module Ubiquo
             output = content_tag(:label, caption) +
               send("relation_#{selector_type}_selector",
               object, object_name, key, related_objects, humanized_field, relation_type, options)
+            output = add_description( output, options.delete( :description ) )
           else
             output = content_tag(:fieldset, html_options) do
               inst_name = options[:name] || object.class.human_attribute_name(key)
               caption = options[:required] == true ? "#{inst_name} *" : inst_name
-              content_tag(:legend, caption) +
+              content = content_tag(:legend, caption) +
                 send("relation_#{selector_type}_selector",
                 object, object_name, key, related_objects, humanized_field, relation_type, options)
+              add_description( content, options.delete( :description ) )
             end
           end
           output
@@ -258,6 +260,12 @@ module Ubiquo
         else
           options[:related_control]
         end
+      end
+
+      def add_description( content, description )
+        return content if description.nil? || !description.kind_of?( String )
+
+        content + content_tag( :p, description, :class => 'description' )
       end
     end
   end
