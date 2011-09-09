@@ -87,14 +87,16 @@ module Ubiquo
 
       module ClassMethods
         # Loads the special set of ubiquo fixtures
+        # Note that if you are firing a TestCase that uses ubiquo fixtures,
+        # all the TestCases will be affected and using the ubiquo fixtures path
         def use_ubiquo_fixtures
           fixture_set_path = Rails.root.join('tmp', 'ubiquo_fixtures')
           raise "Unable to find ubiquo fixtures [#{fixture_set_path}]" unless File.exists?(fixture_set_path)
           fixture_files = Dir.entries(fixture_set_path).reject {|e| e =~ /^\./ || e !~ /\.yml$/}
           raise "No fixtures found in #{fixture_set_path}, have you run rake test:fixture_sets:scan?" if fixture_files.empty?
           fixture_symbols = fixture_files.map {|f| f.gsub('.yml', '').to_sym}
-          # sets this class fixture path to the ubiquo one
-          self.fixture_path = fixture_set_path
+          # sets the global fixture path to the ubiquo one
+          ActiveSupport::TestCase.fixture_path = fixture_set_path
           # prepares the accessors and requires the needed classes
           fixtures(*fixture_symbols)
         end
