@@ -1,8 +1,11 @@
+require File.dirname(__FILE__) + "/../ubiquo/tasks/files"
+
 namespace :ubiquo do
   namespace :test do
     desc "Preparation for ubiquo testing"
     task :prepare => "db:test:prepare" do
-      copy_dir(Dir[Rails.root.join('vendor', 'plugins', 'ubiquo**', 'test', 'fixtures')], "/tmp/ubiquo_fixtures", :force => true, :link => true)
+      include Ubiquo::Tasks::Files
+      install_ubiquo_fixtures
     end
   end
 
@@ -17,6 +20,7 @@ namespace :ubiquo do
 
   desc "Install ubiquo migrations and fixtures to respective folders in the app"
   task :install do
+    include Ubiquo::Tasks::Files
     overwrite = ENV.delete("OVERWRITE")
     overwrite = overwrite == 'true' || overwrite == 'yes'  ? true : false
     copy_dir(Dir.glob(Rails.root.join('vendor', 'plugins', 'ubiquo**', 'install')), "/", :force => overwrite)
@@ -35,36 +39,6 @@ namespace :ubiquo do
       $stdout.puts "\nRunning #{command}"
       system(command)
       exit 1 if $? != 0
-    end
-  end
-
-  # Options accepted:
-  #   force:    copy files even if target exists. Defaults to false
-  #   verbose:  print results. Defaults to false
-  #   link:     use softlinks instead of cp. Defaults to false
-  def copy_dir(from, path = "/", options = {})
-    force = options[:force]
-    verbose = false || options[:verbose]
-    rails_target = File.join(Rails.root, path)
-    FileUtils.mkdir_p(rails_target, :verbose => verbose) unless File.exists?(rails_target)
-    [from].flatten.each do |f|
-      files = Dir.glob(File.join(f, "*"))
-      if options[:link]
-        begin
-          FileUtils.ln_s(files, rails_target, :verbose => verbose, :force => force)
-        rescue Errno::EEXIST
-        end
-      else
-        # refactorable
-        files.each do |file|
-          file_name = File.basename(file)
-          if File.directory?(file)
-            copy_dir(file, File.join(path, file_name), options)
-          else
-            FileUtils.cp(file, rails_target, :verbose => verbose) if force || !File.exists?(File.join(rails_target, file_name))
-          end
-        end
-      end
     end
   end
 
