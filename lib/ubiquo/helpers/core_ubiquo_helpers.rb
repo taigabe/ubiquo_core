@@ -18,6 +18,7 @@ module Ubiquo
         if sources.include?(:defaults)
           default_sources += [:ubiquo, :ubiquo_application, :lightwindow, :ubiquo_lightwindow, :listings, color]
           default_sources += collect_asset_files("#{stylesheets_dir}", "plugins/*.css")
+          default_sources += [:ipad] if defined?( request ) && request.user_agent.match(/Apple.*Mobile/)
         end
         ubiquo_sources = (sources + default_sources).collect do |source|
           next if source == :defaults
