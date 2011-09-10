@@ -42,6 +42,15 @@ document.observe("dom:loaded", function() {
     });
   }
 
+  //links open in new window
+  $$('a[rel="external"]').each(function(e,index) {
+    e.observe('click', function(ev){
+      ev.stop();
+      var url = e.readAttribute('href');
+      window.open(url,'New window');
+    });
+  });
+
   //ubiquo_authentication
   if($('send_confirm_creation') && $("welcome_message_block")) {
     $('send_confirm_creation').observe("change", function() {
