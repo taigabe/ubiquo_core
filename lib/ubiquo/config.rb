@@ -185,7 +185,7 @@ class Ubiquo::Config
         method_name = "_" + method_name
       end
       run_in.class.send(:define_method, method_name, &option)
-      returning run_in.send(method_name, options) do
+      run_in.send(method_name, options).tap do
         run_in.class.send(:remove_method, method_name)
       end
     when String, Symbol
