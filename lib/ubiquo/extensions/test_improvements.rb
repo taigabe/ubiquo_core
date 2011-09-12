@@ -20,12 +20,10 @@ module Ubiquo
         
         # Create a test file for tests
         def test_file(contents = "contents")
-          f = Tempfile.new("test.txt")
-          f.write contents
-          f.flush
-          f.close
-          @test_file_path = f.path
-          open(f.path)
+          Tempfile.new("test.txt").tap do |file|
+            file.write contents
+            file.flush
+          end
         end
       end
       
