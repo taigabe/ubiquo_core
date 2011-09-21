@@ -53,7 +53,8 @@ class UbiquoFormBuilderTest < ActionView::TestCase
   end
 
   test "group with block from erb" do
-    # TODO: test with an erb block like
+    # TODO: test with an erb block like. Dont try to use ERB.new(template) as
+    # rails overloads it and it does not work stright away.
 #   <% form.submit_group do %>
 #    <%= form.create_button %>
 #    <%= form.back_button %>
@@ -231,6 +232,101 @@ class UbiquoFormBuilderTest < ActionView::TestCase
     end
 
   end
+
+  test "tabbed blocks" do
+    self.expects(:t).with("personal_data").returns("personal_data").at_least_once
+    self.expects(:t).with("rights").returns("rights").at_least_once
+    
+    the_form do |form|
+       concat( form.group(:type => :tabbed, :class=> "a-group-of-tabs") do |group|
+         concat( group.add(t("personal_data")) do
+           concat( form.text_field :lastname )
+         end )
+         concat( group.add(t("rights"), :class => "custom-tab-class") do
+           concat( form.check_box :is_admin )
+         end )
+       end )
+    end
+
+    assert_select ".form-tab-container.a-group-of-tabs .form-tab" do |tabs|
+      assert 2, tabs.size
+      assert_equal "custom-tab-class form-tab", tabs.last.attributes["class"]
+    end
+    assert_select ".a-group-of-tabs .form-tab input"
+  end
+
+  test "tabbed blocks easy syntax" do
+    the_form do |form|
+       concat( form.group(:type => :tabbed, :class=> "a-group-of-tabs") do
+         concat( form.tab(("personal_data"),:class => "parenttab") do
+           concat( form.text_field :lastname )
+           concat( form.group(:type => :tabbed, :class=> "childtab") do
+             concat( form.tab(("inner tab"),:class =>"childtab") do
+               concat( form.text_field :is_admin )
+             end )
+           end )
+         end )
+         concat( form.tab(("rights"), :class => "custom-tab-class") do
+           concat( form.check_box :is_admin )
+         end )
+       end )
+    end
+
+    assert_select ".form-tab-container.a-group-of-tabs .form-tab" do |tabs|
+      assert 2, tabs.size
+      assert_equal "custom-tab-class form-tab", tabs.last.attributes["class"]
+    end
+    assert_select ".a-group-of-tabs .form-tab input"
+
+  end
+
+  test "tabs can be unfolded" do
+    original_value = Ubiquo::Config.context(:ubiquo_form_builder).get(:unfold_tabs)
+    Ubiquo::Config.context(:ubiquo_form_builder).set(:unfold_tabs,true)
+    begin
+      the_form do |form|
+         concat( form.group(:type => :tabbed, :class=> "a-group-of-tabs") do
+           concat( form.tab(("personal_data")) do
+             concat( form.text_field :lastname )
+          end )
+         end )
+      end
+
+      assert_select ".form-tab-container.a-group-of-tabs .form-tab", 0
+      assert_select ".form-tab-container-unfolded.a-group-of-tabs .form-tab", 1
+    ensure
+      # Restore config
+      Ubiquo::Config.context(:ubiquo_form_builder).set(:unfold_tabs, original_value )
+    end
+  end
+
+  test "we cannot call tab without a tabbed parent group defined" do
+    assert_raise(RuntimeError) {
+      the_form do |form|
+         concat( form.tab(t("personal_data")) do
+           concat( form.text_field :lastname )
+         end )
+      end
+    }
+  end
+  
+  test "can append content inside the field, after and before the content" do
+    the_form do |form|
+      concat( form.text_field :lastname, :group => {:after => '<div class="after">A</div>'} )
+      concat( form.text_field :lastname, :class=> "alter", :group => {:before => '<div class="before">A</div>'} )
+    end
+    assert_select "form .form-item" do |form_items|
+      assert_select form_items.first, ".after"
+      assert_select form_items.first, "div *" do |items|
+        assert_equal "after", items.last.attributes["class"]
+      end
+      assert_select form_items.last, ".before"
+      assert_select form_items.last, "div *" do |items|
+        assert_equal "before", items.first.attributes["class"]
+      end
+    end
+  end
+
   protected
 
   # helper to build a ubiquo form to test
@@ -256,6 +352,10 @@ class User
     "Bar"
   end
 
+  def born_at
+    Time.parse("2011-01-01 12:00")
+  end
+
   def is_admin
     true
   end
@@ -263,7 +363,8 @@ class User
   def self.human_attribute_name( attr )
     {
       :lastname => "Bar",
-      :is_admin => "Is admin"
+      :is_admin => "Is admin",
+      :born_at => "Born at"
      }[ attr.to_sym ] || attr.to_s
   end
 end

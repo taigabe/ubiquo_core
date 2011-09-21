@@ -1302,6 +1302,55 @@ body#blank #footer {
 	padding-left: 17px;
 }
 
+/* --- Tabbed content --- */
+.tabbed {}
+.tabbed .tabs-menu {}
+.tabbed .tabs-menu li {
+    position: relative;
+    top: 2px;
+    float: left;
+    padding: .7em 1.4em;
+    margin: 0 .6em 0 0;
+    font-size: 1.3em;
+    color: #8f292d;
+    cursor: pointer;
+    background: #f3f6eb;
+    border: 2px solid #E8EDD7;
+    -webkit-border-top-left-radius: 6px;
+    -webkit-border-top-right-radius: 6px;
+    -moz-border-radius-topleft: 6px;
+    -moz-border-radius-topright: 6px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+.tabbed .tabs-menu li.current {
+    cursor: auto;
+    font-weight: bold;
+    background: #FBFEF3;
+    border-bottom-color: #FBFEF3;
+}
+.tabbed ul.tabs-menu li.with-errors {
+    background-image: url(../../images/ubiquo/ico-advice-bad.png);
+    background-repeat: no-repeat;
+    background-position: .5em .4em;
+    padding-left: 2.5em;
+}
+.tabbed .tabs-container .tab {
+    display: none;
+    padding: 1em;
+    background: #FBFEF3;
+    border: 2px solid #E8EDD7;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+}
+.tabbed .tabs-container .current-tab {
+    display: block;
+    clear: both;
+}
+/* ----------------------- */
+
+
 /*-------------- Clearfix --------------*/
 #controls:after, 
 #tabs:after, 
