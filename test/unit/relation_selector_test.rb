@@ -191,12 +191,12 @@ class RelationSelectorTest < ActionView::TestCase
       :object => obj1,
       :required => true,
       :type => :select)
-    assert_equal r1.index('<label>Test only model two *</label>').present?, true
+    assert_equal r1.index('Test only model two *</label>').present?, true
     r2 = relation_selector('test_only_model',
       :test_only_model_two,
       :object => obj1,
       :type => :select)
-    assert_equal r2.index('<label>Test only model two</label>').present?, true
+    assert_equal r2.index('Test only model two</label>').present?, true
 
   end
 

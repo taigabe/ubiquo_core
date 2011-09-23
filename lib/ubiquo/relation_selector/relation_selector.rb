@@ -21,7 +21,6 @@ module Ubiquo
 
       def relation_selector(object_name, key, options = {}, html_options = {})
         object = options[:object]
-
         if object.respond_to?(key)
           # This part checks reflections
           relation_type, object_class_name = discover_relation_by_reflections(
@@ -41,26 +40,22 @@ module Ubiquo
             options
           )
           # array of possible values
+
+          # array of possible values
           related_objects = url_craft_settings object_class_name, selector_type, options
           # Finally, output is generated
-          if selector_type.to_sym == :select
+          html_options.reverse_merge!({
+            :class => "group relation-selector relation-type-#{selector_type}"
+          })
+          wrapper_type = selector_type == :checkbox ? :fieldset : :div
+          output = content_tag(wrapper_type, html_options) do
             inst_name = options[:name] || object.class.human_attribute_name(key)
             caption = options[:required] == true ? "#{inst_name} *" : inst_name
-            output = content_tag(:label, caption) +
+            (wrapper_type == :fieldset ? content_tag(:legend, caption) : "") +
               send("relation_#{selector_type}_selector",
               object, object_name, key, related_objects, humanized_field, relation_type, options)
-            output = add_description( output, options.delete( :description ) )
-          else
-            output = content_tag(:fieldset, html_options) do
-              inst_name = options[:name] || object.class.human_attribute_name(key)
-              caption = options[:required] == true ? "#{inst_name} *" : inst_name
-              content = content_tag(:legend, caption) +
-                send("relation_#{selector_type}_selector",
-                object, object_name, key, related_objects, humanized_field, relation_type, options)
-              add_description( content, options.delete( :description ) )
-            end
           end
-          output
+          add_description(output, options.delete(:description))
         else
           raise RelationSelector::RelationNotFound.new
         end
@@ -148,9 +143,10 @@ module Ubiquo
         if current_related_objects.length > 0
           current_related_objects = current_related_objects.map(&:id).to_a
         end
-        output = content_tag(:ul, :class => 'check_list') do
+        options.reverse_merge!({:css_class => 'category-group'})
+        output = content_tag(:div, :class => options[:css_class]) do
           related_objects.map do |ro|
-            content_tag(:li) do
+            content_tag(:div, :class => 'form-item-inline') do
               check_box_tag("#{object_name}[#{options[:key_field]}][]", ro.id,
                 current_related_objects.include?(ro.id),
                 :id => "#{object_name}_#{options[:key_field]}_#{ro.id}") +
@@ -170,10 +166,15 @@ module Ubiquo
         objects_for_select = related_objects.collect { |cat|
           [cat.send(humanized_field), cat.id]
         }
-        output = select_tag("#{object_name}[#{options[:key_field]}]",
-          options_for_select(objects_for_select,
-            :selected => (object.send(key).id rescue '')),
-          { :id => "#{object_name}_#{options[:key_field]}_select" })
+        inst_name = options[:name] || object.class.human_attribute_name(key)
+        label_caption = options[:required] == true ? "#{inst_name} *" : inst_name
+        output = content_tag(:div, :class => "form-item") do
+          label_tag("#{object_name}[#{options[:key_field]}]_select", label_caption) +
+            select_tag("#{object_name}[#{options[:key_field]}]",
+              options_for_select(objects_for_select,
+                :selected => (object.send(key).id rescue '')),
+                { :id => "#{object_name}_#{options[:key_field]}_select" })
+        end
         output << relation_controls(options)
         output
       end
@@ -220,10 +221,14 @@ module Ubiquo
         else
           "document.observe('dom:loaded', function() { %s })" % js_autocomplete
         end
-        output = javascript_tag(js_code) + text_field_tag(
-          options[:initial_text_field_tag_name], "",
-          :id => "#{object_name}_#{options[:key_field]}_autocomplete"
-        )
+        inst_name = options[:name] || object.class.human_attribute_name(key)
+        label_caption = options[:required] == true ? "#{inst_name} *" : inst_name
+        output = javascript_tag(js_code)
+        output << content_tag(:div, :class => "form-item") do
+          label_tag("#{object_name}[#{key}][]", label_caption) +
+            text_field_tag(options[:initial_text_field_tag_name], "",
+                           :id => "#{object_name}_#{options[:key_field]}_autocomplete")
+        end
         output << relation_controls(options)
       end
 
@@ -236,27 +241,15 @@ module Ubiquo
         end.to_json
       end
 
-      def new_relation_controls(type, object_name, key)
-        content_tag(:div, :class => "new_category_controls") do
-          link_to(t("ubiquo.category_selector.new_element"), '#',
-            :id => "link_new__#{type}__#{object_name}__#{key}",
-            :class => "category_selector_new") +
-            content_tag(:div, :class => "add_new_category", :style => "display:none") do
-            text_field_tag("new_#{object_name}_#{key}", "", :id => "new_#{object_name}_#{key}") +
-              link_to(
-                t("ubiquo.category_selector.add_element"),
-                "",
-                :class => "add_new_category_link"
-              )
-          end
-        end
-      end
-
       def relation_controls(options = {})
         if options[:hide_controls] == true
           ''
         elsif options[:related_control].blank?
-          "<p class='relation_new'>#{link_to(I18n.t('ubiquo.new_relation'), options[:related_url], {:target => '_blank'})}</p>"
+          content_tag(:div, :class => 'relation_new') do
+            link_to I18n.t('ubiquo.new_relation'),
+                    options[:related_url],
+                    { :class => 'bt-add-category', :rel => 'external' }
+          end
         else
           options[:related_control]
         end
