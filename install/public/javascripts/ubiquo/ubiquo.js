@@ -1,3 +1,8 @@
+//Init namespace
+if( !Ubiquo ){
+    var Ubiquo = {};
+}
+
 document.observe("dom:loaded", function() {
   //action buttons
   var num_buttons = 0;
@@ -41,6 +46,15 @@ document.observe("dom:loaded", function() {
       e.remove();
     });
   }
+
+  //links open in new window
+  $$('a[rel="external"]').each(function(e,index) {
+    e.observe('click', function(ev){
+      ev.stop();
+      var url = e.readAttribute('href');
+      window.open(url,'New window');
+    });
+  });
 
   //ubiquo_authentication
   if($('send_confirm_creation') && $("welcome_message_block")) {
@@ -128,6 +142,75 @@ function blind_toggle(desired_elem, brother) {
     new Effect.BlindUp($(brother));
     new Effect.BlindDown($(desired_elem));
   }
+}
+
+if(!Ubiquo.Forms){
+    Ubiquo.Forms = {};
+}
+/*
+ * Creates tabbed content
+ * @param string parent_selector The css selector for the parent
+ * @param string title_selector The css selector for the tag where the child's (each child will be a tab) titles are (will be hidden and serve as the tab menu items)
+ */
+Ubiquo.Forms.createTabs = function(parent_selector,title_selector){
+    $$(parent_selector).each( function(group){
+        if(group && !group.hasClassName("tabbed")){
+            group.addClassName('tabbed');
+
+            //create wrappers
+            var newparent = new Element('div',{
+                'class':'tabs-container'
+            });
+            // Move childs to new div
+            // We avoid using innerHTML as we would lose the observers
+            group.childElements().each(function(child){newparent.appendChild(child);});
+            group.update(newparent);
+
+            var tab_menu = new Element('ul', {'class': 'tabs-menu'});
+            group.insert({ top: tab_menu });
+
+            //hide titles and put them as tab menu items
+            var tabs = group.down('.tabs-container').childElements();
+            tabs.each(function(i,index) {
+                i.addClassName('tab');
+
+                //Create menu tab
+                var tab_menu_option = new Element('li').update(i.down(title_selector).innerHTML);
+                if (index == 0){ tab_menu_option.addClassName('current'); }
+                tab_menu.insert(tab_menu_option);
+
+                i.down(title_selector).hide();
+                if (index == 0) i.addClassName('current-tab');
+            });
+
+            //tab menu behavior
+            var menu_tabs = tab_menu.childElements();
+            menu_tabs.each(function(i,index){
+                i.observe('click',function(ev){
+                    //We do not check if the tab is already shown as sometimes it gets hidden
+                    tabs.invoke("removeClassName",'current-tab');
+                    tabs[index].addClassName('current-tab');
+
+                    menu_tabs.invoke("removeClassName",'current');
+                    i.addClassName('current');
+                });
+            });
+
+            //Highlights the tab that contains errors
+            group.select(".error_field").each(function(error_field){
+                //Detect the position of the tab and highlight the tab and all its upper tabs!
+                var tab = error_field;
+                var container = null;
+                while( (tab = tab.up(".tab")) ){
+                    var container = tab.up(".tabs-container");
+                    if( container ){
+                        var idx = container.childElements().indexOf( tab );
+                        container.up().down(".tabs-menu").childElements()[idx].addClassName("with-errors");
+                    }
+                }
+            });
+        }
+    });
 }
 
 /*
@@ -267,3 +350,6 @@ function collectAndSendValues(selectedContext, selectedSettingKey){
   addHiddenFieldsForSettings(form, settings);
   form.submit();
 }
+//Init tabs before page load but after required dom objects loaded.
+//This initalization could be done on dom:loaded but it creates a strange effect.
+Ubiquo.Forms.createTabs(".form-tab-container","legend");

@@ -304,7 +304,7 @@ var RelationAutoCompleteSelector = Class.create({
     var token_values = {};
     token_values['id'] = id;
     token_values[klass.queryParam] = value;
-    this_token.writeAttribute('alt', $H(token_values).toJSON());
+    this_token.writeAttribute('alt', Object.toJSON($H(token_values)));
     return this_token;
   },
 
@@ -496,7 +496,7 @@ var RelationAutoCompleteSelector = Class.create({
           if(i == 0){
             this.select_dropdown_item(this_li);
           }
-          this_li.writeAttribute('alt', $H(results[i]).toJSON());
+          this_li.writeAttribute('alt', Object.toJSON($H(results[i])));
         }
       }
 

@@ -39,4 +39,26 @@ class Ubiquo::Helpers::CoreUbiquoHelpersTest < ActionView::TestCase
     assert_equal "form result", result
   end
 
+  test "ipad stylesheet is added on defaults when device detected" do
+    # We are not an ipad so no ipad.css
+    html = self.ubiquo_stylesheet_link_tag(:defaults)
+    assert !stylesheet_included?( "ubiquo/ipad.css", html )
+
+    # Now we are an ipad
+    self.expects(:request).returns(stub(:user_agent => (
+          "Mozilla/5.0 (iPad; U; CPU OS 4_2 like Mac OS X; ca-es) "+
+          "AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 "+
+          "Mobile/8C134b Safari/6533.18.5")));
+    html = self.ubiquo_stylesheet_link_tag(:defaults)
+    assert stylesheet_included?( "ubiquo/ipad.css", html )
+  end
+
+  private  
+  # True when the stylesheet is in the html at least once
+  def stylesheet_included? filename, html
+    result = HTML::Document.new(html)
+    assert_select result.root, "link" do |links|
+      return links.map{|l|l.attributes["href"]}.grep(Regexp.new(Regexp.escape(filename))).size > 0
+    end
+  end
 end

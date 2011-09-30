@@ -33,7 +33,6 @@ namespace :ubiquo do
     desc "Installs current crontab definition to current's user crontab (WARNING: removes all existing crontab entries)"
     task :install => :environment do
       system("crontab", "-r")  # Remove current crontab
-      sleep 30                 # Wait a bit to give a chance for current jobs to finish (yeah I know, too optimistic)
       Ubiquo::Cron::Crontab.instance.install!
     end
 
