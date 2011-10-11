@@ -137,7 +137,7 @@ module Ubiquo
       def select_scopes(params,restrict_scopes)
         filters = params.reject {|k,v| !k.to_s.match /^filter_/ }
         scopes = filters.inject({}) { |h, (k,v)| h[k.gsub('filter_', '').to_sym] = v; h } # transform filter_bla keys into :bla
-        valid_scopes = restrict_scopes || @enabled_scopes
+        valid_scopes = restrict_scopes || @enabled_scopes || []
         rogue_filters = scopes.keys - valid_scopes
         unless rogue_filters.blank?
           raise Ubiquo::InvalidFilter, "Unexpected filter received in params: #{rogue_filters.inspect}"

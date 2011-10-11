@@ -117,10 +117,17 @@ class FilteredSearchTest < ActiveSupport::TestCase
     end
   end
 
+  test 'Should not break if filtered_search_scopes has not been called' do
+    assert UnfilteredModel.respond_to?(:filtered_search)
+    assert_nothing_raised do
+      UnfilteredModel.filtered_search
+    end
+  end
+
   private
 
   def self.create_test_tables
-    %w{search_test_models alternate_search_test_models}.each do |table|
+    %w{search_test_models alternate_search_test_models unfiltered_models}.each do |table|
       conn = ActiveRecord::Base.connection
       conn.drop_table(table) if conn.tables.include?(table)
 
