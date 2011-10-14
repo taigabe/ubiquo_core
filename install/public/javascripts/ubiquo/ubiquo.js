@@ -5,29 +5,35 @@ if( !Ubiquo ){
 
 document.observe("dom:loaded", function() {
   //action buttons
-  var num_buttons = 0;
+  var remove_actions_cell = false;
   $$('#content tr').each(function(e,index) {
+    var edit_btn, del_btn, edit_url;
     if(index == 0){
       //first row (headers)
       e.insert({
         bottom: '<th class="delete">&nbsp;</th>'
       });
     }else{
-      var edit_btn = e.down('.btn-edit');
-      edit_btn.hide();
-      var del_btn = e.down('.btn-delete');
-      del_btn.update('<span>'+del_btn.text+'</span>');
-      del_btn.remove();
-      e.insert('<td class="delete"></td>');
-      e.down('td.delete').insert(del_btn);
-      del_btn.observe('click', function(ev){
-        Event.stop(ev);
-      });
+      edit_btn = e.down('.btn-edit');
+      if(edit_btn){
+          edit_btn.hide();
+      }
+      del_btn = e.down('.btn-delete');
+      if(del_btn){
+          del_btn.update('<span>'+del_btn.text+'</span>');
+          del_btn.remove();
+          e.insert('<td class="delete"></td>');
+          e.down('td.delete').insert(del_btn);
+          del_btn.observe('click', function(ev){
+            Event.stop(ev);
+          });
+      }
       
-      var edit_url = null;
-      if(edit_btn != undefined) edit_url = edit_btn.readAttribute('href');
-      
-      e.writeAttribute('title',edit_btn.readAttribute('title'));
+      edit_url = null;
+      if(edit_btn != undefined){ 
+          edit_url = edit_btn.readAttribute('href');
+          e.writeAttribute('title',edit_btn.readAttribute('title'));
+      }
       
       e.observe('mouseover', function(ev){
         e.addClassName('hover');
@@ -38,14 +44,21 @@ document.observe("dom:loaded", function() {
       e.observe('click', function(ev){
         if (edit_url != null) window.location.href = edit_url;
       });
-      num_buttons = e.down('.actions').childElements().length;
+      
+      // Is there any action left?
+      // otherways remove the "actions" cell from everywhere
+      if( e.select(".actions a").length == 0 ) remove_actions_cell = true;
     }
   });
-  if(num_buttons < 2){
+  if(remove_actions_cell){
     $$('#content tr .actions').each(function(e){
       e.remove();
     });
   }
+
+});
+
+document.observe("dom:loaded", function() {
 
   //links open in new window
   $$('a[rel="external"]').each(function(e,index) {
