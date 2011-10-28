@@ -5,7 +5,7 @@ if( !Ubiquo ){
 
 document.observe("dom:loaded", function() {
   //action buttons
-  var remove_actions_cell = false;
+  var remove_actions_cell = true;
   $$('#content tr').each(function(e,index) {
     var edit_btn, del_btn, edit_url;
     if(index == 0){
@@ -47,7 +47,7 @@ document.observe("dom:loaded", function() {
       
       // Is there any action left?
       // otherways remove the "actions" cell from everywhere
-      if( e.select(".actions a").length == 0 ) remove_actions_cell = true;
+      if( e.select(".actions a").length > 0 ) remove_actions_cell = false;
     }
   });
   if(remove_actions_cell){
