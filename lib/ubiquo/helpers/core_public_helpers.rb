@@ -9,10 +9,11 @@ module Ubiquo
         if object.send("#{attribute}_is_public?")
           url_for(object.send(attribute).url(style))
         else
-          url_for(ubiquo_attachment_url(:path => object.send(attribute).url(style)))
+          object_url = object.send(attribute).url(style)
+          CGI::unescape(url_for(ubiquo_attachment_url(:path => object_url)))
         end
       end
-      
+
       def html_unescape(s)
         s = s.to_s
         ERB::Util::HTML_ESCAPE.each do |special, value|
