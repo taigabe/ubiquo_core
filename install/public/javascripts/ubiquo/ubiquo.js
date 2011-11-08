@@ -15,9 +15,6 @@ document.observe("dom:loaded", function() {
       });
     }else{
       edit_btn = e.down('.btn-edit');
-      if(edit_btn){
-          edit_btn.hide();
-      }
       del_btn = e.down('.btn-delete');
       if(del_btn){
           del_btn.update('<span>'+del_btn.text+'</span>');
@@ -33,6 +30,7 @@ document.observe("dom:loaded", function() {
       if(edit_btn != undefined){ 
           edit_url = edit_btn.readAttribute('href');
           e.writeAttribute('title',edit_btn.readAttribute('title'));
+          edit_btn.remove();
       }
       
       e.observe('mouseover', function(ev){
