@@ -54,6 +54,9 @@ module Ubiquo
           end
         end
         true
+      rescue Lockfile::MaxTriesLockError => e
+        error_msg = build_error_msg(e)
+        false
       rescue Exception => e
         error_msg = build_error_msg(e)
         if @recipients
