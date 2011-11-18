@@ -641,6 +641,8 @@ a.new, #content .form-item-submit input.bt-create {
   #content tr:hover td, #content tr.hover td {
   	background: #F0BB47;
   	border-bottom-color: #F0BB47;
+  }
+  #content tr.editable:hover td,#content tr.editable.hover td{
   	cursor: pointer;
   }
 	#content td .state_true, #content td .state_false {

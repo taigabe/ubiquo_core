@@ -28,20 +28,26 @@ document.observe("dom:loaded", function() {
       
       edit_url = null;
       if(edit_btn != undefined){ 
+          e.addClassName("editable");
           edit_url = edit_btn.readAttribute('href');
           e.writeAttribute('title',edit_btn.readAttribute('title'));
           edit_btn.remove();
+          e.observe('mouseover', function(ev){
+            e.addClassName('hover');
+          });
+          e.observe('mouseout', function(ev){
+            e.removeClassName('hover');
+          });
+          e.observe('click', function(ev){
+             // Weird case when a link does some ajax call and the event gets here.
+             // Detected on "remove translation" link
+             if(Event.element(ev).tagName.toUpperCase() != "A"){
+                 if (edit_url != null) window.location.href = edit_url;
+             }
+          });
+
       }
       
-      e.observe('mouseover', function(ev){
-        e.addClassName('hover');
-      });
-      e.observe('mouseout', function(ev){
-        e.removeClassName('hover');
-      });
-      e.observe('click', function(ev){
-        if (edit_url != null) window.location.href = edit_url;
-      });
       
       // Is there any action left?
       // otherways remove the "actions" cell from everywhere
