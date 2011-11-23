@@ -6,10 +6,6 @@ class RelationSelectorTest < ActionView::TestCase
 
   include Ubiquo::RelationSelector::Helper
 
-  def setup
-    set_relations
-  end
-
   test "should_create_right_selector" do
     #Select, checkboxes, autocomplete
     obj = TestOnlyModel.new
@@ -268,5 +264,3 @@ class RelationSelectorTest < ActionView::TestCase
     parent
   end
 end
-
-create_relation_test_model_backend

@@ -28,7 +28,6 @@ module Ubiquo
       def self.create
         table = 'filter_tests'
         conn = ::ActiveRecord::Base.connection
-        conn.drop_table(table) if conn.tables.include?(table)
 
         conn.create_table table.to_sym do |t|
           t.string   :title
@@ -36,7 +35,7 @@ module Ubiquo
           t.datetime :published_at
           t.boolean  :status, :default => false
           t.timestamps
-        end
+        end unless conn.tables.include?(table)
 
         model = table.classify
         Object.const_set(model, Class.new(::ActiveRecord::Base)) unless Object.const_defined? model
@@ -54,6 +53,7 @@ module Ubiquo
       def initialize(*args)
         ::ActionController::Routing::Routes.draw { |map| map.resources :tests }
         @model = FilterTestModel.create
+        @model.delete_all
         load_test_data
         @context = FakeContext.new
         super(*args)
