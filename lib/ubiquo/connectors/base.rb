@@ -80,10 +80,9 @@ module Ubiquo
         self.mock_helper_stubs = future_stubs
       end
 
+      # Raised when a connector requirement is not met
+      class ConnectorRequirementError < StandardError; end
+
     end
-
-    # Raised when a connector requirement is not met
-    class ConnectorRequirementError < StandardError; end
-
   end
 end
