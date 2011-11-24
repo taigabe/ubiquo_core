@@ -21,6 +21,8 @@ Ubiquo::Config.add(:error_field_class, 'error_field')
 
 Ubiquo::Config.add(:ubiquo_path, 'ubiquo')
 
+Ubiquo::Config.add(:edit_on_row_click, true)
+
 Ubiquo::Config.create_context(:ubiquo_form_builder)
 Ubiquo::Config.context(:ubiquo_form_builder) do |context|
   context.add( :default_tag_options, {

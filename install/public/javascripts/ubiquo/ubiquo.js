@@ -6,7 +6,7 @@ if( !Ubiquo ){
 document.observe("dom:loaded", function() {
   //action buttons
   var remove_actions_cell = true;
-  $$('#content tr').each(function(e,index) {
+  $$('#content table.edit_on_row_click tr').each(function(e,index) {
     var edit_btn, del_btn, edit_url;
     if(index == 0){
       //first row (headers)
@@ -55,7 +55,7 @@ document.observe("dom:loaded", function() {
     }
   });
   if(remove_actions_cell){
-    $$('#content tr .actions').each(function(e){
+    $$('#content table.edit_on_row_click tr .actions').each(function(e){
       e.remove();
     });
   }

@@ -684,9 +684,9 @@ a.new, #content .form-item-submit input.bt-create {
   	#content td.actions a:hover {
   	  background-color: #EEE;
   	}
-  	#content td a.btn-delete {
+  	#content table.edit_on_row_click td a.btn-delete {
 	}
-	  #content td.delete a.btn-delete {
+      #content table.edit_on_row_click td.delete a.btn-delete {
   	    float: right;
   	    display: block;
   	    background: url(../../images/ubiquo/ico-delete-off.gif) no-repeat center center;
@@ -703,7 +703,8 @@ a.new, #content .form-item-submit input.bt-create {
 	    width: 34px;
   	    height: 39px;
 	  }
-	  #content td a.btn-delete:hover, #content tr.hover td a.btn-delete {
+	  #content table.edit_on_row_click td a.btn-delete:hover,
+      #content table.edit_on_row_click tr.hover td a.btn-delete {
 	    background: #F0BB47 url(../../images/ubiquo/ico-delete.gif) no-repeat center center;
           }
 	    #content a.btn-delete span {
