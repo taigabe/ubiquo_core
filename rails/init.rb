@@ -30,7 +30,10 @@ Ubiquo::Config.context(:ubiquo_form_builder) do |context|
     :relation_selector => { :append_class => "relation" },
     :date_select => { :group => {:append_class => "datetime"} },
     :datetime_select => { :group => {:append_class => "datetime"} },
-    :check_box => {:group => {:class => "form-item"}, :class => "checkbox"},
+    :check_box => {
+      :group => {:class => "form-item"}, :class => "checkbox",
+      :options_position => 0 # check_box does not has the options in last param but first.
+    },
     :create_button => {
       :i18n_label_key => "ubiquo.create",
       :class => "bt-update",
