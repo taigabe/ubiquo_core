@@ -172,7 +172,7 @@ module Ubiquo
           label_tag("#{object_name}[#{options[:key_field]}]_select", label_caption) +
             select_tag("#{object_name}[#{options[:key_field]}]",
               options_for_select(objects_for_select,
-                :selected => (object.send(key).id rescue '')),
+                :selected => selected_value(object, key,options)),
                 { :id => "#{object_name}_#{options[:key_field]}_select" })
         end
         output << relation_controls(options)
@@ -259,6 +259,15 @@ module Ubiquo
         return content if description.nil? || !description.kind_of?( String )
 
         content + content_tag( :p, description, :class => 'description' )
+      end
+
+      def selected_value object, key, options = {}
+        selected_object = object.send(key)
+        if selected_object
+          selected_object.id
+        else
+          ''
+        end
       end
     end
   end
