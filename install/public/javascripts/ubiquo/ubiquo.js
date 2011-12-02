@@ -113,6 +113,20 @@ document.observe("dom:loaded", function() {
 
 });
 
+document.observe("dom:loaded", function() {
+  //Set focus to first form item
+  if ($$('form[action="/ubiquo/login"]').first()) { //Login window
+    $('ubiquo_user_login').focus();
+  }
+  var first_form = $$('#inner-content form').first();
+  if (first_form) {
+    var first_input = first_form.select('input[type!=hidden]').first();
+    if (first_input) { //Ubiquo form
+      first_input.focus(); 
+    }
+  }
+});
+
 function send_as_form(div_id, url, method) {
   var fo = $(div_id);
   var ie = navigator.appVersion.indexOf("MSIE") != -1;
