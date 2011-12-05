@@ -9,8 +9,10 @@ module Ubiquo
         if object.send("#{attribute}_is_public?")
           url_for(object.send(attribute).url(style))
         else
-          object_url = object.send(attribute).url(style)
-          CGI::unescape(url_for(ubiquo_attachment_url(:path => object_url)))
+          protected_path = Rails.root.join(Ubiquo::Config.get(:attachments)[:private_path])
+          path = object.send(attribute).path(style)
+          relative_path = path.split(protected_path).last
+          CGI::unescape(ubiquo_attachment_url(:path => relative_path))
         end
       end
 
