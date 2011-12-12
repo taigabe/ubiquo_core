@@ -24,6 +24,8 @@ Ubiquo::Plugin.register(:ubiquo, directory, config) do |setting|
   }
 end
 
+Ubiquo::Config.add(:edit_on_row_click, true)
+
 Ubiquo::Config.create_context(:ubiquo_form_builder)
 Ubiquo::Config.context(:ubiquo_form_builder) do |context|
   context.add( :default_tag_options, {
@@ -31,7 +33,10 @@ Ubiquo::Config.context(:ubiquo_form_builder) do |context|
     :relation_selector => { :append_class => "relation" },
     :date_select => { :group => {:append_class => "datetime"} },
     :datetime_select => { :group => {:append_class => "datetime"} },
-    :check_box => {:group => {:class => "form-item"}, :class => "checkbox"},
+    :check_box => {
+      :group => {:class => "form-item"}, :class => "checkbox",
+      :options_position => 0 # check_box does not has the options in last param but first.
+    },
     :create_button => {
       :i18n_label_key => "ubiquo.create",
       :class => "bt-update",

@@ -5,47 +5,64 @@ if( !Ubiquo ){
 
 document.observe("dom:loaded", function() {
   //action buttons
-  var num_buttons = 0;
-  $$('#content tr').each(function(e,index) {
+  var remove_actions_cell = true;
+  $$('#content table.edit_on_row_click tr').each(function(e,index) {
+    var edit_btn, del_btn, edit_url;
     if(index == 0){
       //first row (headers)
       e.insert({
         bottom: '<th class="delete">&nbsp;</th>'
       });
     }else{
-      var edit_btn = e.down('.btn-edit');
-      edit_btn.hide();
-      var del_btn = e.down('.btn-delete');
-      del_btn.update('<span>'+del_btn.text+'</span>');
-      del_btn.remove();
-      e.insert('<td class="delete"></td>');
-      e.down('td.delete').insert(del_btn);
-      del_btn.observe('click', function(ev){
-        Event.stop(ev);
-      });
+      edit_btn = e.down('.btn-edit');
+      del_btn = e.down('.btn-delete');
+      if(del_btn){
+          del_btn.update('<span>'+del_btn.text+'</span>');
+          del_btn.remove();
+          e.insert('<td class="delete"></td>');
+          e.down('td.delete').insert(del_btn);
+          del_btn.observe('click', function(ev){
+            Event.stop(ev);
+          });
+      }
       
-      var edit_url = null;
-      if(edit_btn != undefined) edit_url = edit_btn.readAttribute('href');
+      edit_url = null;
+      if(edit_btn != undefined){ 
+          e.addClassName("editable");
+          edit_url = edit_btn.readAttribute('href');
+          e.writeAttribute('title',edit_btn.readAttribute('title'));
+          edit_btn.remove();
+          e.observe('mouseover', function(ev){
+            e.addClassName('hover');
+          });
+          e.observe('mouseout', function(ev){
+            e.removeClassName('hover');
+          });
+          e.observe('click', function(ev){
+             // Weird case when a link does some ajax call and the event gets here.
+             // Detected on "remove translation" link
+             if(Event.element(ev).tagName.toUpperCase() != "A"){
+                 if (edit_url != null) window.location.href = edit_url;
+             }
+          });
+
+      }
       
-      e.writeAttribute('title',edit_btn.readAttribute('title'));
       
-      e.observe('mouseover', function(ev){
-        e.addClassName('hover');
-      });
-      e.observe('mouseout', function(ev){
-        e.removeClassName('hover');
-      });
-      e.observe('click', function(ev){
-        if (edit_url != null) window.location.href = edit_url;
-      });
-      num_buttons = e.down('.actions').childElements().length;
+      // Is there any action left?
+      // otherways remove the "actions" cell from everywhere
+      if( e.select(".actions a").length > 0 ) remove_actions_cell = false;
     }
   });
-  if(num_buttons < 2){
-    $$('#content tr .actions').each(function(e){
+  if(remove_actions_cell){
+    $$('#content table.edit_on_row_click tr .actions').each(function(e){
       e.remove();
     });
   }
+
+});
+
+document.observe("dom:loaded", function() {
 
   //links open in new window
   $$('a[rel="external"]').each(function(e,index) {
@@ -94,6 +111,20 @@ document.observe("dom:loaded", function() {
     }
   })
 
+});
+
+document.observe("dom:loaded", function() {
+  //Set focus to first form item
+  if ($$('form[action="/ubiquo/login"]').first()) { //Login window
+    $('ubiquo_user_login').focus();
+  }
+  var first_form = $$('#inner-content form').first();
+  if (first_form) {
+    var first_input = first_form.select('input[type!=hidden]').first();
+    if (first_input) { //Ubiquo form
+      first_input.focus(); 
+    }
+  }
 });
 
 function send_as_form(div_id, url, method) {

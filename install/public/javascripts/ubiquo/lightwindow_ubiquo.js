@@ -35,6 +35,7 @@ tinyMceLightWindow = Class.create( lightwindow,{
 
 window["lightwindowInit"] = function() {
 	myLightWindow = new tinyMceLightWindow({
+        effects: false,
         dimensions : {
            image : {height : 250, width : 600},
            page : {height : 250, width : 600},
@@ -125,22 +126,35 @@ window["lightwindowInit"] = function() {
                 this._handleNavigation(this.activeGallery);
                 this._setStatus(false);
             } else {
-                Effect.Fade(this._getInternalElem('loading'), {
-                    duration: 0,
-                    delay: 0,
-                    afterFinish: function() {
-                        // Just in case we need some scroll goodness (this also avoids the swiss cheese effect)
-                        if (this.windowType != 'image' && this.windowType != 'media' && this.windowType != 'external') {
-                            this._getInternalElem('contents').setStyle({
-                                overflow: 'auto'
-                            });
-                        }
-                        this._handleNavigation(this.activeGallery);
-                        this._defaultGalleryAnimationHandler();
-                        this._setStatus(false);
-                    }.bind(this),
-                    queue: {position: 'end', scope: 'lightwindowAnimation'}
-                });
+                if( !this.options.effects ){
+                    this._getInternalElem('loading').hide();
+                    if (this.windowType != 'image' && this.windowType != 'media' && this.windowType != 'external') {
+                        this._getInternalElem('contents').setStyle({
+                            overflow: 'auto'
+                        });
+                    }
+                    this._handleNavigation(this.activeGallery);
+                    this._defaultGalleryAnimationHandler();
+                    this._setStatus(false);
+                }else{
+              
+                    Effect.Fade(this._getInternalElem('loading'), {
+                        duration: 0,
+                        delay: 0,
+                        afterFinish: function() {
+                            // Just in case we need some scroll goodness (this also avoids the swiss cheese effect)
+                            if (this.windowType != 'image' && this.windowType != 'media' && this.windowType != 'external') {
+                                this._getInternalElem('contents').setStyle({
+                                    overflow: 'auto'
+                                });
+                            }
+                            this._handleNavigation(this.activeGallery);
+                            this._defaultGalleryAnimationHandler();
+                            this._setStatus(false);
+                        }.bind(this),
+                        queue: {position: 'end', scope: 'lightwindowAnimation'}
+                    });
+                }
             }
         }
 

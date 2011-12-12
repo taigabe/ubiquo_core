@@ -326,6 +326,20 @@ class UbiquoFormBuilderTest < ActionView::TestCase
       end
     end
   end
+  
+  test "use check_box with all options" do
+    the_form do |form|
+      # Weird use but useful sometimes
+      concat( form.check_box( :lastname ))
+      concat( form.check_box( :lastname, {:class => "simple"}))
+      concat( form.check_box( :lastname, {:class => "complex"}, "GARCIA", "OFF" ))
+    end
+    assert_select "form input[type=hidden][value=0]",2
+    assert_select "form input[type=checkbox][class=checkbox][value=1]"
+    assert_select "form input[type=checkbox][class=simple][value=1]"
+    assert_select "form input[type=hidden][value=OFF]"
+    assert_select "form input[type=checkbox][class=complex][value=GARCIA]"
+  end
 
   protected
 

@@ -82,6 +82,7 @@ lightwindow.prototype = {
         this.options = Object.extend({
             identifier: "lightwindow",
             resizeSpeed : 8,
+            effects: true,
             contentOffset : {
                 height : 20,
                 width : 20
@@ -1497,7 +1498,6 @@ lightwindow.prototype = {
                 break;
 				
             case 'page' :
-			
                 var newAJAX = new Ajax.Request(
                     this.contentToFetch, {
                         method: 'get',
@@ -1772,6 +1772,7 @@ lightwindow.prototype = {
     _defaultAnimationHandler : function( options ) {
 
         var global_params = {};
+        var queued_finish_window = false;
         if( options ){
             if( options.fast ){
                 global_params["duration"] = 0;
@@ -1845,83 +1846,105 @@ lightwindow.prototype = {
 		
         var resized = false;
         var ratio = this.dimensions.container.width-this._getInternalElem('contents').getWidth()+this.resizeTo.width+this.options.contentOffset.width;
+        // Resizes container and contents to the contents size
         if (ratio != this._getInternalElem('container').getWidth()) {
-            new Effect.Parallel([
-                new Effect.Scale(this._getInternalElem('contents'), 100*(this.resizeTo.width/this._getInternalElem('contents').getWidth()), $H({
-                    scaleFrom: 100*(this._getInternalElem('contents').getWidth()/(this._getInternalElem('contents').getWidth()+(this.options.contentOffset.width))),
-                    sync: true,
-                    scaleY: false,
-                    scaleContent: false,
-                    duration: this.default_duration
-                }).merge(global_params).toObject()),
-                new Effect.Scale(this._getInternalElem('container'), 100*(ratio/(this.dimensions.container.width)), $H({
-                    sync: true,
-                    scaleY: false,
-                    scaleFromCenter: true,
-                    scaleContent: false,
-                    duration: this.default_duration
-                }).merge(global_params).toObject())
-                ], $H({
-                    duration: this.duration,
-                    delay: 0.25,
-                    queue: {
-                        position: 'end',
-                        scope: 'lightwindowAnimation'
-                    }
-                }).merge(global_params).toObject()
+            if( !this.options.effects ){
+                //We grow the boxes and center them
+                this._getInternalElem('contents').setStyle({"width": this.resizeTo.width + "px"});
+                var old_left = parseFloat(this._getInternalElem('container').getStyle("left"));
+                var old_width = this._getInternalElem('container').getWidth();
+                var delta_width = (ratio - old_width)/2;
+                this._getInternalElem('container').setStyle({width:ratio + "px",left:(old_left - delta_width)+"px"});
+            }else{
+                new Effect.Parallel([
+                    new Effect.Scale(this._getInternalElem('contents'), 100*(this.resizeTo.width/this._getInternalElem('contents').getWidth()), $H({
+                        scaleFrom: 100*(this._getInternalElem('contents').getWidth()/(this._getInternalElem('contents').getWidth()+(this.options.contentOffset.width))),
+                        sync: true,
+                        scaleY: false,
+                        scaleContent: false,
+                        duration: this.default_duration
+                    }).merge(global_params).toObject()),
+                    new Effect.Scale(this._getInternalElem('container'), 100*(ratio/(this.dimensions.container.width)), $H({
+                        sync: true,
+                        scaleY: false,
+                        scaleFromCenter: true,
+                        scaleContent: false,
+                        duration: this.default_duration
+                    }).merge(global_params).toObject())
+                    ], $H({
+                        duration: this.duration,
+                        delay: 0.25,
+                        queue: {
+                            position: 'end',
+                            scope: 'lightwindowAnimation'
+                        }
+                    }).merge(global_params).toObject()
                 );
+            }
+            resized = true;
         }
 		
         ratio = this.dimensions.container.height-this._getInternalElem('contents').getHeight()+this.resizeTo.height+this.options.contentOffset.height;
         if (ratio != this._getInternalElem('container').getHeight()) {
-            new Effect.Parallel([
-                new Effect.Scale(this._getInternalElem('contents'), 100*(this.resizeTo.height/this._getInternalElem('contents').getHeight()), $H({
-                    scaleFrom: 100*(this._getInternalElem('contents').getHeight()/(this._getInternalElem('contents').getHeight()+(this.options.contentOffset.height))),
-                    sync: true,
-                    scaleX: false,
-                    scaleContent: false,
-                    duration: this.default_duration
-                }).merge(global_params).toObject()),
-                new Effect.Scale(this._getInternalElem('container'), 100*(ratio/(this.dimensions.container.height)), $H({
-                    sync: true,
-                    scaleX: false,
-                    scaleFromCenter: true,
-                    scaleContent: false,
-                    duration: this.default_duration
-                }).merge(global_params).toObject())
-                ], $H({
-                    duration: this.duration,
-                    afterFinish: function() {
-                        if (this.dimensions.dataEffects.length > 0) {
-                            if (!this.options.hideGalleryTab) {
-                                this._getInternalElem('galleries').setStyle({
-                                    width: this.resizeTo.width+'px'
-                                });
-                            }
-                            new Effect.Parallel(this.dimensions.dataEffects, $H({
-                                duration: this.duration,
-                                afterFinish: function() {
-                                    this._finishWindow(options);
-                                }.bind(this),
-                                queue: {
-                                    position: 'end',
-                                    scope: 'lightwindowAnimation'
+            if( !this.options.effects ){
+                //We grow the boxes and center them
+                this._getInternalElem('contents').setStyle({height:this.resizeTo.height + "px"});
+                var old_top = parseFloat(this._getInternalElem('container').getStyle("top"));
+                var old_height = this._getInternalElem('container').getHeight();
+                var delta = (ratio - old_height)/2;
+                this._getInternalElem('container').setStyle({height:ratio + "px",top:(old_top - delta)+"px"});
+            }else{
+                new Effect.Parallel([
+                    new Effect.Scale(this._getInternalElem('contents'), 100*(this.resizeTo.height/this._getInternalElem('contents').getHeight()), $H({
+                        scaleFrom: 100*(this._getInternalElem('contents').getHeight()/(this._getInternalElem('contents').getHeight()+(this.options.contentOffset.height))),
+                        sync: true,
+                        scaleX: false,
+                        scaleContent: false,
+                        duration: this.default_duration
+                    }).merge(global_params).toObject()),
+                    new Effect.Scale(this._getInternalElem('container'), 100*(ratio/(this.dimensions.container.height)), $H({
+                        sync: true,
+                        scaleX: false,
+                        scaleFromCenter: true,
+                        scaleContent: false,
+                        duration: this.default_duration
+                    }).merge(global_params).toObject())
+                    ], $H({
+                        duration: this.duration,
+                        afterFinish: function() {
+                            if (this.dimensions.dataEffects.length > 0) {
+                                if (!this.options.hideGalleryTab) {
+                                    this._getInternalElem('galleries').setStyle({
+                                        width: this.resizeTo.width+'px'
+                                    });
                                 }
-                            }).merge(global_params).toObject()
-                                );
+                                new Effect.Parallel(this.dimensions.dataEffects, $H({
+                                    duration: this.duration,
+                                    afterFinish: function() {
+                                        this._finishWindow(options);
+                                    }.bind(this),
+                                    queue: {
+                                        position: 'end',
+                                        scope: 'lightwindowAnimation'
+                                    }
+                                }).merge(global_params).toObject()
+                                    );
+                            }
+                        }.bind(this),
+                        queue: {
+                            position: 'end',
+                            scope: 'lightwindowAnimation'
                         }
-                    }.bind(this),
-                    queue: {
-                        position: 'end',
-                        scope: 'lightwindowAnimation'
-                    }
-                }).merge(global_params).toObject()
+                    }).merge(global_params).toObject()
                 );
-            resized = true;
+                queued_finish_window = true
+            }
+            resized = true;            
         }
 		
         // We need to do our data effect since there was no resizing
         if (!resized && this.dimensions.dataEffects.length > 0) {
+            //TODO: implement this.options.effects flag effect
             new Effect.Parallel(this.dimensions.dataEffects, $H({
                 duration: this.duration,
                 beforeStart: function() {
@@ -1946,6 +1969,8 @@ lightwindow.prototype = {
                 }
                 }).merge(global_params).toObject()
             );
+        }else{
+            if(!queued_finish_window ){ this._finishWindow(); }
         }
 		
     },
@@ -1959,6 +1984,7 @@ lightwindow.prototype = {
             this._handleNavigation(this.activeGallery);
             this._setStatus(false);
         } else {
+            //TODO: implement this.options.effects flag effect
             Effect.Fade(this._getInternalElem('loading'), {
                 duration: this.default_duration,
                 delay: delay,

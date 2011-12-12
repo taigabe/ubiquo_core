@@ -66,8 +66,9 @@ module Ubiquo
         default_tag_options[name.to_sym] = tag_options if tag_options
         define_method(name) do |field, *args|
           return super unless self.enabled
-          options = args.last.is_a?(Hash) ? args.pop : {}
           options_for_tag = (default_tag_options[name.to_sym] || {}).clone
+          options_position = (options_for_tag && options_for_tag.delete(:options_position)) || -1 # last by default
+          options = args[options_position].is_a?(Hash) ? args[options_position] : {}
           # Accept a closure
           options_for_tag = options_for_tag.call(binding, field, options ) if options_for_tag.respond_to? :call
           options = options.reverse_merge( options_for_tag )
@@ -90,7 +91,14 @@ module Ubiquo
           end
           label_at_bottom = options.delete(:label_at_bottom)
 
-          args << options unless args.last.is_a?(Hash)
+          unless args[options_position].is_a?(Hash)
+            # We cannot set a negative position if it does not exist
+            if options_position == -1 
+              args << options 
+            else
+              args[options_position] = options 
+            end
+          end
           super_result = super( field, *args )
 
           pre = ""
@@ -140,7 +148,7 @@ module Ubiquo
         self.enabled = true #Enabled by default
       end
 
-      # Grouping of fields
+      # Wrapper of fields or tags
       #
       # Options are:
       #   +:type+: the type name of group to render. The default group name is

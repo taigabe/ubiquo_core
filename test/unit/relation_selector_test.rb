@@ -6,10 +6,6 @@ class RelationSelectorTest < ActionView::TestCase
 
   include Ubiquo::RelationSelector::Helper
 
-  def setup
-    set_relations
-  end
-
   test "should_create_right_selector" do
     #Select, checkboxes, autocomplete
     obj = TestOnlyModel.new
@@ -119,6 +115,31 @@ class RelationSelectorTest < ActionView::TestCase
       assert_select lk.first, 'option' do |opt|
         opt.each do |s_opt|
           assert_equal obj2.arbitrary_name, s_opt.children.first.content if s_opt['selected'].present?
+        end
+      end
+    end
+  end
+
+  test "should_use_safely_access_the_related_object" do
+    obj1 = TestOnlyModel.create(:name => 'first')
+    obj2 = TestOnlyModelTwo.create(:arbitrary_name => 'second', :title => 'no_name')
+    obj3 = TestOnlyModelTwo.create(:arbitrary_name => 'third', :title => 'no_name')
+
+    obj1.test_only_model_two = nil
+    obj1.save
+
+    nil.expects(:id).never
+    r = relation_selector('test_only_model',
+      :test_only_model_two,
+      :object => obj1,
+      :name_field => 'arbitrary_name',
+      :type => :select)
+
+    doc = HTML::Document.new(r)
+    assert_select doc.root, 'select' do |lk|
+      assert_select lk.first, 'option' do |opt|
+        opt.each do |s_opt|
+          assert s_opt['selected'].blank?
         end
       end
     end
@@ -268,5 +289,3 @@ class RelationSelectorTest < ActionView::TestCase
     parent
   end
 end
-
-create_relation_test_model_backend

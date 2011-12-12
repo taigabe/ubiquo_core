@@ -30,6 +30,7 @@ end
 
 ActiveRecord::Base.send(:include, Ubiquo::Extensions::ConfigCaller)
 ActiveRecord::Base.send(:extend, Ubiquo::Extensions::ConfigCaller)
+ActiveRecord::Base.send(:extend, Ubiquo::Extensions::DistinctOption)
 Ubiquo::Extensions::Loader.append_extend(:UbiquoController, Ubiquo::Extensions::ConfigCaller)
 Ubiquo::Extensions::Loader.append_include(:UbiquoController, Ubiquo::Extensions::ConfigCaller)
 ActionView::Base.send(:include, Ubiquo::Extensions::ConfigCaller)
