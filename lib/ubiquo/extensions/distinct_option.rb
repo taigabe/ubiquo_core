@@ -40,7 +40,7 @@ module Ubiquo
           # The +order_fields+ (["table1.field1", "table2.field2"])
           # should be inside the distinct on clause, else postgres will fail.
           order_fields = get_order_fields(options)
-          distinct_fields = ["#{table_name}.#{primary_key}", *order_fields].compact
+          distinct_fields = (Array(order_fields) << "#{table_name}.#{primary_key}").compact
 
           "DISTINCT ON (#{distinct_fields.join(',')}) #{rails_select}"
         else
