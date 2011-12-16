@@ -99,7 +99,7 @@ table, th, td { border: none;}
 			#header_central	select {
 				font-size: 1.3em;
 			}
-			
+
 	#tabs {
 		padding: 0 2em;
 	}
@@ -216,7 +216,7 @@ table, th, td { border: none;}
 				-webkit-border-radius: 9px;
 				border-radius: 9px;
 			}
-			
+
 	/*--- sidebar ---*/
 	#sidebar {
 		/*padding-top: 2em;*/
@@ -228,7 +228,7 @@ table, th, td { border: none;}
             position: relative;
 			margin-bottom: 1.3em;
 		}
-			
+
 			#sidebar .sidebar_box {
 	            position: relative;
 				margin-bottom: 2em;
@@ -251,7 +251,7 @@ table, th, td { border: none;}
 					}
 					#sidebar .help-box .header h3 {}
 				#sidebar .sidebar_box .content {
-					
+
 				}
 
 		#sidebar h3 {
@@ -273,7 +273,7 @@ table, th, td { border: none;}
       margin-bottom: .3em;
       font-size: 1.2em;
 		}
-		
+
 		#sidebar .form-item, #sidebar .form-item-submit {
 			font-size: 1.3em;
 		}
@@ -286,7 +286,7 @@ table, th, td { border: none;}
 				padding: 1%;
 				float: left;
 			}
-			
+
 			#sidebar .form-item-submit input.bt-filter-submit {
 				float: right;
 				width: 21%;
@@ -316,12 +316,12 @@ table, th, td { border: none;}
 		right: .7em;
 		font-size: 1.2em;
 	}
-	
+
 	.sidebar_box a.on {
 		padding: 0 .2em;
 		color: #FFF;
 	}
-	
+
 	#links_filter_content li {}
 	#tag_filter_content li {
 		display: inline;
@@ -353,7 +353,7 @@ table, th, td { border: none;}
   			padding-top: .3em;
   		}
   		#date_filter_content .form-item {
-			
+
   		}
   		  #date_filter_content .form-item input {
     			margin-right: .4em;
@@ -376,11 +376,13 @@ table, th, td { border: none;}
 /*--- footer ---*/
 
 #footer {
-	padding-left: 45em;
+  margin-right: 26%;
+  float: right;
 	font-size: 13px;
 	font-family: Helvetica, Arial, sans-serif;
 	color: #969696;
 	overflow: hidden;
+  margin-bottom: 1em;
 }
 	#footer span {
 		display: block;
@@ -394,7 +396,7 @@ table, th, td { border: none;}
 	#footer a:hover {
 		border-bottom: 1px solid #424242;
 	}
-	
+
 	#footer .logo_ubiquo {
 		float: left;
 		margin-right: .7em;
@@ -475,7 +477,7 @@ table, th, td { border: none;}
 		margin-bottom: .5em;
 		list-style-type: square;
 	}
-	
+
 	.search_info {
 		background: url(../../images/ubiquo/ico-search.png) no-repeat .5em .4em;
 	}
@@ -490,7 +492,7 @@ table, th, td { border: none;}
 			-webkit-border-radius: 6px;
 			border-radius: 6px;
 		}
-	
+
 /*--- botons ---*/
 a.new, #content .form_buttons input, #content .form-item-submit input { /* list all buttons here */
 	display: block;
@@ -817,7 +819,7 @@ table#menu_items_list_titles {
 	#menu_items_list ul {
 		padding-left: 2.5em;
 	}
-	
+
 /*--- formularis ---*/
 #content form {
 	padding: 2em;
@@ -848,7 +850,7 @@ table#menu_items_list_titles {
 .form_box {
 	position: relative;
 	margin: 0 0 1em;
-	
+
 }
 
 form h3 {
@@ -941,7 +943,7 @@ form label {
 		margin-left: 1em;
 		border: none;
 	}
-	
+
 	/* new form markup for v0.8 */
 	#content .form-item, #content .form-item-inline {
 		font-size: 1.4em;
@@ -1080,7 +1082,7 @@ form label {
 			float: right;
 			margin-left: .5em;
 		}
-		
+
 	/* ------------------------ */
 
 
@@ -1117,13 +1119,13 @@ form label {
 		.relations_list li a.change {
 			margin-left: .7em;
 		}
-		
+
 /*--- Assets list ---*/
 .assets_list {}
 	.assets_list li {}
 		.assets_list li h4 {}
 		.assets_list li a.view, .assets_list li a.select {
-			
+
 		}
 
 /*--- Translation sidebar box ---*/
@@ -1355,19 +1357,19 @@ body#blank #footer {
 
 
 /*-------------- Clearfix --------------*/
-#controls:after, 
-#tabs:after, 
-#central:after, 
-#content:after, 
-form .page_templates:after, 
-form#frm_calendar p:after, 
-#template:after, 
-.form_box:after, 
-.box_list:after, 
+#controls:after,
+#tabs:after,
+#central:after,
+#content:after,
+form .page_templates:after,
+form#frm_calendar p:after,
+#template:after,
+.form_box:after,
+.box_list:after,
 #content .form_buttons:after,
 .form-item:after,
 .form-item-submit:after,
 #content td.actions:after
-{ 
+{
 	content: "."; display: block; height: 0; clear: both; visibility: hidden;
 }
