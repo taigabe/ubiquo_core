@@ -995,6 +995,9 @@ form label {
 			float: none;
 			width: auto;
 		}
+                #content .relation-selector.relation-type-checkbox input {
+                    margin-right: .3em;
+                }
                 /* help popup */
 		.form-help {
                         margin-left: .4em;
