@@ -32,21 +32,20 @@ module Ubiquo
       # Creates a valid SELECT DISTINCT clause,
       # that in Postgres takes into account the content in options[:order]
       def select_distinct(options)
-        if connection.adapter_name == 'PostgreSQL'
-          scope = scope(:find) rescue nil
-          rails_select = options[:select] || (scope && scope[:select]) || default_select(true)
+        scope = scope(:find) rescue nil
+        rails_select = options[:select] || (scope && scope[:select]) || default_select(true)
 
+        if connection.adapter_name == 'PostgreSQL'
           # By default table.id is the distinct on clause.
           # The +order_fields+ (["table1.field1", "table2.field2"])
           # should be inside the distinct on clause, else postgres will fail.
           order_fields = get_order_fields(options)
           distinct_fields = (Array(order_fields) << "#{table_name}.#{primary_key}").compact
-
+          # Also postgres has the ON connector
           "DISTINCT ON (#{distinct_fields.join(',')}) #{rails_select}"
         else
-          "DISTINCT (#{table_name}.#{primary_key})"
+          "DISTINCT (#{table_name}.#{primary_key}), #{rails_select}"
         end
-
       end
 
       # Given an +options+ hash and the possibly applied scopes,
