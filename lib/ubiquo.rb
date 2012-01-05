@@ -4,7 +4,7 @@ require 'ubiquo/filters'
 require 'ubiquo/helpers'
 require 'ubiquo/navigation_tabs'
 require 'ubiquo/navigation_links'
-require 'ubiquo/required_fields'
+require 'ubiquo/required_fields' rescue puts $!
 require 'ubiquo/filtered_search'
 require 'ubiquo/adapters'
 require 'ubiquo/relation_selector'
