@@ -22,14 +22,14 @@ class UbiquoFormBuilderTest < ActionView::TestCase
   end
 
   test "form field" do
-    assert_nothing_thrown { 
+    assert_nothing_thrown {
       the_form do |form|
         concat( form.text_field :lastname )
         concat( form.hidden_field :lastname )
       end
     }
   end
-  
+
   test "form field text_field" do
     the_form do |form|
       concat( form.text_field :lastname )
@@ -60,7 +60,7 @@ class UbiquoFormBuilderTest < ActionView::TestCase
 #    <%= form.back_button %>
 #  <% end %>
     #
-    
+
   end
 
   test "submit group" do
@@ -78,12 +78,12 @@ class UbiquoFormBuilderTest < ActionView::TestCase
 
     the_form do |f|
       concat( f.submit_group do
-        concat f.create_button 
+        concat f.create_button
         concat f.back_button
         concat f.update_button
       end )
     end
-    
+
     assert_select "form div.form-item-submit" do |blocks|
       assert_equal 1, blocks.size
       block = blocks.first
@@ -110,7 +110,7 @@ class UbiquoFormBuilderTest < ActionView::TestCase
         concat f.update_button( nil, :i18n_label_key => "ubiquo.save-custom")
       end )
     end
-    
+
     assert_select "form div.alter-submit", 1 do |blocks|
       block = blocks.first
       assert_select block, "input[type='submit'][value='c-custom'][class='bt-create2']"
@@ -144,9 +144,9 @@ class UbiquoFormBuilderTest < ActionView::TestCase
     self.expects(:relation_selector).returns("rel")
     assert_nothing_raised{
       the_form do |form|
-        concat( form.group :label => "custom_label_group", :type => :fieldset do
+        form.group :label => "custom_label_group", :type => :fieldset do
           concat( form.relation_selector :actors, :type => :checkbox )
-        end )
+        end
       end
     }
   end
@@ -208,7 +208,7 @@ class UbiquoFormBuilderTest < ActionView::TestCase
       concat( form.group(:class => "a0") do
         concat( form.check_box :is_admin )
       end )
-      
+
       concat( form.group(:class => "a1") do
         concat( form.check_box :is_admin, :translatable => true )
       end )
@@ -236,7 +236,7 @@ class UbiquoFormBuilderTest < ActionView::TestCase
   test "tabbed blocks" do
     self.expects(:t).with("personal_data").returns("personal_data").at_least_once
     self.expects(:t).with("rights").returns("rights").at_least_once
-    
+
     the_form do |form|
        concat( form.group(:type => :tabbed, :class=> "a-group-of-tabs") do |group|
          concat( group.add(t("personal_data")) do
@@ -309,7 +309,7 @@ class UbiquoFormBuilderTest < ActionView::TestCase
       end
     }
   end
-  
+
   test "can append content inside the field, after and before the content" do
     the_form do |form|
       concat( form.text_field :lastname, :group => {:after => '<div class="after">A</div>'} )
@@ -326,7 +326,7 @@ class UbiquoFormBuilderTest < ActionView::TestCase
       end
     end
   end
-  
+
   test "use check_box with all options" do
     the_form do |form|
       # Weird use but useful sometimes
