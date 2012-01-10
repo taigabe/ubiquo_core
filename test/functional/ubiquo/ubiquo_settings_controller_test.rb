@@ -9,6 +9,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     Ubiquo::Settings.create_context(:controller_test) rescue nil
     Ubiquo::Settings.create_context(:controller_test_2) rescue nil
     session[:locale] = "en_US"
+    login_as :admin
   end
 
   def teardown
@@ -28,7 +29,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     assert_equal 'yes please', Ubiquo::Settings[:controller_test][:test_index]
     get :index
 
-    assert_select '#controller_test input[name="test_index"][value="yes please"]', 0
+    assert_select '#context_controller_test input[name="test_index"][value="yes please"]', 0
   end
 
   def test_should_override_a_setting
@@ -38,7 +39,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     assert_equal 'yes please', Ubiquo::Settings[:controller_test][:test_index]
     get :index
 
-    assert_select '#controller_test input[name="test_index"][value="yes please"]', 1
+    assert_select '#context_controller_test input[name="test_index"][value="yes please"]', 1
 
 
     assert_difference('UbiquoSetting.count') do
@@ -47,7 +48,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     assert_equal 'no', Ubiquo::Settings[:controller_test][:test_index]
 
     get :index
-    assert_select '#controller_test input[name="test_index"][value="no"]', 1
+    assert_select '#context_controller_test input[name="test_index"][value="no"]', 1
   end
 
   def test_should_not_override_with_invalid_data_nullable
@@ -62,7 +63,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     end
 
     get :index
-    assert_select '#controller_test input[name="test_index"][value="yes please"]', 1
+    assert_select '#context_controller_test input[name="test_index"][value="yes please"]', 1
 
     # nil allowed
     Ubiquo::Settings[:controller_test].set(:test_index, 'yes please',
@@ -75,8 +76,8 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     end
 
     get :index
-    assert_select '#controller_test input[name="test_index"][value="yes please"]', 0
-    assert_select '#controller_test input[name="test_index"]', 1
+    assert_select '#context_controller_test input[name="test_index"][value="yes please"]', 0
+    assert_select '#context_controller_test input[name="test_index"]', 1
   end
 
   def test_should_not_override_with_invalid_data_for_integer
@@ -91,7 +92,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     end
 
     get :index
-    assert_select '#controller_test input[name="test_index"][value="1"]', 1
+    assert_select '#context_controller_test input[name="test_index"][value="1"]', 1
 
     # try with nil for integer
     assert_no_difference('UbiquoSetting.count') do
@@ -99,7 +100,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     end
 
     get :index
-    assert_select '#controller_test input[name="test_index"][value="1"]', 1
+    assert_select '#context_controller_test input[name="test_index"][value="1"]', 1
   end
 
   def test_should_not_override_with_invalid_allowed_value
@@ -113,7 +114,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     end
 
     get :index
-    assert_select '#controller_test select[name="test_index"] option[value="1"][selected="selected"]', 1
+    assert_select '#context_controller_test select[name="test_index"] option[value="1"][selected="selected"]', 1
 
     #try allowed value
     Ubiquo::Settings[:controller_test].set(:test_index, 1,
@@ -126,7 +127,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     end
 
     get :index
-    assert_select '#controller_test select[name="test_index"] option[value="2"][selected="selected"]', 1
+    assert_select '#context_controller_test select[name="test_index"] option[value="2"][selected="selected"]', 1
   end
 
   def test_should_override_multiple_values_ignoring_invalids
@@ -161,9 +162,9 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
 
 
     get :index
-    assert_select '#controller_test input[name="test_index_1"][value="11"]', 1
-    assert_select '#controller_test input[name="test_index_2"][value="22"]', 1
-    assert_select '#controller_test_2 input[name="test_index_3"][value="33"]', 1
+    assert_select '#context_controller_test input[name="test_index_1"][value="11"]', 1
+    assert_select '#context_controller_test input[name="test_index_2"][value="22"]', 1
+    assert_select '#context_controller_test_2 input[name="test_index_3"][value="33"]', 1
 
   end
 
@@ -185,7 +186,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     assert_equal 'yes please overrided', Ubiquo::Settings[:controller_test][:test_index]
 
     get :index
-    assert_select '#controller_test input[name="test_index"][value="yes please overrided"]', 1
+    assert_select '#context_controller_test input[name="test_index"][value="yes please overrided"]', 1
 
     assert_difference('UbiquoSetting.count', -1) do
       delete :destroy, :id => setting.id
@@ -194,7 +195,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
 
     assert_equal 'yes please', Ubiquo::Settings[:controller_test][:test_index]
     get :index
-    assert_select '#controller_test input[name="test_index"][value="yes please"]', 1
+    assert_select '#context_controller_test input[name="test_index"][value="yes please"]', 1
   end
 
   def test_should_show_a_checkbox_for_boolean
@@ -204,7 +205,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     assert_equal true, Ubiquo::Settings[:controller_test][:test_index]
     get :index
 
-    assert_select '#controller_test input[name="test_index"][type="checkbox"][value="1"]', 1
+    assert_select '#context_controller_test input[name="test_index"][type="checkbox"][value="1"]', 1
 
     ["0", 0, false, "false", nil, "nil"].each do |value|
       UbiquoBooleanSetting.destroy_all
@@ -215,11 +216,11 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
       assert_equal false, Ubiquo::Settings[:controller_test][:test_index]
 
       get :index
-      assert_select '#controller_test input[name="test_index"][type="checkbox"]' do |element|
+      assert_select '#context_controller_test input[name="test_index"][type="checkbox"]' do |element|
         assert_select "input[checked]", false
       end
 
-      #assert_select '#controller_test input[name="test_index"][type="checkbox"]:not([checked="checked"])', 1
+      #assert_select '#context_controller_test input[name="test_index"][type="checkbox"]:not([checked="checked"])', 1
     end
 
     UbiquoBooleanSetting.destroy_all
@@ -237,7 +238,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
       assert_equal true, Ubiquo::Settings[:controller_test][:test_index]
 
       get :index
-      assert_select '#controller_test input[name="test_index"][type="checkbox"][value="1"]', 1
+      assert_select '#context_controller_test input[name="test_index"][type="checkbox"][value="1"]', 1
     end
   end
 
@@ -248,7 +249,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     )
     assert_equal 'yes please', Ubiquo::Settings[:controller_test][:test_index]
     get :index
-    assert_select '#controller_test textarea[name="test_index"]', 1,
+    assert_select '#context_controller_test textarea[name="test_index"]', 1,
         :html => "yes please"
   end
 
@@ -260,8 +261,8 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     assert_equal 'gnuine', Ubiquo::Settings[:controller_test][:test_index]
     get :index
 
-    assert_select '#controller_test input[type="password"][name="test_index"]:not([value="gnuine"])', 1
-    assert_select '#controller_test input[type="password"][name="confirmation_test_index"]:not([value="gnuine"])', 1
+    assert_select '#context_controller_test input[type="password"][name="test_index"]:not([value="gnuine"])', 1
+    assert_select '#context_controller_test input[type="password"][name="confirmation_test_index"]:not([value="gnuine"])', 1
 
     assert_no_difference(['UbiquoSetting.count', 'UbiquoPasswordSetting.count']) do
       # fail, no confirmation
@@ -289,10 +290,10 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     assert_equal 'a', Ubiquo::Settings[:controller_test][:test_index]
     get :index
 
-    assert_select '#controller_test input[type="password"][name="test_index"]:not([value="gnuine"])', 1
-    assert_select '#controller_test input[type="password"][name="confirmation_test_index"]:not([value="gnuine"])', 1
-    assert_select '#controller_test input[type="password"][name="test_index"]:not([value="a"])', 1
-    assert_select '#controller_test input[type="password"][name="confirmation_test_index"]:not([value="a"])', 1
+    assert_select '#context_controller_test input[type="password"][name="test_index"]:not([value="gnuine"])', 1
+    assert_select '#context_controller_test input[type="password"][name="confirmation_test_index"]:not([value="gnuine"])', 1
+    assert_select '#context_controller_test input[type="password"][name="test_index"]:not([value="a"])', 1
+    assert_select '#context_controller_test input[type="password"][name="confirmation_test_index"]:not([value="a"])', 1
 
   end
 
@@ -311,10 +312,10 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     end
 
     get :index
-    assert_select "#controller_test #ubiquo_setting_translated_key_setting" do
+    assert_select "#context_controller_test" do
+      assert_select "#controller_test_ubiquo_setting_translated_key_setting"
       assert_select "label", translated_key
-    end
-    assert_select "#controller_test #ubiquo_setting_non_translated_key_setting" do
+      assert_select "#controller_test_ubiquo_setting_non_translated_key_setting"
       assert_select "label", non_translated_key
     end
   end
@@ -331,7 +332,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     end
 
     get :index
-    assert_select '#controller_test input[name="list_of_recipients"][value="overrided_email1@gnuine.come,overrided_email2@gnuine.com,overrided_mail3@gnuine.com"]', 1
+    assert_select '#context_controller_test input[name="list_of_recipients"][value="overrided_email1@gnuine.come,overrided_email2@gnuine.com,overrided_mail3@gnuine.com"]', 1
     assert_equal 'overrided_email1@gnuine.come,overrided_email2@gnuine.com,overrided_mail3@gnuine.com', Ubiquo::Settings[:controller_test][:list_of_recipients]
   end
 
@@ -351,8 +352,8 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     end
 
     get :index
-    assert_select "#controller_test input[name^=\"list_of_things\"][type=\"text\"]", new_values.length
-    new_values.each { |v| assert_select "#controller_test input[name^=\"list_of_things\"][value=\"#{v}\"]", 1 }
+    assert_select "#context_controller_test input[name^=\"list_of_things\"][type=\"text\"]", new_values.length
+    new_values.each { |v| assert_select "#context_controller_test input[name^=\"list_of_things\"][value=\"#{v}\"]", 1 }
     assert_equal new_values, Ubiquo::Settings[:controller_test][:list_of_things]
 
     # test allowed_values
@@ -364,7 +365,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     end
 
     get :index
-    assert_select '#controller_test select[name^="list_of_things_with_allowed_values"]', 1 do |element|
+    assert_select '#context_controller_test select[name^="list_of_things_with_allowed_values"]', 1 do |element|
       assert_select 'option', allowed_values.length
       assert_select 'option[selected="selected"]', new_values.length
       new_values.each { |v| assert_select "option[selected=\"selected\"][value=\"#{v}\"]", 1 }
@@ -380,7 +381,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
         :list_of_things_with_allowed_values => new_values,
       }
       # error and none selected, the field will be market with a error class
-      assert_select '#controller_test select[name^="list_of_things_with_allowed_values"][class~="error_field"]', 1 do |element|
+      assert_select '#context_controller_test select[name^="list_of_things_with_allowed_values"][class~="error_field"]', 1 do |element|
         assert_select 'option', allowed_values.length
         assert_select 'option[selected="selected"]', 0
         assert_equal previous_values, Ubiquo::Settings[:controller_test][:list_of_things_with_allowed_values]
@@ -390,7 +391,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
 
     # after error, we again have the form with the persistent values
     get :index
-    assert_select '#controller_test select[name^="list_of_things_with_allowed_values"]', 1 do |element|
+    assert_select '#context_controller_test select[name^="list_of_things_with_allowed_values"]', 1 do |element|
       assert_select 'option', allowed_values.length
       assert_select 'option[selected="selected"]', previous_values.length
       previous_values.each { |v| assert_select "option[selected=\"selected\"][value=\"#{v}\"]", 1 }
