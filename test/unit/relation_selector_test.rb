@@ -254,6 +254,18 @@ class RelationSelectorTest < ActionView::TestCase
     end
   end
 
+  test "should use correct input id for hmbt relation" do
+    obj = TestOnlyModelTwo.new
+    obj3 = TestOnlyModelThree.create
+    r = relation_selector('test_only_model_two', :test_only_model_threes, :object => obj, :type => :checkbox, :name_field => 'title')
+    doc = HTML::Document.new(r)
+
+    assert_select doc.root, "input[type=checkbox]" do |chk|
+      assert_equal chk.first['id'], "test_only_model_two_test_only_model_three_ids_#{obj3.id}"
+      assert_equal chk.first['name'], "test_only_model_two[test_only_model_three_ids][]"
+    end
+  end
+
   private
 
   def new_ubiquo_test_only_model_url options = {}
@@ -266,6 +278,10 @@ class RelationSelectorTest < ActionView::TestCase
 
   def new_ubiquo_test_only_model_two_url options = {}
     return url_former('another/one/fake/url', options)
+  end
+
+  def new_ubiquo_test_only_model_three_url options = {}
+    return url_former('another/two/fake/url', options)
   end
 
   def ubiquo_test_only_model_twos_url options = {}

@@ -87,7 +87,7 @@ module Ubiquo
           selector_type = options[:type]
         end
 
-        if relation_type == :has_many
+        if [:has_many, :has_and_belongs_to_many].include? relation_type
           options[:key_field] = "#{key.to_s.singularize}_ids"
           options[:initial_text_field_tag_name] = "#{object_name}[#{options[:key_field]}][]"
         else
