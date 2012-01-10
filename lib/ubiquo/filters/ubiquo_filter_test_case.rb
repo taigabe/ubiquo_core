@@ -51,7 +51,8 @@ module Ubiquo
       include ::Ubiquo::Helpers::CoreUbiquoHelpers
 
       def initialize(*args)
-        ::ActionController::Routing::Routes.draw { |map| map.resources :tests }
+        # FIXME adapt for Rails 3
+        #::ActionController::Routing::Routes.draw { |map| map.resources :tests }
         @model = FilterTestModel.create
         @model.delete_all
         load_test_data
