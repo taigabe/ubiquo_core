@@ -203,6 +203,17 @@ module Ubiquo
       true
     end
 
+    def self.with_options(new_options = {}, &block)
+      backup = @with_options
+      begin        
+        @with_options ||= {}
+        @with_options.merge!(new_options || {})
+        yield(self)
+      ensure
+        @with_options = backup
+      end
+    end
+
     #Old API
 
     #Adds an option to the current context (default :ubiquo). Default value is optional.
@@ -442,7 +453,7 @@ module Ubiquo
     #  }
     #
     def self.default_options
-      uhook_default_options
+      uhook_default_options.merge(@with_options || {})
     end
 
     class InvalidUbiquoBooleanSettingValue < StandardError; end

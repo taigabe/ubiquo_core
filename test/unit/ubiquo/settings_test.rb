@@ -6,7 +6,7 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
   def setup
     save_current_settings
   end
-  
+
   def teardown
     clear_settings
   end
@@ -28,7 +28,7 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
       Ubiquo::Settings.add(:new_option)
     end
   end
-  
+
   def test_needs_to_add_for_setting_a_value
     assert_raise(Ubiquo::Settings::OptionNotFound) do
       Ubiquo::Settings.set(:new_option, 1)
@@ -82,75 +82,75 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
       assert_equal Ubiquo::Settings.get(:c), 3
     end
   end
-  
+
   def test_context_creation_required_to_use_it
     assert !Ubiquo::Settings.context_exists?(:new_context)
     assert_raise(Ubiquo::Settings::ContextNotFound) do
        Ubiquo::Settings.context(:new_context).add(:a)
     end
   end
-  
+
   def test_block_context_option
     Ubiquo::Settings.create_context(:new_context)
     Ubiquo::Settings.add(:a, 1) # Global option
     Ubiquo::Settings.context(:new_context) do |ubiquo_config|
       ubiquo_config.add(:a, 2)
     end
-    
+
     Ubiquo::Settings.context(:new_context) do |ubiquo_config|
       assert_equal ubiquo_config.get(:a), 2
     end
     assert_equal Ubiquo::Settings.get(:a), 1
   end
-  
+
   def test_inline_context_option
     Ubiquo::Settings.create_context(:foo_context)
     Ubiquo::Settings.add(:a, 1) # Global option
     Ubiquo::Settings.context(:foo_context).add(:a, 2)
-    
+
     assert_equal 2, Ubiquo::Settings.context(:foo_context){ |c| c.get(:a)}
     assert_equal 1, Ubiquo::Settings.get(:a)
   end
-  
+
   def test_caller
     Ubiquo::Settings.add(:a, lambda{"return this"})
     assert_equal "return this", self.ubiquo_config_call(:a)
   end
-  
+
   def test_caller_in_current_binding
     Ubiquo::Settings.add(:a, lambda{dummy_method})
     assert_equal dummy_method,  self.ubiquo_config_call(:a)
   end
-  
+
   def test_caller_with_parameters
     Ubiquo::Settings.add(:a, lambda{|options| dummy_method(options)})
     assert_equal dummy_method({:word => "man"}),  self.ubiquo_config_call(:a, {:word => "man"})
   end
-  
+
   def test_caller_with_parameters_from_external_context
     ExternalContext.test
     assert_equal dummy_method({:word => "man"}),  self.ubiquo_config_call(:a, {:word => "man"})
   end
-  
+
   def test_caller_with_symbol
     Ubiquo::Settings.add(:a, :dummy_method)
     assert_equal dummy_method, self.ubiquo_config_call(:a)
   end
-  
+
   def test_caller_with_symbol_and_parameters
     Ubiquo::Settings.add(:a, :dummy_method)
     assert_equal dummy_method({:word => "man"}), self.ubiquo_config_call(:a, {:word => "man"})
   end
-  
+
   def test_caller_with_context
     Ubiquo::Settings.create_context(:new_context)
     Ubiquo::Settings.context(:new_context).add(:a, lambda{|options|
         dummy_method(options)
       })
-  
+
     assert_equal dummy_method({:word => "man"}),  self.ubiquo_config_call(:a, {:context => :new_context, :word => "man"})
   end
-  
+
   def test_inheritance
     Ubiquo::Settings.add(:a, "hello")
     Ubiquo::Settings.add(:b)
@@ -162,24 +162,24 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
     assert_nothing_raised do
       assert_equal "hello", Ubiquo::Settings.get(:b)
     end
-    
+
     Ubiquo::Settings.set(:a, "Bye")
     assert_nothing_raised do
       assert_equal "Bye", Ubiquo::Settings.get(:b)
     end
-    
+
     Ubiquo::Settings.set(:b, "Hello again")
     assert_nothing_raised do
       assert_equal "Hello again", Ubiquo::Settings.get(:b)
     end
   end
-  
+
   def test_inheritance_in_different_context
     Ubiquo::Settings.create_context(:new_context_1)
     Ubiquo::Settings.create_context(:new_context_2)
-    
+
     Ubiquo::Settings.context(:new_context_1).add(:a, "hello")
-    Ubiquo::Settings.context(:new_context_2).add(:b)    
+    Ubiquo::Settings.context(:new_context_2).add(:b)
 
     assert_raise(Ubiquo::Settings::ValueNeverSet) do
       Ubiquo::Settings.context(:new_context_2).get(:b)
@@ -189,12 +189,12 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
       assert_equal "hello", Ubiquo::Settings.context(:new_context_2).get(:b)
     end
   end
-  
+
   def test_inheritance_in_context_to_base
     Ubiquo::Settings.create_context(:foo_context)
-    
+
     Ubiquo::Settings.add(:a, "hello")
-    Ubiquo::Settings.context(:foo_context).add(:b)    
+    Ubiquo::Settings.context(:foo_context).add(:b)
 
     assert_raise(Ubiquo::Settings::ValueNeverSet) do
       Ubiquo::Settings.context(:foo_context).get(:b)
@@ -204,12 +204,12 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
       assert_equal "hello", Ubiquo::Settings.context(:foo_context).get(:b)
     end
   end
- 
+
   def test_overriding_enabling
 
     disable_settings_override
     Ubiquo::Settings.load_from_backend!
- 
+
     initial_s1_value = 'catch11'
     initial_s2_value = 'catch12'
     Ubiquo::Settings.add(:one, initial_s1_value)
@@ -226,7 +226,7 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
     assert_equal 0, Ubiquo::Settings.load_from_backend!
     assert !Ubiquo::Settings.add(UbiquoSetting.create(:key => 'one', :value => 'catch24'))
   end
-  
+
   def test_load_from_backend!
 
     disable_settings_override
@@ -248,7 +248,7 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
   end
 
   def test_add_setting
-    disable_settings_override    
+    disable_settings_override
     initial_s1_value = 'catch11'
     initial_s2_value = 'catch12'
     Ubiquo::Settings.add(:one, initial_s1_value, :is_editable => true)
@@ -297,7 +297,7 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
     assert Ubiquo::Settings.editable?(:four)
     Ubiquo::Settings.add(:five, nil, {:is_editable => true})
     assert Ubiquo::Settings.editable?(:five)
-  end  
+  end
 
   def test_square_brakets
     Ubiquo::Settings.create_context :foo_context
@@ -309,23 +309,23 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
 
     assert_equal 22, Ubiquo::Settings[:foo_context][:one]
     assert_equal Ubiquo::Settings.context(:foo_context)[:one], Ubiquo::Settings[:foo_context][:one]
-  
+
     assert_raise Ubiquo::Settings::OptionNotFound do
       Ubiquo::Settings[:i_dont_exist]
     end
   end
-  
+
   def test_square_brakets_assignment
     Ubiquo::Settings.create_context :foo_context
 
     Ubiquo::Settings.context(:foo_context).add(:one, 22)
 
-    Ubiquo::Settings.context(:foo_context)[:one] = 44 
+    Ubiquo::Settings.context(:foo_context)[:one] = 44
     assert_equal 44, Ubiquo::Settings.context(:foo_context)[:one]
 
     Ubiquo::Settings.add(:two, 23)
-    Ubiquo::Settings[:two] = 46 
-    Ubiquo::Settings.context(Ubiquo::Settings.default_context)[:two] = 46 
+    Ubiquo::Settings[:two] = 46
+    Ubiquo::Settings.context(Ubiquo::Settings.default_context)[:two] = 46
 
     assert_equal 46, Ubiquo::Settings[:two]
 
@@ -344,7 +344,7 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
     Ubiquo::Settings.context(:foo_context).add(:four, 4, :is_editable => true)
 
     assert_equal [:four, :three], Ubiquo::Settings[:foo_context].get_editable_settings
-  
+
     Ubiquo::Settings.add(:five,   5)
     Ubiquo::Settings.add(:six,    6, :is_editable => false)
     Ubiquo::Settings.add(:seven,  7, :is_editable => true)
@@ -377,7 +377,7 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
     assert_equal UbiquoSymbolSetting, Ubiquo::Settings.settings[:foo_context][:three][:options][:value_type]
     assert_equal UbiquoEmailSetting, Ubiquo::Settings.settings[:foo_context][:four][:options][:value_type]
     assert_equal UbiquoPasswordSetting, Ubiquo::Settings.settings[:foo_context][:five][:options][:value_type]
-    
+
     Ubiquo::Settings.context(:foo_context) do |setting|
       assert_raise Ubiquo::Settings::InvalidUbiquoIntegerSettingValue do
         setting[:one] = "1"
@@ -420,8 +420,8 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
     default_overridable_key = Ubiquo::Settings.default_overridable_key
     default_context = Ubiquo::Settings.default_context
     assert_equal false, Ubiquo::Settings[default_overridable_key]
-    assert_equal Ubiquo::Settings.settings[default_context][default_overridable_key][:value], 
-                Ubiquo::Settings[default_overridable_key]    
+    assert_equal Ubiquo::Settings.settings[default_context][default_overridable_key][:value],
+                Ubiquo::Settings[default_overridable_key]
     assert_equal Ubiquo::Settings[default_overridable_key], Ubiquo::Settings[default_context][default_overridable_key]
     assert !Ubiquo::Settings.overridable?
 
@@ -458,7 +458,7 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
     assert !Ubiquo::Settings.settings[default_context][:d][:options].include?(:value_type)
 
     # do not show is_translatable
-    Ubiquo::Settings.string(:e, 
+    Ubiquo::Settings.string(:e,
                             { 'en_US' => 'dungeon',
                               'es_ES' => 'mazmorra',
                               'ca_ES' => 'masmorra',
@@ -493,10 +493,24 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
 
     Ubiquo::Settings.add(:b, 1, :allowed_values => [1,2,3,4,5])
     assert_equal [1,2,3,4,5], Ubiquo::Settings.allowed_values(:b)
-    
+
     Ubiquo::Settings.create_context(:another).add(:c, 1, :allowed_values => [6,7,8,9,10])
     assert_equal [6,7,8,9,10], Ubiquo::Settings.allowed_values(:c)
     assert_equal [6,7,8,9,10], Ubiquo::Settings[:another].allowed_values(:c)
+  end
+
+
+  def should_support_with_option
+    a_hash = {:my_option => 45, :my_option_to_be_override_inside_the_block => 1}
+    Ubiquo::Settings.with_options(a_hash) do |settings_with_my_options|
+      settings_with_my_options.string(:some_unrelated_setting, 'my_value',
+          :my_option_to_be_override_inside_the_block => 2)
+    end
+    Ubiquo::Settings.string(:forget_about_the_options_set_before, 'my_value')
+
+    assert_equal 45, UbiquoSettings.options(:some_unrelated_settings)[:my_option]
+    assert_equal 2, UbiquoSettings.options(:some_unrelated_settings)[:my_option_to_be_override_inside_the_block]
+    assert !UbiquoSettings.options(:forget_about_the_options_set_before).key?(:my_option)
   end
 
   def should_return_default_value
@@ -520,7 +534,7 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
       setting.integer :d, 4, :is_editable => true
       setting.integer :e, 5, :is_editable => false
     end
-    
+
     assert_equal [:b, :c, :d], Ubiquo::Settings[:another].get_editable_settings
     assert_equal [3,2,4], Ubiquo::Settings[:another].get_editable_settings.map{|v| Ubiquo::Settings[:another][v] }
   end
@@ -528,12 +542,12 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
   def test_get_contexts
     Ubiquo::Settings.create_context(:foo_first)
     Ubiquo::Settings.create_context(:foo_third)
-    Ubiquo::Settings.create_context(:foo_second)    
+    Ubiquo::Settings.create_context(:foo_second)
 
     index = Ubiquo::Settings.get_contexts.index(:foo_first)
     assert_equal [:foo_first, :foo_second, :foo_third], Ubiquo::Settings.get_contexts[index..(index+2)]
   end
-  
+
   def dummy_method(options = {})
     options = {:word => "world"}.merge(options)
     "hello #{options[:word]}"
@@ -544,12 +558,12 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
   def clear_settings
     UbiquoSetting.destroy_all
     Ubiquo::Settings.settings[:ubiquo] = @old_configuration.clone
-    Ubiquo::Settings.settings.reject! { |k, v| !@initial_contexts.include?(k)}      
+    Ubiquo::Settings.settings.reject! { |k, v| !@initial_contexts.include?(k)}
   end
 
   def save_current_settings
     @initial_contexts =  Ubiquo::Settings.settings.keys
-    @old_configuration = Ubiquo::Settings.settings[Ubiquo::Settings.default_context].clone    
+    @old_configuration = Ubiquo::Settings.settings[Ubiquo::Settings.default_context].clone
   end
 
 end
