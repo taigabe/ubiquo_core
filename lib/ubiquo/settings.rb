@@ -474,14 +474,7 @@ module Ubiquo
   end
 end
 
-class Settings
-  def self.method_missing(method, *args, &block)
-    Ubiquo::Settings.send(method, *args, &block)
-  end
-  def self.const_missing(sym)
-    Ubiquo::Settings.const_get sym
-  end
-end
+Settings = Ubiquo::Settings
 module Ubiquo
   class Config
     def self.method_missing(method, *args, &block)
@@ -490,11 +483,11 @@ module Ubiquo
         ActiveSupport::Deprecation.warn(%{
         -----------------------------------------------------------
         -----------------------------------------------------------
-        -----------------------------------------------------------
-        -----------------------------------------------------------
-        Ubiquo::Config is deprecated! Use instead:
-        -------Ubiquo::Settings for plugins -----------------------
-        -------Settings         for application -------------------
+                Ubiquo::Config is deprecated!
+                Use instead:
+                  * Settings          in your app
+                  * Ubiquo::Settings  in the plugins
+                Ubiquo::Config will be removed in Ubiquo 0.9
         -----------------------------------------------------------
         -----------------------------------------------------------
         }, caller)
