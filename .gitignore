@@ -1,1 +1,8 @@
-/TAGS
+*.gem
+.bundle
+Gemfile.lock
+pkg/*
+/nbproject
+.rvmrc
+test/dummy/log
+test/dummy/db/*.sqlite3
