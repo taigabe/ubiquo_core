@@ -21,6 +21,9 @@ class UbiquoSetting < ActiveRecord::Base
   after_save :apply
   after_destroy :push_config
 
+  named_scope :context, lambda { |value| { :conditions => {:context => value} } }
+  named_scope :key,     lambda { |value| { :conditions => {:key => value} } }
+
   # Check if the value is included in the alloweds
   def value_acceptable?
     self.allowed_values.blank? ||

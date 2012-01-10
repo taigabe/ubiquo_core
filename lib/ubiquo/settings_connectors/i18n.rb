@@ -320,15 +320,11 @@ module Ubiquo
 
         module ClassMethods
           def uhook_find_or_build context, key, options = {}
+            scoped = ::UbiquoSetting
             if Ubiquo::Settings[context].translatable?(key)
-              setting = ::UbiquoSetting.locale(options[:locale].to_s).find(:first,
-                                      :conditions => ["context = ? AND key = ? ",
-                                                      context.to_s, key.to_s])
-            else
-              setting = ::UbiquoSetting.find(:first,
-                                        :conditions => ["context = ? AND key = ? ",
-                                                      context.to_s, key.to_s])
+              scoped = scoped.locale(options[:locale].to_s)
             end
+            setting = scoped.context(context.to_s).key(key.to_s).first
             setting ||= uhook_generate_instance(context, key, options)
             setting.locale = options[:locale].to_s
             setting
@@ -359,22 +355,23 @@ module Ubiquo
               !Ubiquo::Settings[self.context].translation_exists?(self.key, self.locale)
           end
 
-          # Check if a not translatable setting override exists and  another with different locale
+          # Check if a not translatable setting override exists and another with different locale
           # want to be created
           def check_localization_acceptance
             if self.config_exists? &&
                 !Ubiquo::Settings[self.context].translatable?(self.key) &&
-                (self.translations.present? ||
-                ::UbiquoSetting.find(:first, :conditions => ["context = ? AND key = ? AND locale <> ?",
-                                                        context.to_s, key.to_s, locale.to_s]))
-              self.errors.add :key, "not translatable setting"
+              existing_value = ::UbiquoSetting.locale(self.locale).context(self.context.to_s).key(self.key.to_s).first
+              if self.translations.present? || existing_value && existing_value != self                
+                self.errors.add :key, "not translatable setting"
+              end
             end
           end
 
           def uhook_config_value_same?
-            !self.id &&
-              config_exists? &&
-              Ubiquo::Settings[self.context].default_value(self.key, self.locale)[1] == self.value
+            if self.new_record? && config_exists?
+              locale, value = Ubiquo::Settings[self.context].default_value(self.key, self.locale)
+              value == self.value && locale == self.locale
+            end
           end
         end
       end
@@ -407,12 +404,21 @@ module Ubiquo
           # Returns the available actions links for a given ubiquo_setting
           def uhook_ubiquo_setting_index_actions ubiquo_setting
             actions = []
-            actions << link_to_function(t('ubiquo.ubiquo_setting.index.save'),
-                        "collectAndSendValues('#{ubiquo_setting.context}', '#{ubiquo_setting.key}')")
+            save_text          = t('ubiquo.ubiquo_setting.index.save')
+            javascript_handler = "collectAndSendValues('#{ubiquo_setting.context}', '#{ubiquo_setting.key}')"
+
+            actions << link_to_function(save_text, javascript_handler, :class => 'btn-save')
+
             if ubiquo_setting.id && !ubiquo_setting.generated_from_another_value?
-              actions << link_to(t('ubiquo.ubiquo_setting.index.restore_default'),
-                          ubiquo_ubiquo_setting_path(ubiquo_setting),
-                          :confirm => t('ubiquo.ubiquo_setting.index.confirm_restore_default'), :method => :delete)
+              restore_text = t('ubiquo.ubiquo_setting.index.restore_default')
+              restore_url  = ubiquo_ubiquo_setting_path(ubiquo_setting)
+              confirm_text = t('ubiquo.ubiquo_setting.index.confirm_restore_default')
+
+              actions << link_to(restore_text,
+                                  restore_url,
+                                  :confirm => confirm_text,
+                                  :method  => :delete,
+                                  :class   => 'btn-restore')
             end
             actions
           end
@@ -427,10 +433,11 @@ module Ubiquo
           end
 
           def uhook_print_key_label ubiquo_setting
-            result = label_tag(ubiquo_setting.key_translated)
-            result += content_tag(:span,"(#{t('ubiquo.ubiquo_setting.index.translatable')})", :class => :translatable) if ubiquo_setting.translatable?
-            result += content_tag(:p, "(#{t('ubiquo.ubiquo_setting.index.not_value_for_locale')})") if ubiquo_setting.generated_from_another_value?
-            result
+            result = ""
+            result << ubiquo_setting.key_translated.to_s
+            result << content_tag(:span,"(#{t('ubiquo.ubiquo_setting.index.translatable')})", :class => :translatable) if ubiquo_setting.translatable?
+            result << content_tag(:div, "(#{t('ubiquo.ubiquo_setting.index.not_value_for_locale')})", :class => :generated) if ubiquo_setting.generated_from_another_value?
+            label_tag(result)
           end
         end
 

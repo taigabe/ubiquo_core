@@ -153,9 +153,7 @@ module Ubiquo
 
         module ClassMethods
           def uhook_find_or_build context, key
-            setting = ::UbiquoSetting.find(:first,
-                                    :conditions => ["context = ? AND key = ? ",
-                                                    context, key])
+            setting = ::UbiquoSetting.context(context.to_s).key(key.to_s).first
             setting ||= uhook_generate_instance(context, key)
           end
 
@@ -219,14 +217,23 @@ module Ubiquo
           end
 
           # Returns the available actions links for a given ubiquo_setting
-          def uhook_setting_index_actions ubiquo_setting
+          def uhook_ubiquo_setting_index_actions ubiquo_setting
             actions = []
-            actions << link_to_function(t('ubiquo.ubiquo_setting.index.save'),
-              "collectAndSendValues('#{ubiquo_setting.context}', '#{ubiquo_setting.key}')")
+            save_text          = t('ubiquo.ubiquo_setting.index.save')
+            javascript_handler = "collectAndSendValues('#{ubiquo_setting.context}', '#{ubiquo_setting.key}')"
+
+            actions << link_to_function(save_text, javascript_handler, :class => 'btn-save')
+
             if ubiquo_setting.id
-              actions << link_to(t('ubiquo.ubiquo_setting.index.restore_default'),
-                          ubiquo_setting_path(ubiquo_setting),
-                          :confirm => t('ubiquo.ubiquo_setting.index.confirm_restore_default'), :method => :delete)
+              restore_text = t('ubiquo.ubiquo_setting.index.restore_default')
+              restore_url  = ubiquo_ubiquo_setting_path(ubiquo_setting)
+              confirm_text = t('ubiquo.ubiquo_setting.index.confirm_restore_default')
+              
+              actions << link_to(restore_text,
+                                  restore_url,
+                                  :confirm => confirm_text,
+                                  :method  => :delete,
+                                  :class   => 'btn-restore')
             end
             actions
           end
@@ -246,10 +253,9 @@ module Ubiquo
 
           def uhook_print_key_label ubiquo_setting
             label_tag(ubiquo_setting.key_translated)
-          end            
+          end
 
         end
-
         module InstanceMethods
 
           def uhook_index
