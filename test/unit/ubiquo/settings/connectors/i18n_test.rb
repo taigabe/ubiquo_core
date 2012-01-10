@@ -153,7 +153,7 @@ module Connectors
                                          })
         s1 = UbiquoStringSetting.create(:context => :foo_context_2, :key => :new_setting, :value => 'hola_redefinido', :locale => 'ca_ES')
         assert_equal 'hola_redefinido', Ubiquo::Settings[:foo_context_2].get(:new_setting)
-        
+
         s2 = UbiquoStringSetting.create(:context => :foo_context_2, :key => :new_setting, :value => 'hola_redefinit_no_locale')
         assert s2.errors.present?
         
