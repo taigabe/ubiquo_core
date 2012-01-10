@@ -94,10 +94,5 @@ module Ubiquo
 
     # Enable the Loader feature broadly
     Module.class_eval { include LoaderHook }
-
-    # Rails is loaded at this point and ActionController::Base will not be aware
-    # of the above line since it already has its own aliases, so we need to include
-    # it explicitly to have this feature available also on controllers
-    ActionController::Base.class_eval { include LoaderHook }
   end
 end
