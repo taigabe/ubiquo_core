@@ -983,7 +983,7 @@ form label {
                 #content .form-item .required_field {
 			font-weight: bold;
 		}
-		#content .form-item input, #content .form-item select, #content .form-item textarea, #content .form-item .mceEditor {
+		#content .form-item input, #content .form-item select, #content .form-item textarea, #content .form-item .mceEditor, #content .form-item .checkbox {
 			display: block;
 			float: left;
 			width: 40%;
@@ -1307,66 +1307,79 @@ body#blank #footer {
 
 /*-------------- Ubiquo Settings -------*/
 
-#contexts table td:first-child {
-    width:20%;
-}
-.context-header {
-    font-size: 1.4em !important;
-    margin-bottom: 10px;
-}
-#contexts form {
-    padding:0 !important;
-}
-#contexts .form-item {
-    margin:0 !important;
-    float:none;
-}
-#contexts .form-item input{
-    float:none;
-    display:inline;
-}
-#contexts .form-item fieldset{
-    margin:0.1em 0.1em 0.1em 0.1em;
-    padding:0;
-}  
-#contexts .form-item .number{
-    background:#F0BB47;
-    width:15%;
+form#new_ubiquo_setting .setting-info{
+  float: left;
+  overflow: hidden;
+  display:inline;
+  width: 60%;
 }
 
-#contexts .form-item a.inline_link{
- float:right;
+form#new_ubiquo_setting .setting-actions{
+  float: left;
+  display:inline;
+  width: 39%;
+}
+form#new_ubiquo_setting .setting-actions ul.actions {
+  margin-top: .4em;
+  padding-left: 0;
 }
 
-#contexts tr:hover {
-    background:inherit !important;
-}
-#contexts form{
-    border: 0 !important;
-}
-#contexts form input, #contexts form textarea, #contexts form select{
-    padding: 0.1em;
+form#new_ubiquo_setting .save_all {
+  margin-top: 1em;
 }
 
-#contexts textarea, #contexts input{
-    width: 100% !important;
-}
-#bulk_submit input{
-    margin-left:90%;    
-}
-#bulk_submit { 
-    border: 0 !important;
-    background: #FFF !important;
+#content .settings .form-item input, #content .settings .form-item select, #content .settings .form-item textarea, #content .settings .form-item .mceEditor, #content .form-item .checkbox {
+  width: 70%;
+  font-size: 1em;
 }
 
-#contexts .translatable {
+
+.ubiquo_boolean_setting{
+  width:100%;
+  }
+
+form#new_ubiquo_setting input.checkbox{
     
 }
-
-#contexts span.add-value{
-  margin-top:15px;
-  margin-left: 10px;
+form#new_ubiquo_setting input.password:first-child{
+  width:20%
 }
+form#new_ubiquo_setting input.password:last-child{
+  width:19%
+}
+
+form#new_ubiquo_setting .setting-actions .actions li {
+    vertical-align: top;
+  display:inline;
+  margin-left: 0.5em;
+}
+form#new_ubiquo_setting .setting-actions .actions li a{
+    vertical-align: top;
+    background: url("../../../images/ubiquo/bg-button.png") no-repeat scroll left bottom transparent;
+    border: 1px solid #666666;
+    border-radius: 6px 6px 6px 6px;
+    color: #000000;
+    cursor: pointer;
+    font-size: 0.6em;
+    padding: 0.3em;
+    text-decoration: none;
+    text-transform: lowercase;
+}
+
+
+form#new_ubiquo_setting span.setting-value{
+  min-width: 25em;
+}
+
+form#new_ubiquo_setting .ubiquo_password_setting{
+  display:inline;
+}
+
+
+form#new_ubiquo_setting .generated, form#new_ubiquo_setting .translatable{
+  display:inline;
+}
+
 
 /* --- Tabbed content --- */
 .tabbed {}

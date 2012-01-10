@@ -1,8 +1,3 @@
-<% form_tag(ubiquo_ubiquo_settings_path) do %>
-  <%= hidden_field_tag :id, ubiquo_setting.id %>
-  <%= #  uhook_setting_form
-  %>
-  <div class="form-item">
-    <%= render_template_type(ubiquo_setting) %>
-  </div>
-<% end %>
+<div class="setting-value <%= ubiquo_setting.class.name.underscore %>" id="<%= setting_dom_id(ubiquo_setting)  %>">
+  <%= render_template_type(ubiquo_setting) %>
+</div>

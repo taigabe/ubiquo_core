@@ -2,15 +2,18 @@
   <% unless ubiquo_setting.text? %>
     <%= text_field_tag ubiquo_setting.key,
                         ubiquo_setting.value,
+                        :group => false,
                         :class => error_class(ubiquo_setting) %>
   <% else %>
     <%= text_area_tag ubiquo_setting.key,
                       ubiquo_setting.value,
                       { :rows => 10,
+                        :group => false,
                         :class => error_class(ubiquo_setting) } %>
   <% end %>
 <% else %>
   <%= select_tag ubiquo_setting.key, 
-                  options_for_select(ubiquo_setting.allowed_values, ubiquo_setting.value),
+                 options_for_select(ubiquo_setting.allowed_values, ubiquo_setting.value),
+                :group => false,    
                 :class => error_class(ubiquo_setting) %>
 <% end  %>

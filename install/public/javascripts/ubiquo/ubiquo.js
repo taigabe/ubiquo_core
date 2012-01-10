@@ -330,15 +330,16 @@ function addHiddenFieldsForSettings(form, settings, selectedSettingKey){
 }
 function collectAndSendValues(selectedContext, selectedSettingKey){
   var settings = {}
-  var contexts = $$('#contexts > table');
+  var contexts = $$('#new_ubiquo_setting div[id*="context_"]');
   for(var i = 0; i < contexts.length; ++i){
     var contextKey = $(contexts[i]).readAttribute('id')
+    contextKey = contextKey.replace('context_','');
     if(selectedContext == null || contextKey == selectedContext ){
       settings[contextKey] = {}
-      var settingsRows = $(contexts[i]).getElementsBySelector('tbody tr');
+      var settingsRows = $(contexts[i]).getElementsBySelector('.setting-value');
       for(var j = 0; j < settingsRows.length; ++j){
         var settingKey = settingsRows[j].readAttribute('id');
-        settingKey = settingKey.replace('ubiquo_setting_','');
+        settingKey = settingKey.replace(contextKey+'_ubiquo_setting_','');
         if(selectedSettingKey == null || settingKey == selectedSettingKey){
 
           var settingValue;
@@ -380,6 +381,7 @@ function collectAndSendValues(selectedContext, selectedSettingKey){
   var form = $('bulk_submit');
   addHiddenFieldsForSettings(form, settings);
   form.submit();
+
 }
 //Init tabs before page load but after required dom objects loaded.
 //This initalization could be done on dom:loaded but it creates a strange effect.
