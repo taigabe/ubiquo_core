@@ -180,14 +180,8 @@ class Ubiquo::Config
   def self.call(name, run_in, options = {})
     case option = self.get(name)
     when Proc
-      method_name = "_ubi_config_call_#{Time.now.to_f*10000}"
-      while(run_in.respond_to?(method_name))
-        method_name = "_" + method_name
-      end
-      run_in.class.send(:define_method, method_name, &option)
-      run_in.send(method_name, options).tap do
-        run_in.class.send(:remove_method, method_name)
-      end
+      method = option.ubind(run_in)
+      option.arity == 0 ? method : method.call(options)
     when String, Symbol
       run_in.send option, options
     end
