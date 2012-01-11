@@ -40,7 +40,8 @@ module Ubiquo
       attr_accessor :group_chain, :builder_options, :enabled
 
       helpers = field_helpers + %w{date_select datetime_select time_select} +
-        %w{collection_select select country_select time_zone_select}
+        %w{collection_select select country_select time_zone_select 
+          calendar_date_select }
 
       # TODO: integrate relation_selector to this. It now decides the format
       # depending on the type of selector is used (checkbox or select tags)
