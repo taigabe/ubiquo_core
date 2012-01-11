@@ -341,6 +341,62 @@ class UbiquoFormBuilderTest < ActionView::TestCase
     assert_select "form input[type=checkbox][class=complex][value=GARCIA]"
   end
 
+  test "methods with an optional param which is an array" do
+    # There are some methods like
+    #   date_select(object_name, method, options = {}, html_options = {}) public
+    # where our params must be passed/merged to html_options but there is a chance to work wrong,
+    # and is the following:
+    # 
+    #   date_select(object_name, method, {:foo => :bar, :class => "date_select"} ) 
+    #  
+    # As you see if the implementation of the form builder adds the options to the last param if it's a hash, then
+    # it will fit this case, but what we really want to be called is:
+    # 
+    #   date_select(object_name, method, {:foo => :bar}, {:class => "date_select"} ) 
+    #   
+    # To fix that we configure the builder to expect the hash in right position.
+    
+    # mock the default_options hash
+    # Using marshal as a trick for deep clone
+    old_options = Marshal.load(Marshal.dump(Ubiquo::Helpers::UbiquoFormBuilder.default_tag_options))
+    begin
+      options = Ubiquo::Helpers::UbiquoFormBuilder.default_tag_options
+      options = options.deep_merge(
+        :date_select => {:class => "date_select_class"},
+        :datetime_select => {:class => "datetime_select_class"},
+        :time_select => {:class => "time_select_class"},
+        :collection_select => {:class => "collection_select"},
+        :select => {:class => "select"},
+        :time_zone_select => {:class => "time_zone_select"}
+      )
+      Ubiquo::Helpers::UbiquoFormBuilder.default_tag_options = options
+      the_form do |form|
+        concat(form.check_box( :lastname, :class => "checkboxed"))
+        # Forcing :order because of an unknown bug on I18n covnerting arrays to hashes
+        concat(form.datetime_select(:born_at,{:order =>[:day,:month,:year]}))
+        concat(form.datetime_select(:born_at,{:order =>[:day,:month,:year]}, {:class => "datetime_forced"}))
+        concat(form.date_select(:born_at, {:order =>[:day,:month,:year],:include_blank => true}))
+        concat(form.time_select(:born_at))
+        choices = [["Bar","Bar"],["Foo","Foo"]]
+        concat(form.collection_select(:lastname, choices,:first, :last ))
+        concat(form.select(:lastname, choices ))
+        concat(form.time_zone_select(:lastname))
+      end
+      
+      assert_select "form .checkboxed"
+      assert_select "form .date_select_class"
+      assert_select "form .datetime_forced"
+      assert_select "form .datetime_select_class"
+      assert_select "form .time_select_class"
+      assert_select "form .collection_select"
+      assert_select "form .select"
+      assert_select "form .time_zone_select"
+    ensure
+      # restore class variable
+      Ubiquo::Helpers::UbiquoFormBuilder.default_tag_options = old_options
+    end
+  end
+
   protected
 
   # helper to build a ubiquo form to test
