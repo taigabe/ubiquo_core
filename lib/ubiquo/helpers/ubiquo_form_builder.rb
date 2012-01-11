@@ -67,10 +67,14 @@ module Ubiquo
         define_method(name) do |field, *args|
           return super unless self.enabled
           options_for_tag = (default_tag_options[name.to_sym] || {}).clone
-          options_position = (options_for_tag && options_for_tag.delete(:options_position)) || -1 # last by default
-          options = args[options_position].is_a?(Hash) ? args[options_position] : {}
+          html_options_position = (options_for_tag && 
+              options_for_tag.delete(:html_options_position)) || -1 # last by default
+          base_args = options_for_tag.delete(:base_args)
+          options = args[html_options_position].is_a?(Hash) ? args[html_options_position] : {}
           # Accept a closure
-          options_for_tag = options_for_tag.call(binding, field, options ) if options_for_tag.respond_to? :call
+          if options_for_tag.respond_to? :call
+            options_for_tag = options_for_tag.call(binding, field, options ) 
+          end
           options = options.reverse_merge( options_for_tag )
 
           # not (delete || {}) because we support :group => false
@@ -91,13 +95,20 @@ module Ubiquo
           end
           label_at_bottom = options.delete(:label_at_bottom)
 
-          unless args[options_position].is_a?(Hash)
+          unless args[html_options_position].is_a?(Hash)
             # We cannot set a negative position if it does not exist
-            if options_position == -1 
+            if html_options_position == -1 
               args << options 
             else
-              args[options_position] = options 
+              if base_args
+                # Set the argument values for middle arguments
+                base_args.each_with_index{|v,idx| args[idx]||= v}
+              end
+              args[html_options_position] = options
             end
+          end
+          if name.to_s == "date_select"
+            #require "ruby-debug";debugger;2+2
           end
           super_result = super( field, *args )
 
