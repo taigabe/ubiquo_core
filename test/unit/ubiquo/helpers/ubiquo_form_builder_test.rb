@@ -396,6 +396,15 @@ class UbiquoFormBuilderTest < ActionView::TestCase
       Ubiquo::Helpers::UbiquoFormBuilder.default_tag_options = old_options
     end
   end
+  
+  test "support calendar_date_select" do
+    self.expects(:calendar_date_select).returns('<input name="calendar"/>')
+    the_form do |form|
+      concat( form.calendar_date_select( :born_at ))
+    end
+    assert_select "form .form-item.datetime label"
+    assert_select "form .form-item.datetime input"
+  end
 
   protected
 

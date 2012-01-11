@@ -995,6 +995,10 @@ form label {
 			float: none;
 			width: auto;
 		}
+        
+        .calendar_date_select_popup_icon {
+            margin-left: 10px;
+        }
                 #content .relation-selector.relation-type-checkbox input {
                     margin-right: .3em;
                 }
@@ -1055,6 +1059,11 @@ form label {
                   #content .datetime select {
 			display: inline;
 			float: none;
+			width: auto;
+                  }
+
+                  #content .datetime input {
+			display: inline;
 			width: auto;
                   }
 
