@@ -21,6 +21,7 @@ ActionView::Base.field_error_proc = Ubiquo::Extensions::ActionView.ubiquo_field_
 ActiveRecord::Base.send(:extend, Ubiquo::Extensions::ActiveRecord)
 
 Object.send(:include, Ubiquo::Extensions::Object)
+Proc.send(:include, Ubiquo::Extensions::Proc)
 Array.send(:include, Ubiquo::Extensions::Array)
 String.send(:include, Ubiquo::Extensions::String)
 
