@@ -38,7 +38,7 @@ module Ubiquo
         @lines.push <<-eos.gsub(/^ {10}/, '').gsub("\n", ' ').strip
           #{schedule} /bin/bash -l -c "cd #{self.path}
           && RAILS_ENV=#{self.env}
-          rake ubiquo:cron:runner task='#{job}' #{params} --silent 2>&1"
+          bundle exec rake ubiquo:cron:runner task='#{job}' #{params} --silent 2>&1"
         eos
       end
 
@@ -58,7 +58,7 @@ module Ubiquo
         @lines.push <<-eos.gsub(/^ {10}/, '').gsub("\n", ' ').strip
           #{schedule} /bin/bash -l -c "cd #{self.path}
           && RAILS_ENV=#{self.env}
-          rake ubiquo:cron:runner task='#{task}' type='script' --silent 2>&1"
+          bundle exec rake ubiquo:cron:runner task='#{task}' type='script' --silent 2>&1"
         eos
       end
 

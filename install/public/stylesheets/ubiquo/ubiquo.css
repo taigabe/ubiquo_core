@@ -376,11 +376,13 @@ table, th, td { border: none;}
 /*--- footer ---*/
 
 #footer {
-	padding-left: 45em;
+  margin-right: 26%;
+  float: right;
 	font-size: 13px;
 	font-family: Helvetica, Arial, sans-serif;
 	color: #969696;
 	overflow: hidden;
+  margin-bottom: 1em;
 }
 	#footer span {
 		display: block;
@@ -993,6 +995,13 @@ form label {
 			float: none;
 			width: auto;
 		}
+        
+        .calendar_date_select_popup_icon {
+            margin-left: 10px;
+        }
+                #content .relation-selector.relation-type-checkbox input {
+                    margin-right: .3em;
+                }
                 /* help popup */
 		.form-help {
                         margin-left: .4em;
@@ -1050,6 +1059,11 @@ form label {
                   #content .datetime select {
 			display: inline;
 			float: none;
+			width: auto;
+                  }
+
+                  #content .datetime input {
+			display: inline;
 			width: auto;
                   }
 

@@ -170,7 +170,9 @@ function blind_toggle(desired_elem, brother) {
   if($(desired_elem).visible()) {
     new Effect.BlindUp($(desired_elem));
   } else {
-    new Effect.BlindUp($(brother));
+    if($(brother)){
+      new Effect.BlindUp($(brother));
+    }
     new Effect.BlindDown($(desired_elem));
   }
 }

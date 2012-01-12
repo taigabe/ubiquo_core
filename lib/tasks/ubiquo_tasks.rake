@@ -28,7 +28,7 @@ namespace :ubiquo do
 
   desc "Run given command inside each plugin directory."
   task :foreach, [ :command ] do |t, args|
-    ubiquo_dependencies = %w[ calendar_date_select exception_notification paperclip responds_to_parent tiny_mce ]
+    ubiquo_dependencies = %w[ calendar_date_select exception_notification paperclip responds_to_parent tiny_mce translate ]
     plugin_directory = Rails.root.join('vendor', 'plugins')
     ubiquo_plugins = Dir.glob(File.join(plugin_directory,"ubiquo_*")).map { |file| file.split("/").last }
     plugins = ubiquo_dependencies + ubiquo_plugins

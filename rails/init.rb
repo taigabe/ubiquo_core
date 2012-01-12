@@ -31,11 +31,9 @@ Ubiquo::Config.context(:ubiquo_form_builder) do |context|
   context.add( :default_tag_options, {
     :text_area => { :class => "visual_editor" },
     :relation_selector => { :append_class => "relation" },
-    :date_select => { :group => {:append_class => "datetime"} },
-    :datetime_select => { :group => {:append_class => "datetime"} },
     :check_box => {
       :group => {:class => "form-item"}, :class => "checkbox",
-      :options_position => 0 # check_box does not has the options in last param but first.
+      :html_options_position => 0 # check_box does not has the options in last param but first.
     },
     :create_button => {
       :i18n_label_key => "ubiquo.create",
@@ -47,7 +45,49 @@ Ubiquo::Config.context(:ubiquo_form_builder) do |context|
     },
     :back_button => {
       :i18n_label_key => "ubiquo.back_to_list",
-    }
+    },
+    # Some methods have a special signature (datetime_select, etc.) that need
+    # a special configuration.
+    #
+    # This happens when a method can have a hash on more than one parameter or
+    # when some fields are not required and the html_options come after.
+    #
+    # For example datetime_select( obj_name, method, options = {} , html_options = {} )
+    # we set:
+    #   :base_args => [{},{}],
+    #   :html_options_position => 1 # index of the html options
+    #
+    # The html_options_position is the position of the html_options in the method
+    # arguments list.
+    #
+    :datetime_select => {
+      :base_args => [{},{}],
+      :html_options_position => 1,
+      :group => {:append_class => "datetime"}
+    },
+    :date_select => {
+      :base_args => [{},{}],
+      :html_options_position => 1,
+      :group => {:append_class => "datetime"}
+    },
+    :time_select => {
+      :base_args => [{},{}],
+      :html_options_position => 1,
+      :group => {:append_class => "datetime"}
+    },
+    :collection_select => {
+      :base_args => [nil,nil,nil,{},{}],
+      :html_options_position => 4,
+    },
+    :select => {
+      :base_args => [nil,{},{}],
+      :html_options_position => 2,
+    },
+    :time_zone_select => {
+      :base_args => [nil,{},{}],
+      :html_options_position => 2,
+    },
+    :calendar_date_select => {:group => {:append_class => "datetime"}}
   })
   context.add( :groups_configuration,{
       :div => {:content_tag => :div, :class => "form-item"},
@@ -90,7 +130,7 @@ require 'ubiquo'
 config.after_initialize do
   if Ubiquo::Plugin.registered[:ubiquo_i18n]
     Ubiquo::Settings[:settings_connector] = :i18n
-    Ubiquo::SettingsConnectors.load! 
+    Ubiquo::SettingsConnectors.load!
   end
 end
 

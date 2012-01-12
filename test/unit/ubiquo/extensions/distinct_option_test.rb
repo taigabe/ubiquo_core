@@ -24,11 +24,13 @@ class Ubiquo::Extensions::DistinctOptionTest < ActiveSupport::TestCase
     complex_order = 'name DESC, test_only_models.id ASC, test_only_model_twos.title'
     %w{all scoped}.each do |method|
       results = TestOnlyModel.send(method,
-        @options.merge(:select => 'test_only_models.id', :order => complex_order)
+        @options.merge(:select => 'test_only_models.name', :order => complex_order)
       )
       assert_equal 1, results.size
+      # should not raise a exception
+      assert results.first.name
       assert_raise ActiveRecord::MissingAttributeError do
-        results.first.name # only :id has been loaded (preserves :select)
+        results.first.arbitrary_name # only :name and :id has been loaded (preserves :select)
       end
     end
   end
