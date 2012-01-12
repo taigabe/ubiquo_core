@@ -99,11 +99,11 @@ module Ubiquo
         fields = selected_fields || default_text_fields
         regexp_op = connection.adapter_name == "PostgreSQL" ? "~*" : "REGEXP"
         @enabled_scopes.concat [:text]
-        named_scope :text, lambda { |value|
+        scope :text, lambda { |value|
           match = accent_insensitive_regexp(value.downcase)
           matches = fields.inject([]) { |r, f| r << match }
           conditions = fields.map { |f| "lower(#{table_name}.#{f}) #{regexp_op} ?" }.join(" OR ")
-          { :conditions => [ conditions, *matches ] }
+          where(conditions, *matches)
         }
       end
 
@@ -113,8 +113,8 @@ module Ubiquo
         # TODO: End and removal of parse_date, see I18n.parse_date
         if table_exists? && column_names.include?("published_at")
           @enabled_scopes.concat [ :publish_start, :publish_end ]
-          named_scope :publish_start , lambda { |value| { :conditions => ["#{table_name}.published_at >= ?", parse_date(value)] } }
-          named_scope :publish_end   , lambda { |value| { :conditions => ["#{table_name}.published_at <= ?", parse_date(value, :time_offset => 1.day)] } }
+          scope :publish_start, lambda { |value| where("#{table_name}.published_at >= ?", parse_date(value)) }
+          scope :publish_end, lambda { |value| where("#{table_name}.published_at <= ?", parse_date(value, :time_offset => 1.day)) }
         end
       end
 
