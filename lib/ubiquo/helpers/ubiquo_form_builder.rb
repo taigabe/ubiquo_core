@@ -10,16 +10,16 @@ module Ubiquo
     #   the media_selector for instance has to:
     #   1. Add the methods to the global form helper as usual
     #   2. Update UbiquoFormBuilder attributes
-    #   
+    #
     #   The UbiquoFormBuilder becomes proxy of all the FormBuilder methods for
     #   input fields (#text_field, #select_field, #date_select, etc.)
-    #   
-    #   We add a wrapper around all the fields as configured in the 
-    #   Ubiquo::Config.context(:ubiquo_form_builder).get(:default_tag_options)
-    #   
+    #
+    #   We add a wrapper around all the fields as configured in the
+    #   Ubiquo::Settings.context(:ubiquo_form_builder).get(:default_tag_options)
+    #
     #   So all methods mentioned have the following options added, and the proxy
     #   (UbiquoFormBuilder instance) processes them accordingly.
-    #   
+    #
     #   Options for the form field helper methods:
     #   +:translatable+: used to say that the field is translatable. It adds the required
     #     markup to use it. It accepts boolean or a string that will be rendered on the field
@@ -33,14 +33,14 @@ module Ubiquo
     #   +label_as_legend+: renders the label as legend of the wrapping fieldset
     #   +group+: accepts group configurations. See #group method doc.
     #
-    
+
     class UbiquoFormBuilder < ActionView::Helpers::FormBuilder
 
       cattr_accessor :default_tag_options, :groups_configuration
       attr_accessor :group_chain, :builder_options, :enabled
 
       helpers = field_helpers + %w{date_select datetime_select time_select} +
-        %w{collection_select select country_select time_zone_select 
+        %w{collection_select select country_select time_zone_select
           calendar_date_select }
 
       # TODO: integrate relation_selector to this. It now decides the format
@@ -49,8 +49,8 @@ module Ubiquo
 
       # Dont decorate these
       helpers -= %w{hidden_field label fields_for}
-      
-      Ubiquo::Config.context(:ubiquo_form_builder) do |context|
+
+      Ubiquo::Settings.context(:ubiquo_form_builder) do |context|
         self.default_tag_options = context.get(:default_tag_options)
         self.groups_configuration = context.get(:groups_configuration)
       end
@@ -68,13 +68,13 @@ module Ubiquo
         define_method(name) do |field, *args|
           return super unless self.enabled
           options_for_tag = (default_tag_options[name.to_sym] || {}).clone
-          html_options_position = (options_for_tag && 
+          html_options_position = (options_for_tag &&
               options_for_tag.delete(:html_options_position)) || -1 # last by default
           base_args = options_for_tag.delete(:base_args)
           options = args[html_options_position].is_a?(Hash) ? args[html_options_position] : {}
           # Accept a closure
           if options_for_tag.respond_to? :call
-            options_for_tag = options_for_tag.call(binding, field, options ) 
+            options_for_tag = options_for_tag.call(binding, field, options )
           end
           options = options.reverse_merge( options_for_tag )
 
@@ -98,8 +98,8 @@ module Ubiquo
 
           unless args[html_options_position].is_a?(Hash)
             # We cannot set a negative position if it does not exist
-            if html_options_position == -1 
-              args << options 
+            if html_options_position == -1
+              args << options
             else
               if base_args
                 # Set the argument values for middle arguments
@@ -147,7 +147,7 @@ module Ubiquo
 
       def initialize(*args)
         super(*args)
-        Ubiquo::Config.context(:ubiquo_form_builder) do |ctx|
+        Ubiquo::Settings.context(:ubiquo_form_builder) do |ctx|
           self.builder_options = {
             :unfold_tabs => ctx.get(:unfold_tabs),
             :default_group_type => ctx.get(:default_group_type),
@@ -164,7 +164,7 @@ module Ubiquo
       #
       # Options are:
       #   +:type+: the type name of group to render. The default group name is
-      #     read from Ubiquo::Config.context(:ubiquo_form_builder).get(:default_group_type)
+      #     read from Ubiquo::Settings.context(:ubiquo_form_builder).get(:default_group_type)
       #     We get default configuration based on this type. Some of the available
       #     types are :div, :fieldset and :tabbed. To see all of them look at the
       #     ubiquo_core/rails/init.rb in :groups_configuration or get there in runtime.
@@ -176,7 +176,7 @@ module Ubiquo
       #   +:after+: string to append inside the wrapper after the content.
       #
       # Example of tabbed form:
-      # 
+      #
       #     <% form.group(:type=>:tabbed) do %>
       #       <% form.tab("Personal data") do %>
       #         <%= f.text_field :first_name %>
@@ -227,7 +227,7 @@ module Ubiquo
         last_status = self.enabled
         self.enabled = false
         begin
-          manage_result( @template.capture( &block ).to_s, block )          
+          manage_result( @template.capture( &block ).to_s, block )
         ensure
           self.enabled = last_status
         end
@@ -266,7 +266,7 @@ module Ubiquo
       # Shows the back button for a form. Going back to controler index page.
       #
       # +text+ is the text shown in the button.
-      # 
+      #
       # +options+ available:
       #   +:url+ to go back. It's controller index by default
       #   +:i18n_label_key+ key for the translation unless text is not null
@@ -312,11 +312,11 @@ module Ubiquo
       #
       # Notice that block must not have to have an ampersand
       def manage_result result, block
-        @template.concat( result ) if @template.send(:block_called_from_erb?, block )
-        result
+        # No need to do special handling with the ERB changes in Rails 3
+        @template.concat(result)
       end
 
     end
   end
-  
+
 end

@@ -71,7 +71,6 @@ class UbiquoFormBuilderTest < ActionView::TestCase
   end
 
   test "Submit group for new and edit" do
-    self.expects(:ubiquo_users_path).returns("/ubiquo/users")
     self.expects(:t).with("ubiquo.create").returns("ubiquo.create-value")
     self.expects(:t).with("ubiquo.save").returns("ubiquo.save-value")
     self.expects(:t).with("ubiquo.back_to_list").returns("ubiquo.back_to_list-value")
@@ -281,8 +280,8 @@ class UbiquoFormBuilderTest < ActionView::TestCase
   end
 
   test "tabs can be unfolded" do
-    original_value = Ubiquo::Config.context(:ubiquo_form_builder).get(:unfold_tabs)
-    Ubiquo::Config.context(:ubiquo_form_builder).set(:unfold_tabs,true)
+    original_value = Ubiquo::Settings.context(:ubiquo_form_builder).get(:unfold_tabs)
+    Ubiquo::Settings.context(:ubiquo_form_builder).set(:unfold_tabs,true)
     begin
       the_form do |form|
          concat( form.group(:type => :tabbed, :class=> "a-group-of-tabs") do
@@ -296,7 +295,7 @@ class UbiquoFormBuilderTest < ActionView::TestCase
       assert_select ".form-tab-container-unfolded.a-group-of-tabs .form-tab", 1
     ensure
       # Restore config
-      Ubiquo::Config.context(:ubiquo_form_builder).set(:unfold_tabs, original_value )
+      Ubiquo::Settings.context(:ubiquo_form_builder).set(:unfold_tabs, original_value )
     end
   end
 
@@ -346,16 +345,16 @@ class UbiquoFormBuilderTest < ActionView::TestCase
     #   date_select(object_name, method, options = {}, html_options = {}) public
     # where our params must be passed/merged to html_options but there is a chance to work wrong,
     # and is the following:
-    # 
-    #   date_select(object_name, method, {:foo => :bar, :class => "date_select"} ) 
-    #  
+    #
+    #   date_select(object_name, method, {:foo => :bar, :class => "date_select"} )
+    #
     # As you see if the implementation of the form builder adds the options to the last param if it's a hash, then
     # it will fit this case, but what we really want to be called is:
-    # 
-    #   date_select(object_name, method, {:foo => :bar}, {:class => "date_select"} ) 
-    #   
+    #
+    #   date_select(object_name, method, {:foo => :bar}, {:class => "date_select"} )
+    #
     # To fix that we configure the builder to expect the hash in right position.
-    
+
     # mock the default_options hash
     # Using marshal as a trick for deep clone
     old_options = Marshal.load(Marshal.dump(Ubiquo::Helpers::UbiquoFormBuilder.default_tag_options))
@@ -382,7 +381,7 @@ class UbiquoFormBuilderTest < ActionView::TestCase
         concat(form.select(:lastname, choices ))
         concat(form.time_zone_select(:lastname))
       end
-      
+
       assert_select "form .checkboxed"
       assert_select "form .date_select_class"
       assert_select "form .datetime_forced"
@@ -396,7 +395,7 @@ class UbiquoFormBuilderTest < ActionView::TestCase
       Ubiquo::Helpers::UbiquoFormBuilder.default_tag_options = old_options
     end
   end
-  
+
   test "support calendar_date_select" do
     self.expects(:calendar_date_select).returns('<input name="calendar"/>')
     the_form do |form|
@@ -410,7 +409,8 @@ class UbiquoFormBuilderTest < ActionView::TestCase
 
   # helper to build a ubiquo form to test
   def the_form( options={}, &proc)
-    self.expects(:ubiquo_user_path).returns("/ubiquo/users/1")
+    self.stubs(:ubiquo_users_path).returns("/ubiquo/users")
+    self.stubs(:ubiquo_user_path).returns("/ubiquo/users/1")
     options[:builder] = Ubiquo::Helpers::UbiquoFormBuilder
     user = User.new
     form_for([:ubiquo,user], options, &proc)
@@ -419,13 +419,12 @@ class UbiquoFormBuilderTest < ActionView::TestCase
 
 end
 
-
 # Testing purpose class to simulate an ActiveRecord model
-class User
+class User < ActiveRecord::Base
+  conn = ActiveRecord::Base.connection
 
-  def id
-    123
-  end
+  conn.create_table :users do |t|
+  end unless conn.tables.include?('users')
 
   def lastname
     "Bar"
@@ -447,5 +446,4 @@ class User
      }[ attr.to_sym ] || attr.to_s
   end
 end
-
 
