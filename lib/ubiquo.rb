@@ -1,12 +1,29 @@
 module Ubiquo
 
   class Engine < Rails::Engine
-    config.paths["lib"].autoload!
-    config.autoload_paths << "#{config.root}/install/app/controllers"
-    isolate_namespace Ubiquo
-    initializer :load_extensions do
+    module Base
+      def self.included plugin
+        plugin.class_eval do
+          config.paths["lib"].autoload!
+          config.autoload_paths << "#{config.root}/install/app/controllers"
+          isolate_namespace Ubiquo
+          rake_tasks do
+            namespace railtie_name do
+              desc "Install files from #{railtie_name} to application"
+              task :install do
+                ENV["FROM"] = railtie_name
+                require 'ruby-debug';debugger
+              end
+            end
+          end
+        end
+      end
+    end
+    include Ubiquo::Engine::Base
 
+    initializer :load_extensions do
       require 'ubiquo/version'
+      require 'ubiquo/plugin'
       require 'ubiquo/extensions'
       require 'ubiquo/filters'
       require 'ubiquo/helpers'
@@ -34,6 +51,7 @@ module Ubiquo
   def self.supported_locales
     Ubiquo::Settings.get :supported_locales
   end
+
   def self.default_locale
     Ubiquo::Settings.get :default_locale
   end
