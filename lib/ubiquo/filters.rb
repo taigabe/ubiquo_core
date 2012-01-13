@@ -167,7 +167,7 @@ module Ubiquo
     # Thanks to this trick we avoid to define filters two times one
     # for messages and one for render.
     def initialize_filter_set_if_needed
-      helper = "#{@controller.controller_name.singularize}_filters"
+      helper = "#{controller.controller_name.singularize}_filters"
       send(helper) unless @filter_set
     end
 

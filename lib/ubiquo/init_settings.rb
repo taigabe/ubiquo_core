@@ -1,6 +1,6 @@
 require 'ubiquo'
 
-Ubiquo::Plugin.register(:ubiquo, directory, config)
+Ubiquo::Plugin.register(:ubiquo)
 
 Ubiquo::Config.add(:elements_per_page, 10)
 

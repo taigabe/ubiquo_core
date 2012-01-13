@@ -16,7 +16,7 @@ module Ubiquo
       # Returns a Module that, when included, will provide all the scheduled funcionality for +sym+
       def self.extensions_for(sym)
         Module.new{
-          block = Proc.new{|recipient|
+          block = ::Proc.new{|recipient|
             Loader.methods.each do |method|
               Array(Loader.extensions[sym.to_s][method]).each do |k|
                 recipient.send(method, k)
