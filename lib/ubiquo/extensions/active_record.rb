@@ -103,7 +103,7 @@ module Ubiquo
       # see self.create_scopes documentation for an example
       def apply_find_scopes(scopes, &initial)
         scopes.compact.inject(initial) do |block, value|
-          Proc.new do
+          lambda do
             with_scope({:find => value}, &block)
           end
         end.call

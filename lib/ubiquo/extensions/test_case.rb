@@ -117,10 +117,10 @@ module Ubiquo
             (class << self; self end).class_eval do
               eval <<-CONN
                 def test_with_connector name, &block
-                  block_with_connector_load = Proc.new{
+                  block_with_connector_load = lambda do
                     "#{plugin.to_s.camelize}::Connectors::#{conn.to_s.camelize}".constantize.load!
                     block.bind(self).call
-                  }
+                  end
                   test_without_connector "#{conn}_\#{name}", &block_with_connector_load
                 end
               CONN

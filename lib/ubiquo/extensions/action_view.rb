@@ -3,7 +3,7 @@ module Ubiquo
     module ActionView
       # Return a proc that marks an html tag as an error
       def self.ubiquo_field_error_proc
-        Proc.new do |html_tag, instance|
+        lambda do |html_tag, instance|
           msg = instance.error_message
           error_class = Ubiquo::Settings.get(:error_field_class)
           unless (html_tag =~ /<input.*?type=\"(checkbox|radio|file)\"/)
