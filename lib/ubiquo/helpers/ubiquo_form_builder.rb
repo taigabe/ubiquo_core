@@ -66,7 +66,7 @@ module Ubiquo
       def self.initialize_method( name, tag_options = nil )
         default_tag_options[name.to_sym] = tag_options if tag_options
         define_method(name) do |field, *args|
-          return super unless self.enabled
+          return super(field, *args) unless self.enabled
           options_for_tag = (default_tag_options[name.to_sym] || {}).clone
           html_options_position = (options_for_tag &&
               options_for_tag.delete(:html_options_position)) || -1 # last by default

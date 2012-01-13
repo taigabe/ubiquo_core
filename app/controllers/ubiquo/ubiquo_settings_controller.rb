@@ -1,7 +1,5 @@
 class Ubiquo::UbiquoSettingsController < UbiquoController
 
-  Ubiquo::Extensions.load_extensions_for UbiquoController, self
-
   ubiquo_config_call :settings_access_control
 
   # GET /settings

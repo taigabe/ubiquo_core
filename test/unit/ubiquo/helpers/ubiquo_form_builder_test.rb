@@ -100,14 +100,14 @@ class UbiquoFormBuilderTest < ActionView::TestCase
     self.expects(:t).with("ubiquo.save-custom").returns("ubiquo.save-custom-value")
 
     the_form do |f|
-      concat( f.submit_group( :class => "alter-submit" ) do
+      f.submit_group( :class => "alter-submit") do
         # Custom params
-        concat f.create_button( "c-custom", :class => "bt-create2" )
-        concat f.create_button( nil, :i18n_label_key => "ubiquo.create-custom")
-        concat f.back_button( "back-custom", {:js_function => "alert('foo');", :class => "bt-back2"} )
-        concat f.update_button( "u-custom", :class => "bt-update2" )
-        concat f.update_button( nil, :i18n_label_key => "ubiquo.save-custom")
-      end )
+        f.create_button( "c-custom", :class => "bt-create2" )
+        f.create_button( nil, :i18n_label_key => "ubiquo.create-custom")
+        f.back_button( "back-custom", {:js_function => "alert('foo');", :class => "bt-back2"} )
+        f.update_button( "u-custom", :class => "bt-update2" )
+        f.update_button( nil, :i18n_label_key => "ubiquo.save-custom")
+      end
     end
 
     assert_select "form div.alter-submit", 1 do |blocks|
@@ -124,17 +124,17 @@ class UbiquoFormBuilderTest < ActionView::TestCase
 
   test "custom_block" do
     the_form do |form|
-      concat( form.custom_block do
-        concat( '<div class="custom-form-item">' )
-        concat( form.label :lastname, "imalabel")
-        concat( form.text_field :lastname)
-        concat("</div>")
-     end )
+      form.custom_block do
+        '<div class="custom-form-item">'
+        form.label :lastname, "imalabel"
+        form.text_field :lastname
+        "</div>"
+     end
     end
 
     assert_select "form > div.form-item", 0
     # Only a label (means that text_field has not generated any label)
-    assert_select "form label", "imalabel", 1
+    assert_select "form label", "imalabel"
 
     assert_select "form input[type='text'][value='Bar']", 1
   end
@@ -413,8 +413,7 @@ class UbiquoFormBuilderTest < ActionView::TestCase
     self.stubs(:ubiquo_user_path).returns("/ubiquo/users/1")
     options[:builder] = Ubiquo::Helpers::UbiquoFormBuilder
     user = User.new
-    form_for([:ubiquo,user], options, &proc)
-    @rendered = ""
+    render :text => form_for([:ubiquo,user], options, &proc)
   end
 
 end

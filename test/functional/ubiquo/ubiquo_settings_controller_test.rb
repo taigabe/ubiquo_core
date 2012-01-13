@@ -9,7 +9,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     Ubiquo::Settings.create_context(:controller_test) rescue nil
     Ubiquo::Settings.create_context(:controller_test_2) rescue nil
     session[:locale] = "en_US"
-    login_as :admin
+#    login_as :admin
   end
 
   def teardown
@@ -306,7 +306,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     translated_key = 'This key is translated'
     non_translated_key = 'Non translated key setting'
 
-    Ubiquo::Config[:supported_locales].each do |locale|
+    Ubiquo::Settings[:supported_locales].each do |locale|
       I18n.backend.store_translations locale,
         {:ubiquo => {:ubiquo_settings => {:controller_test => {:translated_key_setting => {:name => translated_key}}}}}
     end
