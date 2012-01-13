@@ -35,6 +35,6 @@ module Ubiquo
 end
 
 ActiveRecord::Base.send :include, Ubiquo::RequiredFields::ActiveRecord
-ActiveRecord::Validations::ClassMethods.send :include, Ubiquo::RequiredFields::Validations
+ActiveModel::Validations::ClassMethods.send :include, Ubiquo::RequiredFields::Validations
 ActionView::Helpers::FormHelper.send :include, Ubiquo::RequiredFields::FormHelper
 ActionView::Helpers::FormTagHelper.send :include, Ubiquo::RequiredFields::FormTagHelper
