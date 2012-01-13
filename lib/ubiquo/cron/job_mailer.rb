@@ -18,11 +18,11 @@ module Ubiquo
       #   execution of the job.
       # * +error_message- string with the error message.
       def error(error_recipients, job, execution_message, error_message, sent_at = Time.now)
-        app_name = Ubiquo::Config.get(:app_name)
+        app_name = Ubiquo::Settings.get(:app_name)
         content_type "text/plain"
         charset 'utf-8'
         recipients error_recipients
-        from Ubiquo::Config.get(:notifier_email_from)
+        from Ubiquo::Settings.get(:notifier_email_from)
         sent_on sent_at
         subject "[#{app_name} #{Rails.env} CRON JOB ERROR] for job: #{job}"
         body(
@@ -36,7 +36,7 @@ module Ubiquo
       private
 
       def app_name
-        Ubiquo::Config.get(:app_name)
+        Ubiquo::Settings.get(:app_name)
       end
 
     end

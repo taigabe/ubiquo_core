@@ -17,19 +17,24 @@ module Ubiquo
       require 'ubiquo/adapters'
       require 'ubiquo/relation_selector'
 
-      Ubiquo::Config.add(:supported_locales, [ :ca, :es, :en ])
-      Ubiquo::Config.add(:default_locale, :ca)
     end
 
     initializer :register_ubiquo_plugin do
       require 'ubiquo/init_settings.rb'
     end
+
+    initializer :load_settings_connector do
+      if Ubiquo::Plugin.registered[:ubiquo_i18n]
+        Ubiquo::Settings[:settings_connector] = :i18n
+      end
+      Ubiquo::SettingsConnectors.load!
+    end
   end
 
   def self.supported_locales
-    Ubiquo::Config.get :supported_locales
+    Ubiquo::Settings.get :supported_locales
   end
   def self.default_locale
-    Ubiquo::Config.get :default_locale
+    Ubiquo::Settings.get :default_locale
   end
 end

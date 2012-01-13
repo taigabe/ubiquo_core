@@ -142,7 +142,7 @@ module Ubiquo
 
       def process_groups(group_list)
         group_list.to_s.split(',').each do |group|
-          tables = Ubiquo::Config.get(:model_groups)[group.to_sym]
+          tables = Ubiquo::Settings.get(:model_groups)[group.to_sym]
           tables.each do |table|
             yield table
           end if tables

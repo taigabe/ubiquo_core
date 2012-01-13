@@ -6,9 +6,13 @@ module Ubiquo
     self.registered ||= {}
 
     def self.register(name, &block)
-      Ubiquo::Config.create_context(name)
-      Ubiquo::Config.context(name, &block)
+      Ubiquo::Settings.create_context(name)
+      Ubiquo::Settings.context(name, &block)
       self.registered[name] = name
+    end
+
+    def setting(*args)
+      Ubiquo::Settings.add(args)
     end
 
   end

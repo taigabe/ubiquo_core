@@ -23,6 +23,7 @@ optionals:
 
 model ||= name.classify
 model = model.to_s.constantize
+hide_headers ||= false
 hide_actions ||= false
 link_to_new ||= ""
 table_id ||= name.pluralize + "-list"
@@ -36,32 +37,34 @@ table_class += " edit_on_row_click" if edit_on_row_click
 	<%= link_to_new %>
   <% end %>
   <table id="<%= table_id %>" class="<%= table_class %>" width="100%" border="1" cellspacing="0" cellpadding="3">
-    <tr>
-      <% headers.each do |column| %>
-        <th><%= ubiquo_table_headerfy column, name %></th>
-      <% end %>
-      <% unless hide_actions %>
-        <th class="actions"><%= t('ubiquo.base.actions') %></th>
-      <% end %>
+    <% unless hide_headers %>
+    <tr>      
+        <% headers.each do |column| %>
+          <th><%= ubiquo_table_headerfy column, name %></th>
+        <% end %>
+        <% unless hide_actions %>
+          <th class="actions"><%= t('ubiquo.base.actions') %></th>
+        <% end %>      
+    </tr>
+    <% end %>
+    <% rows.each do |row| %>
+      <tr class="<%= cycle('even', 'odd') %>" id="<%= name %>_<%= row[:id] %>">
+        <% row[:columns].each do |col| %>
+          <td>
+            <%=
+               case col
+                 when ActiveSupport::TimeWithZone : l(col)
+                 when TrueClass, FalseClass : ubiquo_boolean_image(col)
+                 else col.to_s
+               end %>
+          </td>
+        <% end %>
+        <% unless hide_actions %>
+          <td class="actions">
+            <%= row[:actions].delete_if{|r|r.blank?}.join(' ') %>
+          </td>
+        <% end %>
       </tr>
-      <% rows.each do |row| %>
-        <tr class="<%= cycle('even', 'odd') %>" id="<%= name %>_<%= row[:id] %>">
-          <% row[:columns].each do |col| %>
-            <td>
-              <%=
-                 case col
-                   when ActiveSupport::TimeWithZone : l(col)
-                   when TrueClass, FalseClass : ubiquo_boolean_image(col)
-                   else col.to_s
-                 end %>
-            </td>
-          <% end %>
-          <% unless hide_actions %>
-            <td class="actions">
-              <%= row[:actions].delete_if{|r|r.blank?}.join(' ') %>
-            </td>
-          <% end %>
-        </tr>
     <% end %>
   </table>
   <% if !pages.nil? %>

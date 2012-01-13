@@ -27,7 +27,7 @@ module Ubiquo
       # ]
       def ubiquo_paginate(options = {})
         options.delete_if{|o1,o2| o2.blank? }
-        options.reverse_merge!({:page => 1, :per_page => Ubiquo::Config.get(:elements_per_page) })
+        options.reverse_merge!({:page => 1, :per_page => Ubiquo::Settings.get(:elements_per_page) })
         items = self.with_scope(:find => {:limit => (options[:per_page].to_i + 1), :offset => (options[:per_page].to_i * (options[:page].to_i - 1))}) do
           yield
         end
@@ -44,7 +44,7 @@ module Ubiquo
       # Intermediate method customizing paperclip has_attached_file
       # Calls paperclip with id_partition (folders style 000/000/001) in path and url params
       def file_attachment(field, options = {})
-        options.reverse_merge!(Ubiquo::Config.get(:attachments))
+        options.reverse_merge!(Ubiquo::Settings.get(:attachments))
         visibility = options[:visibility]
 
         # Comment it because we didn't achieved run path with lambda

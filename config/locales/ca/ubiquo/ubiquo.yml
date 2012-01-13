@@ -1,5 +1,25 @@
 ca:
   ubiquo:
+    ubiquo_setting:
+      created: "paràmetres de configuració guardats"
+      createds: "paràmetres de configuració guardats"
+      destroy_error: "Error restaurant un paràmetre de configuració"
+      destroyed: "Restaurat el valor per defecte del paràmetre %{key} de l'àmbit %{context}"
+      empty_list_title: "Llistat de paràmetres de configuració"
+      empty_list_message: "Des d'aquest apartat pots veure una llista de tots els recursos existents editables. Podràs crear-los, editar-los o esborrar-los."
+      index:
+        title: "Configuració"
+        add_value: "Afegir valor"
+        remove_value: "Eliminar valor"
+        confirm_restore_default: "Està segur de voler tornar al valor per defecte?"
+        restore_default: "Restaurar valor per defecte"
+        save: "Guardar"
+        save_all: "Guardar tots"
+        translatable: "T"
+        not_value_for_locale: "No existeix valor per aquest idioma, generat d'un altre"
+      error: "paràmetre de configuració amb errors"
+      errors: "paràmetres de configuració amb errors"
+      title: "Configuració"
     language: "Idioma"
     create: "Crear"
     edit: "Editar"
