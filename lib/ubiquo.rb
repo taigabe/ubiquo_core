@@ -3,7 +3,7 @@ module Ubiquo
   class Engine < Rails::Engine
     config.paths["lib"].autoload!
     config.autoload_paths << "#{config.root}/install/app/controllers"
-
+    isolate_namespace Ubiquo
     initializer :load_extensions do
 
       require 'ubiquo/version'
