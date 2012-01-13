@@ -6,3 +6,5 @@ pkg/*
 .rvmrc
 test/dummy/log
 test/dummy/db/*.sqlite3
+test/dummy/config/tiny_mce.yml
+test/dummy/public
