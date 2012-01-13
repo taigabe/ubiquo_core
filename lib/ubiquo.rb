@@ -4,18 +4,33 @@ module Ubiquo
     module Base
       def self.included plugin
         plugin.class_eval do
+          # Configure some default autoload paths
           config.paths["lib"].autoload!
           config.autoload_paths << "#{config.root}/install/app/controllers"
+
           isolate_namespace Ubiquo
+
+          # Define ubiquo_xxx:install task
           rake_tasks do
             namespace railtie_name do
               desc "Install files from #{railtie_name} to application"
               task :install do
                 ENV["FROM"] = railtie_name
-                require 'ruby-debug';debugger
               end
             end
           end
+
+          # All our initializers will be run by default before the app initializers
+          class << self
+            def initializer_with_default_before(name, opts = {}, &blk)
+              unless opts[:after] or opts[:before]
+                opts[:before] = :load_config_initializers
+              end
+              initializer_without_default_before(name, opts, &blk)
+            end
+            alias_method_chain :initializer, :default_before
+          end
+
         end
       end
     end
