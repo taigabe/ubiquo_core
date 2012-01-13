@@ -36,7 +36,7 @@ class UbiquoSettingTest < ActiveSupport::TestCase
   def test_should_not_create_values_for_not_existent_settings
      assert_no_difference ['UbiquoSetting.count', 'UbiquoStringSetting.count'] do
      ubiquo_setting = create_ubiquo_setting(UbiquoStringSetting, :key => "foooo")
-     assert ubiquo_setting.errors.on(:key)
+     assert ubiquo_setting.errors[:key]
    end
 
   end
@@ -44,14 +44,14 @@ class UbiquoSettingTest < ActiveSupport::TestCase
   def test_requires_existent_context
     assert_no_difference ['UbiquoSetting.count', 'UbiquoStringSetting.count'] do
       ubiquo_setting = create_ubiquo_setting(UbiquoStringSetting, :context => "non-existant")
-      assert ubiquo_setting.errors.on(:context)
+      assert ubiquo_setting.errors[:context]
     end
   end
 
   def test_should_require_key
     assert_no_difference ['UbiquoSetting.count', 'UbiquoStringSetting.count'] do
       ubiquo_setting = create_ubiquo_setting(UbiquoStringSetting, :key => "")
-      assert ubiquo_setting.errors.on(:key)
+      assert ubiquo_setting.errors[:key]
     end
   end
 
@@ -60,14 +60,14 @@ class UbiquoSettingTest < ActiveSupport::TestCase
     Ubiquo::Settings.add(key, "Hello!")
     assert_no_difference ['UbiquoSetting.count', 'UbiquoStringSetting.count'] do
       ubiquo_setting = create_ubiquo_setting(UbiquoStringSetting, :key => key)
-      assert ubiquo_setting.errors.on(:value)
+      assert ubiquo_setting.errors[:value]
     end
 
     key = "not_nullable_setting_clone"
     Ubiquo::Settings.add(key, "Hello!", :is_nullable => false)
     assert_no_difference ['UbiquoSetting.count', 'UbiquoStringSetting.count'] do
       ubiquo_setting = create_ubiquo_setting(UbiquoStringSetting, :key => key)
-      assert ubiquo_setting.errors.on(:value)
+      assert ubiquo_setting.errors[:value]
     end
 
     key = "nullable_setting"
