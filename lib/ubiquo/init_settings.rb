@@ -19,12 +19,10 @@ Ubiquo::Plugin.register(:ubiquo) do |setting|
   setting.add :ubiquo_path, 'ubiquo'
   setting.add :settings_overridable, false
   setting.add :settings_access_control, lambda{
-    # FIXME define a mock access_control
-#    access_control :DEFAULT => "settings_management"
+    access_control :DEFAULT => "settings_management"
   }
   setting.add :settings_permit, lambda{
-    # FIXME define a mock permit?
-#    permit?("ubiquo_settings_management")
+    permit?("ubiquo_settings_management")
   }
 end
 
