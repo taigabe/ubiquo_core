@@ -138,7 +138,10 @@ ca:
     month_names: [~, Gener, Febrer, Març, Abril, Maig, Juny, Juliol, Agost, Setembre, Octubre, Novembre, Desembre]
     abbr_month_names: [~, Gen, Febr, Març, Abr, Maig, Juny, Jul, Ag, Set, Oct, Nov, Des]
     # Used in date_select and datime_select.
-    order: [ :day, :month, :year ]
+    order:
+      - :day
+      - :month
+      - :year
 
   time:
     formats:
