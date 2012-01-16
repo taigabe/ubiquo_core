@@ -25,7 +25,7 @@
         <div id="header_central">
           <h1>
             <%#= ubiquo_image_tag "app_logo.png" %>
-            <%= link_to Ubiquo::Settings.get(:app_title), ubiquo_home_path %>
+            <%= link_to Ubiquo::Settings.get(:app_title), ubiquo.home_path %>
           </h1>
           <%= locale_selector if respond_to?(:locale_selector) %>
         </div>
