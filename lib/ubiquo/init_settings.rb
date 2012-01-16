@@ -26,8 +26,14 @@ Ubiquo::Plugin.register(:ubiquo) do |setting|
   }
 end
 
-Ubiquo::Settings.add(:supported_locales, [ :ca, :es, :en ])
-Ubiquo::Settings.add(:default_locale, :ca)
+Ubiquo::Settings.add do |app_config|
+  app_config.app_name = "u09"
+  app_config.app_title = "U09"
+  app_config.app_description = "U09"
+  app_config.notifier_email_from = "change@me.com"
+  app_config.supported_locales = [:ca, :es, :en ]
+  app_config.default_locale = :ca
+end
 
 Ubiquo::Settings.add(:edit_on_row_click, true)
 
