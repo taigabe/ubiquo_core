@@ -6,6 +6,7 @@ module Ubiquo
         plugin.class_eval do
           # Configure some default autoload paths
           config.paths["lib"].autoload!
+          config.paths["config/locales"].glob = "**/*.{rb,yml}"
           config.autoload_paths << "#{config.root}/install/app/controllers"
 
           isolate_namespace Ubiquo
@@ -13,9 +14,13 @@ module Ubiquo
           # Define ubiquo_xxx:install task
           rake_tasks do
             namespace railtie_name do
+              require 'ubiquo/tasks/files.rb'
+
               desc "Install files from #{railtie_name} to application"
               task :install do
                 ENV["FROM"] = railtie_name
+                overwrite = ['yes','true'].include?(ENV.delete("OVERWRITE"))
+                Ubiquo::Tasks::Files.copy_dir(Dir.glob(config.root.join('install')), "/", :force => overwrite)
               end
             end
           end
@@ -34,7 +39,6 @@ module Ubiquo
         end
       end
     end
-    include Ubiquo::Engine::Base
 
     initializer :load_extensions do
       require 'ubiquo/version'
@@ -49,11 +53,11 @@ module Ubiquo
       require 'ubiquo/adapters'
       require 'ubiquo/relation_selector'
       require 'ubiquo/permissions_interface'
-
+      require 'ubiquo/init_settings.rb'
     end
 
     initializer :register_ubiquo_plugin do
-      require 'ubiquo/init_settings.rb'
+#      require 'ubiquo/init_settings.rb'
     end
 
     initializer :load_settings_connector do
@@ -62,6 +66,9 @@ module Ubiquo
       end
       Ubiquo::SettingsConnectors.load!
     end
+    include Ubiquo::Engine::Base
+
+
   end
 
   def self.supported_locales
