@@ -1,4 +1,5 @@
 require File.dirname(__FILE__) + "/../ubiquo/tasks/files"
+require 'rake/testtask'
 
 namespace :ubiquo do
   namespace :test do
