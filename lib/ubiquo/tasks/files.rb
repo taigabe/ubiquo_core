@@ -38,6 +38,7 @@ module Ubiquo
           end
         end
       end
+      module_function :copy_dir
     end
   end
 end
