@@ -30,6 +30,7 @@ module Ubiquo
             def initializer_with_default_before(name, opts = {}, &blk)
               unless opts[:after] or opts[:before]
                 opts[:before] = :load_config_initializers
+                opts[:after]  = :load_ubiquo_core_extensions
               end
               initializer_without_default_before(name, opts, &blk)
             end
@@ -40,7 +41,7 @@ module Ubiquo
       end
     end
 
-    initializer :load_extensions do
+    initializer :load_ubiquo_core_extensions do
       require 'ubiquo/version'
       require 'ubiquo/plugin'
       require 'ubiquo/extensions'
