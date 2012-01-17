@@ -168,11 +168,6 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
 
   end
 
-  def test_should_update_setting
-#    put :update, :id => (:one).id, :category => category_attributes, :category_set_id => category_sets(:one).id
-#    assert_redirected_to ubiquo_category_set_categories_url
-  end
-
   # destroy = restore default
   # Destroy Setting and set the default_value for  the setting
   def test_should_destroy_ubiquo_setting

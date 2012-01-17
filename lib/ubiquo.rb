@@ -7,6 +7,10 @@ module Ubiquo
           # Configure some default autoload paths
           config.paths["lib"].autoload!
           config.paths["config/locales"].glob = "**/*.{rb,yml}"
+
+          # If the views or controllers are not found in the app (e.g. in tests),
+          # the default ones will be used
+          config.paths["app/views"] << "#{config.root}/install/app/views"
           config.autoload_paths << "#{config.root}/install/app/controllers"
 
           isolate_namespace Ubiquo

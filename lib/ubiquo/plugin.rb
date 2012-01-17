@@ -11,6 +11,10 @@ module Ubiquo
       self.registered[name] = name
     end
 
+    def self.registered?(name)
+      registered.include?(name)
+    end
+
     def setting(*args)
       Ubiquo::Settings.add(args)
     end

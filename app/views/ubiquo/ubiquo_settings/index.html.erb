@@ -5,13 +5,13 @@
 
 <% if @contexts.present? %>
 
-  <% ubiquo_form_for([:ubiquo, UbiquoSetting.new]) do |form| %>
+  <% ubiquo_form_for(UbiquoSetting.new) do |form| %>
     <div class="settings">
       <%= ubiquo_setting_list(@contexts, form) %>
     </div>
   <% end %>
 
-  <% form_tag(ubiquo_ubiquo_settings_path, :id => 'bulk_submit', :style => 'display:none') do %>
+  <% form_tag(ubiquo.ubiquo_settings_path, :id => 'bulk_submit', :style => 'display:none') do %>
   <% end %>
 
 <% else %>

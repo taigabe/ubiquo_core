@@ -158,7 +158,7 @@ module Ubiquo
         end
 
         module ClassMethods
-          def uhook_find_or_build context, key
+          def uhook_find_or_build context, key, options = {}
             setting = ::UbiquoSetting.context(context.to_s).key(key.to_s).first
             setting ||= uhook_generate_instance(context, key)
           end

@@ -4,6 +4,12 @@ module Ubiquo
 
       class AssociationNotFound < StandardError; end
 
+      class UbiquoStylesheetIncludeTag < ActionView::Helpers::AssetTagHelper::StylesheetIncludeTag
+        def custom_dir
+
+        end
+      end
+
       # Adds the default stylesheet tags needed for ubiquo
       # options:
       #   color: by default is red, but you can replace it calling another color
@@ -11,13 +17,13 @@ module Ubiquo
       #   rest of options: this helper doesn't user more options, the rest are
       #                    send to stylesheet_link_tag generic helper
       def ubiquo_stylesheet_link_tag(*sources)
-        stylesheets_dir = ActionView::Helpers::AssetTagHelper::STYLESHEETS_DIR + '/ubiquo'
         options = sources.extract_options!.stringify_keys
         color = options.delete("color") || :red
         default_sources = []
         if sources.include?(:defaults)
           default_sources += [:ubiquo, :ubiquo_application, :lightwindow, :ubiquo_lightwindow, :listings, color]
-          default_sources += collect_asset_files("#{stylesheets_dir}", "plugins/*.css")
+#          require 'ruby-debug';debugger
+#          default_sources += tag.send :collect_asset_files, "ubiquo/plugins/*.css"
           default_sources += [:ipad] if defined?( request ) && request.user_agent.match(/Apple.*Mobile/)
         end
         ubiquo_sources = (sources + default_sources).collect do |source|
@@ -39,12 +45,11 @@ module Ubiquo
       end
 
       def ubiquo_javascript_include_tag(*sources)
-        javascripts_dir = ActionView::Helpers::AssetTagHelper::JAVASCRIPTS_DIR + '/ubiquo'
         options = sources.extract_options!.stringify_keys
         default_sources = []
         if sources.include?(:defaults)
           default_sources += [:ubiquo, :lightwindow, :lightwindow_ubiquo]
-          default_sources += collect_asset_files("#{javascripts_dir}", "plugins/*.js")
+#          default_sources += collect_asset_files "ubiquo/plugins/*.js"
         end
         ubiquo_sources = (sources + default_sources).collect do |source|
           next if source == :defaults
@@ -80,13 +85,12 @@ module Ubiquo
       def ubiquo_sidebar_box(title, options, &block)
         css_class = "sidebar_box #{options[:class]}".strip
         extra_header = options[:extra_header] || ''
-        result = content_tag(:div, :class => css_class, :id => options[:id]) do
+        content_tag(:div, :class => css_class, :id => options[:id]) do
           content_tag(:div, :class => "header") do
             content_tag(:h3, title) + extra_header
           end + \
           content_tag(:div, capture(&block), :class => "content")
         end
-        block_called_from_erb?(block) ? concat(result) : result
       end
 
       # Return true if string_date is a valid date representation with a
