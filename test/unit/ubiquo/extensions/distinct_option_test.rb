@@ -29,7 +29,7 @@ class Ubiquo::Extensions::DistinctOptionTest < ActiveSupport::TestCase
       assert_equal 1, results.size
       # should not raise a exception
       assert results.first.name
-      assert_raise ActiveRecord::MissingAttributeError do
+      assert_raise ActiveModel::MissingAttributeError do
         results.first.arbitrary_name # only :name and :id has been loaded (preserves :select)
       end
     end

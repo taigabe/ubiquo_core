@@ -1,39 +1,51 @@
 module Ubiquo
   module Extensions
+    # As of Rails 3.2, an ActiveRecord::Relation#uniq exists that does what
+    # ubiquo's :distinct option previously did. But looks like it's not working
+    # correctly for calculations (some tests from distinct_option_test were failing),
+    # so we leave the :distinct option here until that's fixed.
+    # There is also an issue with Postgres select/order clauses, fixed here.
+    # Once uniq works as expected, :distinct support can be removed.
     module DistinctOption
 
-      def self.extended klass
-        klass.singleton_class.class_eval do |metaclass|
-          metaclass::VALID_FIND_OPTIONS << :distinct
-          alias_method_chain :construct_finder_sql,      :distinct
-          alias_method_chain :construct_calculation_sql, :distinct
+      def self.included klass
+        klass.class_eval do
+          klass::VALID_FIND_OPTIONS << :distinct
+          alias_method_chain :apply_finder_options, :distinct
+          attr_accessor :using_distinct
+        end
+        ::ActiveRecord::Calculations.class_eval do
+          include Calculations
+          alias_method_chain :calculate, :distinct
         end
       end
 
       # Applies the :distinct option when constructing sql queries
-      def construct_finder_sql_with_distinct(options)
-        scope = scope(:find)
-        if options[:distinct] || (scope && scope[:distinct])
+      def apply_finder_options_with_distinct(options)
+        if options[:distinct]
           options_with_distinct = options.merge(:select => select_distinct(options))
+          self.using_distinct = true
         end
-        construct_finder_sql_without_distinct(options_with_distinct || options)
+        apply_finder_options_without_distinct(options_with_distinct || options)
       end
 
+      module Calculations
       # Applies the :distinct option when constructing COUNT sql queries
-      def construct_calculation_sql_with_distinct(operation, column_name, options)
-        scope = scope(:find)
-        if scope && scope[:distinct]
+      def calculate_with_distinct(operation, column_name, options = {})
+        if using_distinct
+          # column_name must be fixed since Rails default behaviour is not correct
           column_name = [connection.quote_table_name(table_name), primary_key] * '.'
           options_with_distinct = options.merge(:distinct => true)
         end
-        construct_calculation_sql_without_distinct(operation, column_name, options_with_distinct || options)
+        calculate_without_distinct(operation, column_name, options_with_distinct || options)
+      end
       end
 
       # Creates a valid SELECT DISTINCT clause,
       # that in Postgres takes into account the content in options[:order]
       def select_distinct(options)
-        scope = scope(:find) rescue nil
-        rails_select = options[:select] || (scope && scope[:select]) || default_select(true)
+        select_in_scope_attributes = select_values.join if select_values.present?
+        rails_select = options[:select] || select_in_scope_attributes || default_select
 
         if connection.adapter_name == 'PostgreSQL'
           # By default table.id is the distinct on clause.
@@ -48,11 +60,15 @@ module Ubiquo
         end
       end
 
-      # Given an +options+ hash and the possibly applied scopes,
+      # Returns the default content of a select clause
+      def default_select
+        quoted_table_name + '.*'
+      end
+
+      # Given an +options+ hash with an :order key,
       # returns the model fields that are being used to order.
       def get_order_fields(options)
-        scope = scope(:find) rescue nil
-        if order = (options[:order] || (scope && scope[:order]))
+        if order = options[:order]
           # general case: order is "table1.field1 asc, table2.field2 DESC"
           orders = order.split(',').map{|ord| ord.split(' ')}
 
