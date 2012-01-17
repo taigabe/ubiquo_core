@@ -411,7 +411,7 @@ module Ubiquo
 
             if ubiquo_setting.id && !ubiquo_setting.generated_from_another_value?
               restore_text = t('ubiquo.ubiquo_setting.index.restore_default')
-              restore_url  = ubiquo_ubiquo_setting_path(ubiquo_setting)
+              restore_url  = ubiquo.ubiquo_setting_path(ubiquo_setting)
               confirm_text = t('ubiquo.ubiquo_setting.index.confirm_restore_default')
 
               actions << link_to(restore_text,
@@ -470,7 +470,7 @@ module Ubiquo
           # Performs any required action on setting when in edit
           def uhook_edit_ubiquo_setting ubiquo_setting
             unless ubiquo_setting.in_locale?(current_locale)
-              redirect_to(ubiquo_ubiquo_settings_path)
+              redirect_to(ubiquo.ubiquo_settings_path)
               false
             end
           end

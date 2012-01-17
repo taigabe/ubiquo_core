@@ -6,7 +6,7 @@ module Ubiquo
           tab.text = I18n.t("ubiquo.ubiquo_setting.title")
           tab.title = I18n.t("ubiquo.ubiquo_setting.title")
           tab.highlights_on({:controller => "ubiquo/ubiquo_settings"})
-          tab.link = ubiquo_ubiquo_settings_path
+          tab.link = ubiquo.ubiquo_settings_path
         end if ubiquo_config_call :settings_permit, {:context => :ubiquo}
       end
     end
