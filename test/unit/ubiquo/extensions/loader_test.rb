@@ -20,14 +20,14 @@ class Ubiquo::Extensions::LoaderTest < ActiveSupport::TestCase
     Test.send('remove_const', 'MyClass')
     Ubiquo::Extensions::Loader.append_include('Test::MyClass', Test::MyModule)
     Test.const_set('MyClass', Class.new)
-    assert Test::MyClass.instance_methods.include?('my_method')
+    assert Test::MyClass.instance_methods.include?(:my_method)
   end
 
   def test_append_methods_should_schedule_automatic_inclusion_when_defined_after_with_normal_def
     Test.send('remove_const', 'MyClass')
     Ubiquo::Extensions::Loader.append_include('Test::MyClass', Test::MyModule)
     Test.class_eval "class MyClass; end"
-    assert Test::MyClass.instance_methods.include?('my_method')
+    assert Test::MyClass.instance_methods.include?(:my_method)
   end
 
   def test_append_methods_should_allow_inclusion_in_other_classes
@@ -35,7 +35,7 @@ class Ubiquo::Extensions::LoaderTest < ActiveSupport::TestCase
     Test::OtherClass.class_eval do
       Ubiquo::Extensions.load_extensions_for Test::MyClass, self
     end
-    assert Test::OtherClass.instance_methods.include?('my_method')
+    assert Test::OtherClass.instance_methods.include?(:my_method)
   end
 
 end
