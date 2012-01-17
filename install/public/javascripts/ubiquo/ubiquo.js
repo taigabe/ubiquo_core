@@ -25,9 +25,9 @@ document.observe("dom:loaded", function() {
             Event.stop(ev);
           });
       }
-      
+
       edit_url = null;
-      if(edit_btn != undefined){ 
+      if(edit_btn != undefined){
           e.addClassName("editable");
           edit_url = edit_btn.readAttribute('href');
           e.writeAttribute('title',edit_btn.readAttribute('title'));
@@ -47,8 +47,8 @@ document.observe("dom:loaded", function() {
           });
 
       }
-      
-      
+
+
       // Is there any action left?
       // otherways remove the "actions" cell from everywhere
       if( e.select(".actions a").length > 0 ) remove_actions_cell = false;
@@ -122,7 +122,7 @@ document.observe("dom:loaded", function() {
   if (first_form) {
     var first_input = first_form.select('input[type!=hidden]').first();
     if (first_input) { //Ubiquo form
-      first_input.focus(); 
+      first_input.focus();
     }
   }
 });
@@ -203,7 +203,7 @@ Ubiquo.Forms.createTabs = function(parent_selector,title_selector){
             group.insert({ top: tab_menu });
 
             //hide titles and put them as tab menu items
-            var tabs = group.down('.tabs-container').childElements();
+            var tabs = group.down('.tabs-container').immediateDescendants().select(function(e){return !!e.down(title_selector);})
             tabs.each(function(i,index) {
                 i.addClassName('tab');
 
@@ -238,7 +238,10 @@ Ubiquo.Forms.createTabs = function(parent_selector,title_selector){
                     var container = tab.up(".tabs-container");
                     if( container ){
                         var idx = container.childElements().indexOf( tab );
-                        container.up().down(".tabs-menu").childElements()[idx].addClassName("with-errors");
+                        var element = container.up().down(".tabs-menu").childElements()[idx];
+                        if(element){
+                          element.addClassName("with-errors");
+                        }
                     }
                 }
             });
@@ -388,3 +391,4 @@ function collectAndSendValues(selectedContext, selectedSettingKey){
 //Init tabs before page load but after required dom objects loaded.
 //This initalization could be done on dom:loaded but it creates a strange effect.
 Ubiquo.Forms.createTabs(".form-tab-container","legend");
+
