@@ -33,45 +33,29 @@ module Ubiquo
       # ( the navigator must be configured previously with 'create_link_navigator' method )
       #
       def render_link_navigator(navigator, options = {})
-
         return if navigator.links.empty?
-
         navigator.html_options[:id]    ||= options[:id]
         navigator.html_options[:class] ||= options[:class]
-
-        @html = tag('ul', navigator.html_options , true)
-
-        navigator.links.each do |link|
-
-          li_options = {}
-          li_options[:id] = "#{link.id}" if link.id
-          li_options[:class] = link.class ? "#{link.class}" : ""
-
-          if link.is_highlighted?(params) && link.highlight_option_active
-            li_options[:class] += " #{link.highlighted_class}" if link.highlighted_class
-          elsif link.is_disabled?
-            li_options[:class] += " #{link.disabled_class}" if link.disabled_class
+        content_tag(:ul, navigator.html_options) do
+          navigator.links.each do |link|
+            li_options = {}
+            li_options[:id] = "#{link.id}" if link.id
+            li_options[:class] = link.class ? "#{link.class}" : ""
+            if link.is_highlighted?(params) && link.highlight_option_active
+              li_options[:class] += " #{link.highlighted_class}" if link.highlighted_class
+            elsif link.is_disabled?
+              li_options[:class] += " #{link.disabled_class}" if link.disabled_class
+            end
+            li_options[:class] = nil if li_options[:class].blank?
+            item_content = if !link.is_disabled? && !link.url.blank?
+              link_to(link.text, link.url, link.html)
+            else
+              content_tag('span', link.text, link.html)
+            end
+            concat(content_tag(:li, item_content, li_options))
           end
-          li_options[:class] = nil if li_options[:class].blank?
-
-          attach tag('li', li_options, true)
-          if !link.is_disabled? && !link.url.blank?
-            attach link_to(link.text, link.url, link.html)
-          else
-            attach content_tag('span', link.text, link.html)
-          end
-          attach "</li>\n"
-
         end
-        attach '</ul>'
-        @html
       end
-
-      private
-      def attach(string)
-        @html += string
-      end
-
     end
   end
 end

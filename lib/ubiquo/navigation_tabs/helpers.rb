@@ -29,47 +29,35 @@ module Ubiquo
         block.call(navigator)
         navigator
       end
-      
+
       # Render a list of tabs with html common options (:id and :class)
       # ( the navigator must be configured previously with 'create_tab_navigator' method )
-      # 
+      #
       # The option :sort can be used to sort tabs by alphabet
       def render_tab_navigator(navigator, options = {})
-        
         navigator.html_options[:id]    ||= options[:id]
         navigator.html_options[:class] ||= options[:class]
-        
-        @html = tag('ul', navigator.html_options , true)
         navigator.sort! if options[:sort] == true
-        
-        navigator.tabs.each do |tab|      
-          li_options = {}
 
-          li_options[:id] = "#{tab.id}" if tab.id
-          li_options[:title] = "#{tab.title}" if tab.title
-          li_options[:class] = "#{tab.class}" if tab.class
+        content_tag(:ul, navigator.html_options) do
+          navigator.tabs.map do |tab|
+            li_options = {}
+            li_options[:id] = "#{tab.id}" if tab.id
+            li_options[:title] = "#{tab.title}" if tab.title
+            li_options[:class] = "#{tab.class}" if tab.class
 
-          if tab.is_highlighted?(params) && tab.highlight_option_active
-            li_options[:class] = "#{tab.highlighted_class}" if tab.highlighted_class
+            if tab.is_highlighted?(params) && tab.highlight_option_active
+              li_options[:class] = "#{tab.highlighted_class}" if tab.highlighted_class
+            end
+            item_content = if tab.has_link? 
+              link_to(tab.text, tab.link, tab.html)
+            else
+              content_tag('span', tab.text, tab.html)
+            end
+            concat(content_tag(:li, item_content, li_options))
           end
-
-          attach tag('li', li_options, true)
-          if tab.has_link?
-            attach link_to(tab.text, tab.link, tab.html)
-          else
-            attach content_tag('span', tab.text, tab.html) 
-          end
-          attach "</li>\n"
         end
-        attach '</ul>'
-
-        @html
       end
-
-      def attach(string)
-        @html += string
-      end
-      
     end
   end
 end
