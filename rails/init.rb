@@ -97,7 +97,7 @@ Ubiquo::Config.context(:ubiquo_form_builder) do |context|
           :before =>
             lambda do |context, options|
               # Render the legend tag
-              legend_options = options[:legend] || options[:label] || {}
+              legend_options = options.delete(:legend) || options.delete(:label) || {}
               context.eval("@template").content_tag(:legend, legend_options)
             end
         }

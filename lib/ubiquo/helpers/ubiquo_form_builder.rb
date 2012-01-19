@@ -76,7 +76,7 @@ module Ubiquo
           if options_for_tag.respond_to? :call
             options_for_tag = options_for_tag.call(binding, field, options ) 
           end
-          options = options.reverse_merge( options_for_tag )
+          options = options_for_tag.deep_merge options
 
           # not (delete || {}) because we support :group => false
           group_options = ( options.has_key?(:group) ? options.delete( :group ) : {} )
@@ -88,15 +88,18 @@ module Ubiquo
 
           label_name = options.delete(:label) || @object.class.human_attribute_name(field)
           label = ""
-          if options[:label_as_legend]
+          if options.delete(:label_as_legend)
             # We'll render a legend in spite of a label.
-            group_options[:label] = label_name
+            # This option is collected by a lambda. See rails/init.rb
+            group_options[:legend] = label_name
           else
             label = label(field, *label_name )
           end
           label_at_bottom = options.delete(:label_at_bottom)
 
-          unless args[html_options_position].is_a?(Hash)
+          if args[html_options_position].is_a?(Hash)
+            args[html_options_position] = options
+          else
             # We cannot set a negative position if it does not exist
             if html_options_position == -1 
               args << options 
@@ -107,9 +110,6 @@ module Ubiquo
               end
               args[html_options_position] = options
             end
-          end
-          if name.to_s == "date_select"
-            #require "ruby-debug";debugger;2+2
           end
           super_result = super( field, *args )
 

@@ -38,7 +38,7 @@ class UbiquoFormBuilderTest < ActionView::TestCase
     assert_select "form" do |list|
       assert_equal "/ubiquo/users/1", list.first.attributes["action"]
       assert_select "div.form-item" do
-        assert_select "label", "Bar"
+        assert_select "label", "Last name"
         assert_select "input[type='text'][name='user[lastname]'][value='Bar']"
         assert_select "input[type='text'][name='user[lastname]'][value='Bar'][class='alter']"
       end
@@ -406,6 +406,48 @@ class UbiquoFormBuilderTest < ActionView::TestCase
     assert_select "form .form-item.datetime input"
   end
 
+  test "do not forward options as attributes" do
+    the_form do |form|
+      concat( form.text_field :lastname, :group => {:class => "aclass", :attx => "attxvalue"} )
+      concat( form.text_field :lastname, :label => "MYLABEL",:label_as_legend => true, 
+        :group => { :type => :fieldset, :class => "custom_class"} )
+    end
+    assert_select "form *[group]", 0
+    assert_select "fieldset[label]", 0
+    assert_select "fieldset[legend]", 0
+    assert_select "fieldset[label_as_legend]", 0
+    assert_select "fieldset[class=custom_class]"
+    assert_select "input[label_as_legend]", 0    
+  end
+
+  test "media_selector merge the attributes" do
+    previous_config = Ubiquo::Helpers::UbiquoFormBuilder.default_tag_options[:text_field]
+    Ubiquo::Helpers::UbiquoFormBuilder.default_tag_options[:text_field] = {}
+    begin
+      Ubiquo::Helpers::UbiquoFormBuilder.initialize_method("text_field",
+        { :group => {
+            :type => :fieldset, 
+            :class => "group-related-assets"
+          },
+          :label_as_legend => true
+        })
+
+
+      the_form do |form|
+        concat( form.text_field :lastname, 
+          :group => { 
+            :class => "aclass", 
+            :before => "<span>Before!</span>" 
+          } )
+      end
+      assert_select "form fieldset[class=aclass]"
+      assert_select "form legend","Last name"
+      assert_select "form fieldset span", "Before!"
+    ensure
+      Ubiquo::Helpers::UbiquoFormBuilder.default_tag_options[:text_field] = previous_config 
+    end
+  end
+  
   protected
 
   # helper to build a ubiquo form to test
@@ -441,7 +483,7 @@ class User
 
   def self.human_attribute_name( attr )
     {
-      :lastname => "Bar",
+      :lastname => "Last name",
       :is_admin => "Is admin",
       :born_at => "Born at"
      }[ attr.to_sym ] || attr.to_s
