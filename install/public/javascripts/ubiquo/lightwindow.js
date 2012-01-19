@@ -613,7 +613,7 @@ lightwindow.prototype = {
             height: this.pageDimensions.height+'px'
         });
 		
-        var lw = document.createElement('div');
+        var lw = Element.extend(document.createElement('div'));
         lw.addClassName(this.options.classNames.lightwindow);
         this.cssRules.lightwindow = "#"+lw.identify();
         lw.innerHTML = this.options.skin.main;
@@ -1376,7 +1376,7 @@ lightwindow.prototype = {
                         }
                     }
 
-                    images[i] = document.createElement('img');
+                    images[i] = Element.extend(document.createElement('img'));
                     images[i].addClassName(this.options.classNames.image +"_"+ i);
                     images[i].setAttribute('border', '0');
                     images[i].setAttribute('src', this.contentToFetch);
@@ -2208,7 +2208,7 @@ lightwindow.prototype = {
             outerObject = this._addParamToObject('quality', 'high', outerObject);
 
             if (!Prototype.Browser.IE) {
-                var innerObject = document.createElement('object');
+                var innerObject = Element.extend(document.createElement('object'));
                 innerObject.setAttribute('type', this.options.mimeTypes[this._fileExtension(this.contentToFetch)]);
                 innerObject.setAttribute('data', this.contentToFetch);
                 innerObject.addClassName(this.options.classNames.media_secondary);
