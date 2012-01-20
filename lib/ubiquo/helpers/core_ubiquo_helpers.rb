@@ -89,7 +89,7 @@ module Ubiquo
           content_tag(:div, :class => "header") do
             content_tag(:h3, title) + extra_header
           end + \
-          content_tag(:div, capture(&block), :class => "content")
+          content_tag(:div, block.call, :class => "content")
         end
       end
 
@@ -115,7 +115,7 @@ module Ubiquo
       # Renders a message in a help block in the sidebar
       def help_block_sidebar(message)
         ubiquo_sidebar_box(t("ubiquo.help"), :class => "help-box") do
-          "<p>#{message}</p>"
+          content_tag(:p, message)
         end
       end
 
@@ -180,6 +180,9 @@ module Ubiquo
         opts[:builder] = UbiquoFormBuilder
         args << opts if !args.last
         form_for(record_or_name_or_array, *args, &proc)
+      end
+
+      def error_messages_for object
       end
     end
   end
