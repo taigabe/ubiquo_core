@@ -87,7 +87,7 @@ module Ubiquo
           help = options.delete(:help)
 
           label_name = options.delete(:label) || @object.class.human_attribute_name(field)
-          label = ""
+          label = "".html_safe
           if options[:label_as_legend]
             # We'll render a legend in spite of a label.
             group_options[:label] = label_name
@@ -108,13 +108,10 @@ module Ubiquo
               args[html_options_position] = options
             end
           end
-          if name.to_s == "date_select"
-            #require "ruby-debug";debugger;2+2
-          end
-          super_result = super( field, *args )
+          super_result = @template.capture {super( field, *args )}
 
-          pre = ""
-          post = ""
+          pre = "".html_safe
+          post = "".html_safe
           if( label_at_bottom )
             post += label
           else
@@ -131,13 +128,14 @@ module Ubiquo
             description
           end if description
 
-          if group_options
+          result = if group_options
             group(group_options) do
               pre + super_result + post
             end
           else
             pre + super_result + post
           end
+          manage_result(result)
         end
       end
 
@@ -194,32 +192,27 @@ module Ubiquo
         type = options.delete(:type) || self.builder_options[:default_group_type]
         options = options.reverse_merge( groups_configuration[type] || {})
 
-        if options[:partial]
-          result = @template.render :partial => options[:partial],
-            :locals => options.merge(:content => @template.capture(&block).to_s)
-        else
-          options[:class] = [
-              options[:class],
-              options.delete(:append_class)
-          ].delete_if(&:blank?).compact.join(" ")
+        options[:class] = [
+            options[:class],
+            options.delete(:append_class)
+        ].delete_if(&:blank?).compact.join(" ")
 
-          block_group = BlockGroup.new( self, options.merge(:type => type) )
-          self.group_chain << block_group
-          tag = options.delete(:content_tag) # Delete it before sending to content_tag
-          callbacks = options.delete(:callbacks) || {}
-          result = @template.content_tag(tag, options) do
-            out = ""
-            out += callbacks[:before].call( binding, options ).to_s if callbacks[:before].respond_to?(:call)
-            out += options.delete(:before).to_s
-            out += @template.capture(block_group, &block ).to_s
-            out += options.delete(:after).to_s
-            out += callbacks[:after].call( binding, options ).to_s if callbacks[:after].respond_to?(:call)
-            out
-          end
-          self.group_chain.pop
+        block_group = BlockGroup.new( self, options.merge(:type => type) )
+        self.group_chain << block_group
+        tag = options.delete(:content_tag) # Delete it before sending to content_tag
+        callbacks = options.delete(:callbacks) || {}
+        result = @template.content_tag(tag, options) do
+          out = "".html_safe
+          out += callbacks[:before].call( binding, options ).to_s if callbacks[:before].respond_to?(:call)
+          out += options.delete(:before).to_s
+          out += @template.capture(block_group, &block ).to_s
+          out += options.delete(:after).to_s
+          out += callbacks[:after].call( binding, options ).to_s if callbacks[:after].respond_to?(:call)
+          out
         end
+        self.group_chain.pop
         # Any method here that accepts a block must check before concat
-        manage_result( result, block )
+        manage_result( result )
       end
 
       # Block to disable UbiquoFormbBuilder "magic" inside it.
@@ -227,7 +220,7 @@ module Ubiquo
         last_status = self.enabled
         self.enabled = false
         begin
-          manage_result( @template.capture( &block ).to_s, block )
+          manage_result(@template.capture( &block ).to_s)
         ensure
           self.enabled = last_status
         end
@@ -243,14 +236,14 @@ module Ubiquo
       def create_button( text = nil, options = {} )
         options = options.reverse_merge( default_tag_options[:create_button] )
         text = text || @template.t(options.delete(:i18n_label_key))
-        submit text, options
+        manage_result(submit text, options)
       end
 
       # Button to submit on the edit form
       def update_button( text = nil, options = {} )
         options = options.reverse_merge( default_tag_options[:update_button] )
         text = text || @template.t(options.delete(:i18n_label_key))
-        submit text, options
+        manage_result(submit text, options)
       end
 
       # Creates a tab on the current block.
@@ -283,7 +276,7 @@ module Ubiquo
         options.delete(:i18n_label_key)
         js_function = options[:js_function] || "document.location.href='#{url}'"
 
-        @template.button_to_function text, js_function, options
+        manage_result(@template.button_to_function text, js_function, options)
       end
 
       # It's a group of blocks. Used by tab construction
@@ -311,7 +304,7 @@ module Ubiquo
       # will not appear on the response.
       #
       # Notice that block must not have to have an ampersand
-      def manage_result result, block
+      def manage_result result
         # No need to do special handling with the ERB changes in Rails 3
         @template.concat(result)
       end

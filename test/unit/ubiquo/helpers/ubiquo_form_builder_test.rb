@@ -13,30 +13,30 @@ class UbiquoFormBuilderTest < ActionView::TestCase
     # Testing the tester.
     the_form do |ufb|
       assert_equal Ubiquo::Helpers::UbiquoFormBuilder, ufb.class
-      concat("AAA")
+      concat("mytext")
     end
     assert_select "form" do |list|
-      assert_equal "/ubiquo/users/1", list.first.attributes["action"]
+      assert_equal "/ubiquo/users", list.first.attributes["action"]
     end
-    assert_select "form", "AAA"
+    assert_select "form", "mytext"
   end
 
   test "form field" do
     assert_nothing_thrown {
       the_form do |form|
-        concat( form.text_field :lastname )
-        concat( form.hidden_field :lastname )
+        form.text_field :lastname
+        form.hidden_field :lastname
       end
     }
   end
 
   test "form field text_field" do
     the_form do |form|
-      concat( form.text_field :lastname )
-      concat( form.text_field :lastname, :class=> "alter" )
+      form.text_field :lastname
+      form.text_field :lastname, :class=> "alter"
     end
     assert_select "form" do |list|
-      assert_equal "/ubiquo/users/1", list.first.attributes["action"]
+      assert_equal "/ubiquo/users", list.first.attributes["action"]
       assert_select "div.form-item" do
         assert_select "label", "Bar"
         assert_select "input[type='text'][name='user[lastname]'][value='Bar']"
@@ -47,25 +47,14 @@ class UbiquoFormBuilderTest < ActionView::TestCase
 
   test "group" do
     the_form do |f|
-      concat( f.group {} )
+      f.group {}
     end
     assert_select "form div.form-item"
   end
 
-  test "group with block from erb" do
-    # TODO: test with an erb block like. Dont try to use ERB.new(template) as
-    # rails overloads it and it does not work stright away.
-#   <% form.submit_group do %>
-#    <%= form.create_button %>
-#    <%= form.back_button %>
-#  <% end %>
-    #
-
-  end
-
   test "submit group" do
     the_form do |f|
-      concat f.submit_group {}
+      f.submit_group {}
     end
     assert_select "form div.form-item-submit"
   end
@@ -76,11 +65,11 @@ class UbiquoFormBuilderTest < ActionView::TestCase
     self.expects(:t).with("ubiquo.back_to_list").returns("ubiquo.back_to_list-value")
 
     the_form do |f|
-      concat( f.submit_group do
-        concat f.create_button
-        concat f.back_button
-        concat f.update_button
-      end )
+      f.submit_group do
+        f.create_button
+        f.back_button
+        f.update_button
+      end
     end
 
     assert_select "form div.form-item-submit" do |blocks|
@@ -95,7 +84,6 @@ class UbiquoFormBuilderTest < ActionView::TestCase
   end
 
   test "Custom params for submit buttons" do
-    self.expects(:ubiquo_users_path).returns("/ubiquo/users")
     self.expects(:t).with("ubiquo.create-custom").returns("ubiquo.create-custom-value")
     self.expects(:t).with("ubiquo.save-custom").returns("ubiquo.save-custom-value")
 
@@ -125,10 +113,10 @@ class UbiquoFormBuilderTest < ActionView::TestCase
   test "custom_block" do
     the_form do |form|
       form.custom_block do
-        '<div class="custom-form-item">'
-        form.label :lastname, "imalabel"
-        form.text_field :lastname
-        "</div>"
+        '<div class="custom-form-item">'.html_safe +
+        form.label(:lastname, "imalabel") +
+        form.text_field(:lastname) +
+        "</div>".html_safe
      end
     end
 
@@ -144,7 +132,7 @@ class UbiquoFormBuilderTest < ActionView::TestCase
     assert_nothing_raised{
       the_form do |form|
         form.group :label => "custom_label_group", :type => :fieldset do
-          concat( form.relation_selector :actors, :type => :checkbox )
+          form.relation_selector :actors, :type => :checkbox
         end
       end
     }
@@ -152,24 +140,24 @@ class UbiquoFormBuilderTest < ActionView::TestCase
   test "show description, help info and translatable hints" do
     self.expects(:t).with("ubiquo.translatable_field").returns("ubiquo.translatable_field")
 
-    the_form do |form|
-      concat( form.group(:class => "a0") do
-        concat( form.text_field :lastname, :translatable => true )
-      end)
-      concat( form.group(:class => "a1") do
-        concat( form.text_field :lastname, :class=> "alter", :translatable => "foo" )
-      end)
-      concat( form.group(:class => "a2") do
-        concat( form.text_field :lastname, :class=> "alter2", :description => "foo2", :help => "Info text")
-      end )
-      concat( form.group(:class => "a3") do
-        concat( form.text_field :lastname, :class=> "alter3", :translatable => "foo3", :description => "bar" )
-      end )
+    a = the_form do |form|
+      form.group(:class => "a0") do
+        form.text_field :lastname, :translatable => true
+      end
+      form.group(:class => "a1") do
+       form.text_field :lastname, :class=> "alter", :translatable => "foo"
+      end
+      form.group(:class => "a2") do
+        form.text_field :lastname, :class=> "alter2", :description => "foo2", :help => "Info text"
+      end
+      form.group(:class => "a3") do
+        form.text_field :lastname, :class=> "alter3", :translatable => "foo3", :description => "bar"
+      end
 
     end
 
     assert_select "form" do |list|
-      assert_equal "/ubiquo/users/1", list.first.attributes["action"]
+      assert_equal "/ubiquo/users", list.first.attributes["action"]
       assert_select ".a0" do
         assert_select "p.translation-info", "ubiquo.translatable_field"
         assert_select "p.description",0
@@ -204,13 +192,13 @@ class UbiquoFormBuilderTest < ActionView::TestCase
 
   test "show checkox correctly" do
     the_form do |form|
-      concat( form.group(:class => "a0") do
-        concat( form.check_box :is_admin )
-      end )
+       form.group(:class => "a0") do
+       form.check_box :is_admin
+      end
 
-      concat( form.group(:class => "a1") do
-        concat( form.check_box :is_admin, :translatable => true )
-      end )
+      form.group(:class => "a1") do
+        form.check_box :is_admin, :translatable => true
+      end
     end
 
     assert_select "form" do |list|
@@ -237,18 +225,18 @@ class UbiquoFormBuilderTest < ActionView::TestCase
     self.expects(:t).with("rights").returns("rights").at_least_once
 
     the_form do |form|
-       concat( form.group(:type => :tabbed, :class=> "a-group-of-tabs") do |group|
-         concat( group.add(t("personal_data")) do
-           concat( form.text_field :lastname )
-         end )
-         concat( group.add(t("rights"), :class => "custom-tab-class") do
-           concat( form.check_box :is_admin )
-         end )
-       end )
+       form.group(:type => :tabbed, :class=> "a-group-of-tabs") do |group|
+         group.add(t("personal_data")) do
+           form.text_field :lastname
+         end
+         group.add(t("rights"), :class => "custom-tab-class") do
+           form.check_box :is_admin
+         end
+       end
     end
 
     assert_select ".form-tab-container.a-group-of-tabs .form-tab" do |tabs|
-      assert 2, tabs.size
+      assert_equal 2, tabs.size
       assert_equal "custom-tab-class form-tab", tabs.last.attributes["class"]
     end
     assert_select ".a-group-of-tabs .form-tab input"
@@ -256,23 +244,23 @@ class UbiquoFormBuilderTest < ActionView::TestCase
 
   test "tabbed blocks easy syntax" do
     the_form do |form|
-       concat( form.group(:type => :tabbed, :class=> "a-group-of-tabs") do
-         concat( form.tab(("personal_data"),:class => "parenttab") do
-           concat( form.text_field :lastname )
-           concat( form.group(:type => :tabbed, :class=> "childtab") do
-             concat( form.tab(("inner tab"),:class =>"childtab") do
-               concat( form.text_field :is_admin )
-             end )
-           end )
-         end )
-         concat( form.tab(("rights"), :class => "custom-tab-class") do
-           concat( form.check_box :is_admin )
-         end )
-       end )
+       form.group(:type => :tabbed, :class=> "a-group-of-tabs") do
+         form.tab(("personal_data"),:class => "parenttab") do
+           form.text_field :lastname
+           form.group(:type => :tabbed, :class=> "childtab") do
+             form.tab(("inner tab"),:class =>"childtab") do
+               form.text_field :is_admin
+             end
+           end
+         end
+         form.tab(("rights"), :class => "custom-tab-class") do
+           form.check_box :is_admin
+         end
+       end
     end
 
     assert_select ".form-tab-container.a-group-of-tabs .form-tab" do |tabs|
-      assert 2, tabs.size
+      assert_equal 2, tabs.size
       assert_equal "custom-tab-class form-tab", tabs.last.attributes["class"]
     end
     assert_select ".a-group-of-tabs .form-tab input"
@@ -284,11 +272,11 @@ class UbiquoFormBuilderTest < ActionView::TestCase
     Ubiquo::Settings.context(:ubiquo_form_builder).set(:unfold_tabs,true)
     begin
       the_form do |form|
-         concat( form.group(:type => :tabbed, :class=> "a-group-of-tabs") do
-           concat( form.tab(("personal_data")) do
-             concat( form.text_field :lastname )
-          end )
-         end )
+         form.group(:type => :tabbed, :class=> "a-group-of-tabs") do
+           form.tab(("personal_data")) do
+             form.text_field :lastname
+          end
+         end
       end
 
       assert_select ".form-tab-container.a-group-of-tabs .form-tab", 0
@@ -302,17 +290,17 @@ class UbiquoFormBuilderTest < ActionView::TestCase
   test "we cannot call tab without a tabbed parent group defined" do
     assert_raise(RuntimeError) {
       the_form do |form|
-         concat( form.tab(t("personal_data")) do
-           concat( form.text_field :lastname )
-         end )
+         form.tab(t("personal_data")) do
+           form.text_field :lastname
+         end
       end
     }
   end
 
   test "can append content inside the field, after and before the content" do
     the_form do |form|
-      concat( form.text_field :lastname, :group => {:after => '<div class="after">A</div>'} )
-      concat( form.text_field :lastname, :class=> "alter", :group => {:before => '<div class="before">A</div>'} )
+      form.text_field :lastname, :group => {:after => '<div class="after">A</div>'}
+      form.text_field :lastname, :class=> "alter", :group => {:before => '<div class="before">A</div>'}
     end
     assert_select "form .form-item" do |form_items|
       assert_select form_items.first, ".after"
@@ -329,9 +317,9 @@ class UbiquoFormBuilderTest < ActionView::TestCase
   test "use check_box with all options" do
     the_form do |form|
       # Weird use but useful sometimes
-      concat( form.check_box( :lastname ))
-      concat( form.check_box( :lastname, {:class => "simple"}))
-      concat( form.check_box( :lastname, {:class => "complex"}, "GARCIA", "OFF" ))
+      form.check_box( :lastname )
+      form.check_box( :lastname, {:class => "simple"})
+      form.check_box( :lastname, {:class => "complex"}, "GARCIA", "OFF" )
     end
     assert_select "form input[type=hidden][value=0]",2
     assert_select "form input[type=checkbox][class=checkbox][value=1]"
@@ -370,16 +358,16 @@ class UbiquoFormBuilderTest < ActionView::TestCase
       )
       Ubiquo::Helpers::UbiquoFormBuilder.default_tag_options = options
       the_form do |form|
-        concat(form.check_box( :lastname, :class => "checkboxed"))
+        form.check_box( :lastname, :class => "checkboxed")
         # Forcing :order because of an unknown bug on I18n covnerting arrays to hashes
-        concat(form.datetime_select(:born_at,{:order =>[:day,:month,:year]}))
-        concat(form.datetime_select(:born_at,{:order =>[:day,:month,:year]}, {:class => "datetime_forced"}))
-        concat(form.date_select(:born_at, {:order =>[:day,:month,:year],:include_blank => true}))
-        concat(form.time_select(:born_at))
+        form.datetime_select(:born_at,{:order =>[:day,:month,:year]})
+        form.datetime_select(:born_at,{:order =>[:day,:month,:year]}, {:class => "datetime_forced"})
+        form.date_select(:born_at, {:order =>[:day,:month,:year],:include_blank => true})
+        form.time_select(:born_at)
         choices = [["Bar","Bar"],["Foo","Foo"]]
-        concat(form.collection_select(:lastname, choices,:first, :last ))
-        concat(form.select(:lastname, choices ))
-        concat(form.time_zone_select(:lastname))
+        form.collection_select(:lastname, choices,:first, :last )
+        form.select(:lastname, choices )
+        form.time_zone_select(:lastname)
       end
 
       assert_select "form .checkboxed"
@@ -399,7 +387,7 @@ class UbiquoFormBuilderTest < ActionView::TestCase
   test "support calendar_date_select" do
     self.expects(:calendar_date_select).returns('<input name="calendar"/>')
     the_form do |form|
-      concat( form.calendar_date_select( :born_at ))
+      form.calendar_date_select( :born_at )
     end
     assert_select "form .form-item.datetime label"
     assert_select "form .form-item.datetime input"
