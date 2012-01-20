@@ -2,13 +2,6 @@
 module Ubiquo
   module Tasks 
     module Files
-  
-      # Place the fixtures that are inside plugins into a temporal folder to be used
-      # in ubiquo tests
-      def install_ubiquo_fixtures
-        copy_dir(Dir[Rails.root.join('vendor', 'plugins', 'ubiquo**', 'test', 'fixtures')], "/tmp/ubiquo_fixtures", :force => true, :link => true)    
-      end
-  
       # Options accepted:
       #   force:    copy files even if target exists. Defaults to false
       #   verbose:  print results. Defaults to false
