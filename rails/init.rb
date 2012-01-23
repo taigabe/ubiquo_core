@@ -130,7 +130,7 @@ require 'ubiquo'
 config.after_initialize do
   if Ubiquo::Plugin.registered[:ubiquo_i18n]
     Ubiquo::Settings[:settings_connector] = :i18n
-    Ubiquo::SettingsConnectors.load!
   end
+  Ubiquo::SettingsConnectors.load!
 end
 
