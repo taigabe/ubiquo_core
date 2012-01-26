@@ -13,6 +13,7 @@ end
 
 ActionController::Routing::RouteSet::Mapper.send(:include, Ubiquo::Extensions::Routing)
 Ubiquo::Extensions::Loader.append_include(:UbiquoController, Ubiquo::Extensions::DateParser)
+Ubiquo::Extensions::Loader.append_include(:UbiquoController, Ubiquo::Extensions::MimeResponds)
 ActionView::Base.field_error_proc = Ubiquo::Extensions::ActionView.ubiquo_field_error_proc
 ActiveRecord::Base.send(:extend, Ubiquo::Extensions::ActiveRecord)
 

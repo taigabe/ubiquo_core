@@ -5,3 +5,8 @@ map.namespace :ubiquo do |ubiquo|
   end
   ubiquo.resources :ubiquo_settings
 end
+
+if Rails.env.test?
+  map.connect 'default_mime_responds_route_index', :controller => 'default_mime_responds', :action => 'index'
+  map.connect 'default_mime_responds_route_show', :controller => 'default_mime_responds', :action => 'show'
+end
