@@ -12,13 +12,14 @@ module Ubiquo
       end
 
       def render
+        url_for_options = @context.params.merge(@options[:url_for_options] || {})
         lateral_filter(@options) do |keepable_params|
-          @context.form_tag(@options[:url_for_options], :method => :get) do
-            hidden_fields(keepable_params) + \
-            @context.content_tag(:div, :class => 'form-item-submit') do
-              @context.text_field_tag(@options[:field], @context.params[@options[:field]]) + "\n" + \
-              @context.submit_tag(I18n.t('ubiquo.search'), :class => 'bt-filter-submit')
-            end
+          @context.form_tag(url_for_options, :method => :get) do
+            (hidden_fields(keepable_params) +
+              @context.content_tag(:div, :class => 'form-item-submit') do
+                @context.text_field_tag(@options[:field], @context.params[@options[:field]]) + "\n" + \
+                @context.submit_tag(I18n.t('ubiquo.search'), :class => 'bt-filter-submit')
+              end).html_safe
           end
         end
       end
