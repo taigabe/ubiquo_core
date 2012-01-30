@@ -26,7 +26,7 @@ module Ubiquo
 
       # Renders all filters of the set, in order, as a string
       def render
-        @filters.map { |f| f.render }.join("\n")
+        @filters.map { |f| f.render }.join("\n").html_safe
       end
 
       # Renders the human message, associated with active filters of

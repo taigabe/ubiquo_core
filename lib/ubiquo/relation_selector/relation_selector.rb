@@ -40,8 +40,6 @@ module Ubiquo
             options
           )
           # array of possible values
-
-          # array of possible values
           related_objects = url_craft_settings object_class_name, selector_type, options
           # Finally, output is generated
           html_options.reverse_merge!({
@@ -51,9 +49,10 @@ module Ubiquo
           output = content_tag(wrapper_type, html_options) do
             inst_name = options[:name] || object.class.human_attribute_name(key)
             caption = options[:required] == true ? "#{inst_name} *" : inst_name
-            (wrapper_type == :fieldset ? content_tag(:legend, caption) : "") +
+            ((wrapper_type == :fieldset ? content_tag(:legend, caption) : "") +
               send("relation_#{selector_type}_selector",
-              object, object_name, key, related_objects, humanized_field, relation_type, options)
+                object, object_name, key, related_objects,
+                humanized_field, relation_type, options)).html_safe
           end
           add_description(output, options.delete(:description))
         else
@@ -147,15 +146,15 @@ module Ubiquo
         output = content_tag(:div, :class => options[:css_class]) do
           related_objects.map do |ro|
             content_tag(:div, :class => 'form-item-inline') do
-              check_box_tag("#{object_name}[#{options[:key_field]}][]", ro.id,
+              (check_box_tag("#{object_name}[#{options[:key_field]}][]", ro.id,
                 current_related_objects.include?(ro.id),
                 :id => "#{object_name}_#{options[:key_field]}_#{ro.id}") +
                 label_tag(
                   "#{object_name}_#{options[:key_field]}_#{ro.id}",
                   ro.send(humanized_field)
-                )
+                ))
             end
-          end.join
+          end.join.html_safe
         end
         output << hidden_field_tag("#{object_name}[#{options[:key_field]}][]", '')
         output << relation_controls(options)
@@ -224,11 +223,12 @@ module Ubiquo
         inst_name = options[:name] || object.class.human_attribute_name(key)
         label_caption = options[:required] == true ? "#{inst_name} *" : inst_name
         output = javascript_tag(js_code)
-        output << content_tag(:div, :class => "form-item") do
+        field_autocomplete = content_tag(:div, :class => "form-item") do
           label_tag("#{object_name}[#{key}][]", label_caption) +
             text_field_tag(options[:initial_text_field_tag_name], "",
                            :id => "#{object_name}_#{options[:key_field]}_autocomplete")
         end
+        output << field_autocomplete
         output << relation_controls(options)
       end
 

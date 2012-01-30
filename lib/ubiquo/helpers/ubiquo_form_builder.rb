@@ -71,15 +71,19 @@ module Ubiquo
           html_options_position = (options_for_tag &&
               options_for_tag.delete(:html_options_position)) || -1 # last by default
           base_args = options_for_tag.delete(:base_args)
-          options = args[html_options_position].is_a?(Hash) ? args[html_options_position] : {}
+          options = if args[html_options_position].is_a?(Hash)
+            args[html_options_position]
+          else
+            {}
+          end
+
           # Accept a closure
           if options_for_tag.respond_to? :call
             options_for_tag = options_for_tag.call(binding, field, options )
           end
-          options = options.reverse_merge( options_for_tag )
-
+          options = options_for_tag.deep_merge options
           # not (delete || {}) because we support :group => false
-          group_options = ( options.has_key?(:group) ? options.delete( :group ) : {} )
+          group_options = (options.has_key?(:group) ? options.delete(:group) : {})
           group_options = group_options.dup if group_options.is_a? Hash
 
           translatable = options.delete(:translatable)
@@ -88,15 +92,18 @@ module Ubiquo
 
           label_name = options.delete(:label) || @object.class.human_attribute_name(field)
           label = "".html_safe
-          if options[:label_as_legend]
+          if options.delete(:label_as_legend)
             # We'll render a legend in spite of a label.
-            group_options[:label] = label_name
+            # This option is collected by a lambda. See rails/init.rb
+            group_options[:legend] = label_name
           else
-            label = label(field, *label_name )
+            label = label(field, *label_name)
           end
           label_at_bottom = options.delete(:label_at_bottom)
 
-          unless args[html_options_position].is_a?(Hash)
+          if args[html_options_position].is_a?(Hash)
+            args[html_options_position] = options
+          else
             # We cannot set a negative position if it does not exist
             if html_options_position == -1
               args << options
@@ -108,7 +115,7 @@ module Ubiquo
               args[html_options_position] = options
             end
           end
-          super_result = @template.capture {super( field, *args )}
+          super_result = @template.capture { super(field, *args) }.html_safe
 
           pre = "".html_safe
           post = "".html_safe
@@ -117,7 +124,6 @@ module Ubiquo
           else
             pre += label
           end
-
           post += group(:type => :help) do
             help
           end if help
@@ -197,25 +203,29 @@ module Ubiquo
             options.delete(:append_class)
         ].delete_if(&:blank?).compact.join(" ")
 
-        block_group = BlockGroup.new( self, options.merge(:type => type) )
+        block_group = BlockGroup.new(self, options.merge(:type => type))
         self.group_chain << block_group
         tag = options.delete(:content_tag) # Delete it before sending to content_tag
         callbacks = options.delete(:callbacks) || {}
         result = @template.content_tag(tag, options) do
           out = "".html_safe
-          out += callbacks[:before].call( binding, options ).to_s if callbacks[:before].respond_to?(:call)
-          out += options.delete(:before).to_s
-          out += @template.capture(block_group, &block ).to_s
-          out += options.delete(:after).to_s
-          out += callbacks[:after].call( binding, options ).to_s if callbacks[:after].respond_to?(:call)
+          if callbacks[:before].respond_to?(:call)
+            out += callbacks[:before].call(binding, options)
+          end
+          out += options.delete(:before)
+          out += @template.capture(block_group, &block)
+          out += options.delete(:after)
+          if callbacks[:after].respond_to?(:call)
+            out += callbacks[:after].call(binding, options)
+          end
           out
         end
         self.group_chain.pop
         # Any method here that accepts a block must check before concat
-        manage_result( result )
+        manage_result(result)
       end
 
-      # Block to disable UbiquoFormbBuilder "magic" inside it.
+      # Block to disable UbiquoFormBuilder "magic" inside it.
       def custom_block(&block)
         last_status = self.enabled
         self.enabled = false
@@ -268,8 +278,8 @@ module Ubiquo
       #
       def back_button( text = nil, options = {} )
         # FIXME: this url generation does not support nested controllers
-        url = options.delete(:url) ||
-          @template.send( "ubiquo_" + (@object.class.to_s.pluralize.underscore) + "_path" )
+        url = options.delete(:url)
+        url ||= @template.ubiquo.send("#{@object.class.to_s.pluralize.underscore}_path")
         options = options.reverse_merge(default_tag_options[:back_button])
 
         text = text || @template.t(options[:i18n_label_key])
@@ -291,8 +301,8 @@ module Ubiquo
         # Recieves a block of form that will be grouped and named by name
         #   +name+ The name of the tab or fieldset
         #   +group_options+ are options passed to the wrapper of the block.
-        def add( name, group_options = {}, &block )
-          form_builder.group(group_options.reverse_merge({:type => :tab,:legend => name}), &block)
+        def add(name, group_options = {}, &block)
+          form_builder.group(group_options.reverse_merge({ :type => :tab, :legend => name }), &block)
         end
       end
 

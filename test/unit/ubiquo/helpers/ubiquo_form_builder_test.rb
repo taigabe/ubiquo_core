@@ -38,7 +38,7 @@ class UbiquoFormBuilderTest < ActionView::TestCase
     assert_select "form" do |list|
       assert_equal "/ubiquo/users", list.first.attributes["action"]
       assert_select "div.form-item" do
-        assert_select "label", "Bar"
+        assert_select "label", "Lastname"
         assert_select "input[type='text'][name='user[lastname]'][value='Bar']"
         assert_select "input[type='text'][name='user[lastname]'][value='Bar'][class='alter']"
       end
@@ -88,7 +88,7 @@ class UbiquoFormBuilderTest < ActionView::TestCase
     self.expects(:t).with("ubiquo.save-custom").returns("ubiquo.save-custom-value")
 
     the_form do |f|
-      f.submit_group( :class => "alter-submit") do
+      f.submit_group(:class => "alter-submit") do
         # Custom params
         f.create_button( "c-custom", :class => "bt-create2" )
         f.create_button( nil, :i18n_label_key => "ubiquo.create-custom")
@@ -299,8 +299,8 @@ class UbiquoFormBuilderTest < ActionView::TestCase
 
   test "can append content inside the field, after and before the content" do
     the_form do |form|
-      form.text_field :lastname, :group => {:after => '<div class="after">A</div>'}
-      form.text_field :lastname, :class=> "alter", :group => {:before => '<div class="before">A</div>'}
+      form.text_field :lastname, :group => { :after => '<div class="after">A</div>'.html_safe }
+      form.text_field :lastname, :class=> "alter", :group => { :before => '<div class="before">A</div>'.html_safe }
     end
     assert_select "form .form-item" do |form_items|
       assert_select form_items.first, ".after"
@@ -393,44 +393,55 @@ class UbiquoFormBuilderTest < ActionView::TestCase
     assert_select "form .form-item.datetime input"
   end
 
+  test "do not forward options as attributes" do
+    the_form do |form|
+      form.text_field :lastname, :group => { :class => "aclass", :attx => "attxvalue" }
+      form.text_field :lastname, :label => "MYLABEL", :label_as_legend => true,
+        :group => { :type => :fieldset, :class => "custom_class"}
+    end
+    assert_select "form *[group]", 0
+    assert_select "fieldset[label]", 0
+    assert_select "fieldset[legend]", 0
+    assert_select "fieldset[label_as_legend]", 0
+    assert_select "fieldset[class=custom_class]"
+    assert_select "input[label_as_legend]", 0
+  end
+
+  test "media_selector merge the attributes" do
+    previous_config = Ubiquo::Helpers::UbiquoFormBuilder.default_tag_options[:text_field]
+    Ubiquo::Helpers::UbiquoFormBuilder.default_tag_options[:text_field] = {}
+    begin
+      Ubiquo::Helpers::UbiquoFormBuilder.initialize_method("text_field",
+        { :group => {
+            :type => :fieldset,
+            :class => "group-related-assets"
+          },
+          :label_as_legend => true
+        })
+      the_form do |form|
+        form.text_field :lastname,
+          :group => {
+            :class => "aclass",
+            :before => "<span>Before!</span>"
+          }
+      end
+      assert_select "form fieldset[class=aclass]"
+      assert_select "form legend", "Lastname"
+      assert_select "form fieldset span", "Before!"
+    ensure
+      Ubiquo::Helpers::UbiquoFormBuilder.default_tag_options[:text_field] = previous_config
+    end
+  end
+
   protected
 
   # helper to build a ubiquo form to test
-  def the_form( options={}, &proc)
-    self.stubs(:ubiquo_users_path).returns("/ubiquo/users")
-    self.stubs(:ubiquo_user_path).returns("/ubiquo/users/1")
+  def the_form(options = {}, &proc)
+    self.ubiquo.stubs(:users_path).returns("/ubiquo/users")
+    self.ubiquo.stubs(:user_path).returns("/ubiquo/users/1")
+    options[:url] = ubiquo.users_path
     options[:builder] = Ubiquo::Helpers::UbiquoFormBuilder
-    user = User.new
-    render :text => form_for([:ubiquo,user], options, &proc)
+    render :text => form_for(User.new, options, &proc)
   end
 
 end
-
-# Testing purpose class to simulate an ActiveRecord model
-class User < ActiveRecord::Base
-  conn = ActiveRecord::Base.connection
-
-  conn.create_table :users do |t|
-  end unless conn.tables.include?('users')
-
-  def lastname
-    "Bar"
-  end
-
-  def born_at
-    Time.parse("2011-01-01 12:00")
-  end
-
-  def is_admin
-    true
-  end
-
-  def self.human_attribute_name( attr )
-    {
-      :lastname => "Bar",
-      :is_admin => "Is admin",
-      :born_at => "Born at"
-     }[ attr.to_sym ] || attr.to_s
-  end
-end
-
