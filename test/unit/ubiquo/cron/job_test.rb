@@ -19,7 +19,7 @@ class Ubiquo::Cron::JobTest < ActiveSupport::TestCase
   test "Should be able to run a job" do
     assert_respond_to @job, :run
     Rake::Task['ubiquo_cron_test'].expects(:invoke).returns(true)
-    assert @job.run('ubiquo_cron_test')
+    assert @job.run('ubiquo_cron_test'), "job ubiquo_cron_test doesn't run"
   end
 
   test "Should be able to log results to a specified log file" do
@@ -98,14 +98,14 @@ class Ubiquo::Cron::JobTest < ActiveSupport::TestCase
       :debug      => false,
       :recipients => recipients
     )
-    assert_difference 'ActionMailer::Base.deliveries.size', +1 do
+    assert_difference 'ActionMailer::Base.deliveries.size', 1 do
       job.run task
     end
     error_mail = ActionMailer::Base.deliveries.first
 
     assert_match /CRON JOB ERROR/, error_mail.subject
-    assert_equal error_mail.to[0], 'test@test.com'
-    assert_match /krash/, error_mail.body
+    assert_equal error_mail.to.first, 'test@test.com'
+    assert_match /krash/, error_mail.encoded
   end
 
   test "Should not send emails when no recipients are set" do

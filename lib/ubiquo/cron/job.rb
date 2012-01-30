@@ -60,7 +60,7 @@ module Ubiquo
       rescue Exception => e
         error_msg = build_error_msg(e)
         if @recipients
-          JobMailer.deliver_error(@recipients, task, run_msg, error_msg)
+          JobMailer.error(@recipients, task, run_msg, error_msg).deliver
         end
         false
       ensure

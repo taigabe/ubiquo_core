@@ -3,10 +3,11 @@ module Ubiquo
 
     # Sends mail with cron job errors.
     class JobMailer < ActionMailer::Base
+      default :from => Ubiquo::Settings.get(:notifier_email_from),
+              :return_path => Ubiquo::Settings.get(:notifier_email_from),
+              :charset => "UTF-8", :content_type => "text/plain"
 
       def self.reloadable?() false end
-
-      self.template_root = "#{File.dirname(__FILE__)}/views"
 
       # Sends email with cron job error.
       #
@@ -17,20 +18,15 @@ module Ubiquo
       # * +execution_message+ - string with information about
       #   execution of the job.
       # * +error_message- string with the error message.
-      def error(error_recipients, job, execution_message, error_message, sent_at = Time.now)
-        app_name = Ubiquo::Settings.get(:app_name)
-        content_type "text/plain"
-        charset 'utf-8'
-        recipients error_recipients
-        from Ubiquo::Settings.get(:notifier_email_from)
-        sent_on sent_at
-        subject "[#{app_name} #{Rails.env} CRON JOB ERROR] for job: #{job}"
-        body(
-          :job               => job,
-          :application       => app_name,
-          :error_message     => error_message,
-          :execution_message => execution_message
-        )
+      def error(error_recipients, job, execution_message, error_message)
+        @application = Ubiquo::Settings.get(:app_name)
+        @job = job
+        @error_message = error_message
+        @execution_message = execution_message
+
+        subject = "[#{app_name} #{Rails.env} CRON JOB ERROR] for job: #{job}"
+        mail(:to => error_recipients,
+             :subject => subject)
       end
 
       private
