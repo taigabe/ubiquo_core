@@ -12,7 +12,7 @@ class FilteredSearchTest < ActiveSupport::TestCase
     assert_nothing_raised do
       @m.class_eval do
         filtered_search_scopes :enable => [:desc]
-        named_scope :desc, lambda { |v| { :conditions => "#{table_name}.description = '#{v}'"} }
+        scope :desc, lambda { |v| { :conditions => "#{table_name}.description = '#{v}'"} }
       end
     end
     assert_equal [@m.find_by_description('stop')], @m.filtered_search({ 'filter_desc' => 'stop'})
@@ -22,7 +22,7 @@ class FilteredSearchTest < ActiveSupport::TestCase
     assert_raise Ubiquo::InvalidFilter do
       @m.class_eval do
         filtered_search_scopes
-        named_scope :desc, lambda { |v| { :conditions => "#{table_name}.description = '#{v}'"} }
+        scope :desc, lambda { |v| { :conditions => "#{table_name}.description = '#{v}'"} }
       end
       @m.filtered_search({'filter_desc' => 'Tired'})
     end
@@ -61,8 +61,7 @@ class FilteredSearchTest < ActiveSupport::TestCase
     assert_nothing_raised do
       @m.class_eval do
         filtered_search_scopes
-
-        named_scope :locale
+        scope :locale
       end
       @m.filtered_search({"filter_locale" => "es"})
     end

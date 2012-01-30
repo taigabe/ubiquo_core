@@ -3,13 +3,13 @@ require File.dirname(__FILE__) + "/../../../test_helper.rb"
 class Ubiquo::Extensions::ActiveRecordTest < ActiveSupport::TestCase
 
   def test_should_have_a_paginate
-    assert ActiveRecord::Base.methods.include?('paginate')
+    assert ActiveRecord::Base.methods.include?(:paginate)
   end
-  
+
   def test_should_have_an_ubiquo_paginate
-    assert ActiveRecord::Base.methods.include?('ubiquo_paginate')
+    assert ActiveRecord::Base.methods.include?(:ubiquo_paginate)
   end
-    
+
   def test_file_attachment_should_clone_given_options_when_defining_paperclip_styles
     original_styles = {
         :style_name => {
