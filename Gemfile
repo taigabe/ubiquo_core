@@ -7,3 +7,5 @@ gemspec
 gem 'linecache19', :git => 'git://github.com/mark-moseley/linecache'
 gem 'tiny_mce', :git => 'git://github.com/gnuine/tiny_mce'
 gem 'calendar_date_select', :git => 'git://github.com/gnuine/calendar_date_select'
+gem 'paperclip'
+gem 'lockfile'
