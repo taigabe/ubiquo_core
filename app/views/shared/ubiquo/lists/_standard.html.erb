@@ -34,13 +34,13 @@ table_class += " edit_on_row_click" if edit_on_row_click
 %>
 <% if rows.size > 0 %>
   <% content_for :sidebar do %>
-	<%= link_to_new %>
+	<%= link_to_new.html_safe %>
   <% end %>
   <table id="<%= table_id %>" class="<%= table_class %>" width="100%" border="1" cellspacing="0" cellpadding="3">
     <% unless hide_headers %>
     <tr>      
         <% headers.each do |column| %>
-          <th><%= ubiquo_table_headerfy column, name %></th>
+          <th><%= ubiquo_table_headerfy(column, name).html_safe %></th>
         <% end %>
         <% unless hide_actions %>
           <th class="actions"><%= t('ubiquo.base.actions') %></th>
@@ -53,26 +53,29 @@ table_class += " edit_on_row_click" if edit_on_row_click
           <td>
             <%=
                case col
-                 when ActiveSupport::TimeWithZone : l(col)
-                 when TrueClass, FalseClass : ubiquo_boolean_image(col)
-                 else col.to_s
-               end %>
+               when ActiveSupport::TimeWithZone 
+                 l(col)
+               when TrueClass, FalseClass 
+                 ubiquo_boolean_image(col)
+               else 
+                 col.to_s
+               end.html_safe %>
           </td>
         <% end %>
         <% unless hide_actions %>
           <td class="actions">
-            <%= row[:actions].delete_if{|r|r.blank?}.join(' ') %>
+            <%= row[:actions].delete_if{|r|r.blank?}.join(' ').html_safe %>
           </td>
         <% end %>
       </tr>
     <% end %>
   </table>
   <% if !pages.nil? %>
-    <%= render :partial => "shared/ubiquo/pagination", :locals => { :item_pages => pages } %>
+    <%= render(:partial => "shared/ubiquo/pagination", :locals => { :item_pages => pages }) %>
   <% end %>
 <% else %>
-  <%= render :partial => "shared/ubiquo/lists/empty",
+  <%= render(:partial => "shared/ubiquo/lists/empty",
              :locals => { :name => name,
                           :link_to_new => link_to_new,
-                          :model => model } %>
+                          :model => model }).html_safe %>
 <% end %>
