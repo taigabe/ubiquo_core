@@ -132,14 +132,27 @@ module Ubiquo
 
     # Returns a key ordered list of settings that can be overrided by users
     def self.get_editable_settings
-      settings[current_context].map{ |s|
-        s.first if s.last[:options][:is_editable]
-      }.compact.sort{|a,b| a.to_s  <=> b.to_s}
+      sorted_settings = sort_settings(settings[current_context].keys)
+      sorted_settings.select { |key| editable?(key) }
     end
 
     # Returns a sorted list of available contexts
     def self.get_contexts
-      settings.keys.sort{|a,b| a.to_s <=> b.to_s}
+      sort_contexts(self.settings.keys)
+    end
+
+    def self.sort_settings(setting_keys)
+      prioritary_sorting(setting_keys, :prioritary_settings)
+    end
+
+    def self.sort_contexts(context_keys)
+      prioritary_sorting(context_keys, :prioritary_contexts)
+    end
+
+    def self.prioritary_sorting(input, key)
+      output = []      
+      output += self[default_context][key] if self[default_context].option_exists?(key)
+      output.map(&:to_sym) | input.sort{|a,b| a.to_s <=> b.to_s}
     end
 
     # Check if a value can be nil

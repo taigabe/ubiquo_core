@@ -22,6 +22,8 @@ Ubiquo::Plugin.register(:ubiquo, directory, config) do |setting|
   setting.add :settings_permit, lambda{
     permit?("ubiquo_settings_management")
   }
+  setting.add(:prioritary_settings, [])
+  setting.add(:prioritary_contexts, [])
 end
 
 Ubiquo::Config.add(:edit_on_row_click, true)
