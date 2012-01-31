@@ -95,7 +95,7 @@ module Connectors
         assert_equal 'value1', Ubiquo::Settings[:foo].get(:first, Ubiquo::Settings.default_locale.to_s)
         assert_equal 'value1', Ubiquo::Settings[:foo].get(:first, Ubiquo::Settings.default_locale.to_sym)
         assert_equal 'value1', Ubiquo::Settings[:foo].get(:first, :locale => :any)
-                
+
         assert_equal 'value2_redefinido', Ubiquo::Settings[:foo].get(:second, 'es_ES')
         assert_equal 'value2_redefinit', Ubiquo::Settings[:foo].get(:second, 'ca_ES')
         assert_equal 'value2_overriden', Ubiquo::Settings[:foo].get(:second, 'en_UK')

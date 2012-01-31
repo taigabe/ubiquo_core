@@ -253,8 +253,8 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
     initial_s2_value = 'catch12'
     Ubiquo::Settings.add(:one, initial_s1_value, :is_editable => true)
     Ubiquo::Settings.add(:two, initial_s2_value, :is_editable => true)
-    s1 = UbiquoSetting.create(:key => 'one', :value => 'catch22')
-    s2 = UbiquoSetting.create(:key => 'two', :value => 'catch24')
+    s1 = UbiquoStringSetting.create(:key => 'one', :value => 'catch22')
+    s2 = UbiquoStringSetting.create(:key => 'two', :value => 'catch24')
     assert_equal initial_s1_value, Ubiquo::Settings.get(:one)
     assert_equal initial_s2_value, Ubiquo::Settings.get(:two)
 
@@ -458,13 +458,7 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
     assert !Ubiquo::Settings.settings[default_context][:d][:options].include?(:value_type)
 
     # do not show is_translatable
-    Ubiquo::Settings.string(:e,
-                            { 'en_US' => 'dungeon',
-                              'es_ES' => 'mazmorra',
-                              'ca_ES' => 'masmorra',
-                            },
-                            :is_translatable => true
-                            )
+    Ubiquo::Settings.string(:e, 'dungeon', :is_translatable => true )
     assert !Ubiquo::Settings.options(:a).include?(:is_translatable)
 
     # do not show default_value
@@ -592,7 +586,7 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
   protected
 
   def clear_settings
-    UbiquoSetting.destroy_all
+    UbiquoSetting.delete_all
     Ubiquo::Settings.settings[:ubiquo] = @old_configuration.clone
     Ubiquo::Settings.settings.reject! { |k, v| !@initial_contexts.include?(k)}
   end

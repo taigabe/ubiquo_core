@@ -38,7 +38,10 @@ module Ubiquo
 
           def uhook_load_from_backend!
             return 0 if !overridable?
-            ::UbiquoSetting.all.map{|s| add(s)}.length
+            regenerate_settings
+            ::UbiquoSetting.all.map do |s|
+              self.context(s.context).add(s)
+            end.compact.length
           end
 
           def uhook_add(name = nil, default_value = nil, options = {}, &block)
@@ -68,7 +71,7 @@ module Ubiquo
                     :options => options
                   }
                 )
-                check_type(options[:value_type], default_value) if @loaded && options[:value_type]
+                check_type(options[:value_type], default_value) if self.loaded && options[:value_type]
                 settings[self.current_context][name] = {
                   :options => options,
                   :value => default_value
@@ -85,10 +88,14 @@ module Ubiquo
             else
               raise Ubiquo::Settings::InvalidOptionName if !check_valid_name(name)
               raise Ubiquo::Settings::OptionNotFound if !self.option_exists?(name)
+              
               name = name.to_sym
-              check_type(options[:value_type], value) if @loaded && options[:value_type]
-              settings[self.current_context][name] = {
-                :options => options.merge(:default_value => value),
+              options = settings[current_context][name][:options].merge(options)
+              check_type(options[:value_type], value) if self.loaded && options[:value_type]
+              options.merge!(:default_value => value) if !options.delete(:is_a_override)
+              options.delete(:inherits)
+              settings[current_context][name] = {
+                :options => options,
                 :value => value
               }
             end
@@ -115,7 +122,7 @@ module Ubiquo
               end
               self.context(inherited_context).get(inherited_key)
             else
-              raise Ubiquo::Settings::ValueNeverSetted if settings[self.current_context][name][:value].nil? && !is_nullable?(name) 
+              raise Ubiquo::Settings::ValueNeverSet if settings[self.current_context][name][:value].nil? && !nullable?(name) 
               if overridable?
                 settings[self.current_context][name][:value]
               else
@@ -248,7 +255,7 @@ module Ubiquo
           end
 
           def uhook_get_ubiquo_setting(context, setting_key, options = {})
-            ::UbiquoSetting.find_or_build(context, setting_key)
+            ::UbiquoSetting.find_or_build(context, setting_key, options)
           end
 
           def uhook_print_key_label ubiquo_setting
@@ -297,7 +304,8 @@ module Ubiquo
           # Create or update a new instance of ubiquo_setting.
           def uhook_create_ubiquo_setting options_for_find_or_build = {}
             {}.tap do |result|
-              result[:valids] = result[:errors] = []
+              result[:valids] = []
+              result[:errors] = []
               params[:ubiquo_settings].each do |context, data|
                 data.each do |key, value_array|
                   unless confirmation?(key, data)

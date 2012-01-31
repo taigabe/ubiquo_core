@@ -33,8 +33,7 @@ module Ubiquo
       end
 
       def self.unload!
-        ::UbiquoSetting.instance_variable_set :@translatable, false
-
+        ::UbiquoSetting.untranslatable        
       end
 
       module Settings
@@ -51,7 +50,7 @@ module Ubiquo
 
         module ClassMethods
           include Standard::Settings::ClassMethods
-          
+
           # Returns the default value for the setting
           def uhook_default_value(name = nil, options = {})
             if translatable?(name)
@@ -87,15 +86,6 @@ module Ubiquo
             else
               return settings[current_context][name][:options][:allowed_values]
             end
-          end
-
-          # Load all settings from a i18n database backend
-          def uhook_load_from_backend!
-            regenerate_settings
-            return 0 if !overridable?
-            ::UbiquoSetting.all.map{|s|
-              context(s.context).add(s)
-            }.length
           end
 
           # Add a Setting
@@ -160,7 +150,7 @@ module Ubiquo
                     value = { locale.to_sym => value }
                     options.merge!(:default_value => { locale.to_sym => default_value })
                   end
-                  check_type(options[:value_type], value.values) if loaded && options[:value_type]
+                  check_type(options[:value_type], value.values) if self.loaded && options[:value_type]
                 else
                   check_type(options[:value_type], value) if
                   loaded && options[:value_type]
@@ -190,9 +180,9 @@ module Ubiquo
               options = settings[current_context][name][:options].merge(options)
               if options[:is_translatable]
                 value = settings[current_context][name][:value].merge({ locale => value })
-                check_type(options[:value_type], value.values) if loaded && options[:value_type]
+                check_type(options[:value_type], value.values) if self.loaded && options[:value_type]
               else
-                check_type(options[:value_type], value) if loaded && options[:value_type]
+                check_type(options[:value_type], value) if self.loaded && options[:value_type]
               end
               options.merge!(:default_value => value) if !options.delete(:is_a_override)
               options.delete(:inherits)
@@ -387,6 +377,8 @@ module Ubiquo
         end
 
         module Helper
+          include Standard::UbiquoSettingsController::Helper
+          
           # Adds a locale filter to the received filter_set
           def uhook_ubiquo_setting_filters filter_set
             filter_set.locale

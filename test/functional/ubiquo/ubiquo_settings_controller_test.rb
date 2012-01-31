@@ -192,7 +192,6 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
       delete :destroy, :id => setting.id
     end
 
-
     assert_equal 'yes please', Ubiquo::Settings[:controller_test][:test_index]
     get :index
     assert_select '#context_controller_test input[name="test_index"][value="yes please"]', 1

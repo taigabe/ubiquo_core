@@ -3,12 +3,12 @@ class Ubiquo::UbiquoSettingsController < UbiquoController
   Ubiquo::Extensions.load_extensions_for UbiquoController, self
 
   ubiquo_config_call :settings_access_control
+  before_filter :clean_result
 
   # GET /settings
   # GET /settings.xml
   # GET /settings.json
   def index
-
     find_settings
     respond_to do |format|
       format.html # index.html.erb
@@ -67,7 +67,6 @@ class Ubiquo::UbiquoSettingsController < UbiquoController
         render :action => :index
       }
     end
-    @result = nil
   end
 
   private
@@ -78,5 +77,9 @@ class Ubiquo::UbiquoSettingsController < UbiquoController
 
   def load_setting
     @ubiquo_setting = UbiquoSetting.find(params[:id])
+  end
+
+  def clean_result
+    @result = nil
   end
 end

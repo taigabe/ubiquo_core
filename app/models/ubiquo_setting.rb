@@ -26,8 +26,7 @@ class UbiquoSetting < ActiveRecord::Base
 
   # Check if the value is included in the alloweds
   def value_acceptable?
-    self.allowed_values.blank? ||
-      self.allowed_values.include?(self.value)
+    self.allowed_values.blank? || self.allowed_values.include?(self.value)
   end
   
   # Check if the context of the setting exists
@@ -37,7 +36,6 @@ class UbiquoSetting < ActiveRecord::Base
 
   # Check is a setting is allowed to have a nil value
   def nullabe?
-    context_exists? &&
     config_exists? &&
     Ubiquo::Settings[self.context].nullable?(self.key)
   end
@@ -45,12 +43,12 @@ class UbiquoSetting < ActiveRecord::Base
   # Check if a setting exists
   def config_exists?
     context_exists? &&
-    Ubiquo::Settings[self.context].option_exists?(self.key).present?
+    Ubiquo::Settings[self.context].option_exists?(self.key)
   end
 
   def config_editable?
     config_exists? &&
-    Ubiquo::Settings[self.context].editable?(self.key).present?
+    Ubiquo::Settings[self.context].editable?(self.key)
   end
   
   def config_value_same?
@@ -142,8 +140,9 @@ class UbiquoSetting < ActiveRecord::Base
   end
 
   def self.generate_type context, key
-    if Ubiquo::Settings.settings[context.to_sym][key][:options][:value_type]
-      Ubiquo::Settings.settings[context.to_sym][key][:options][:value_type]
+    raise Ubiquo::Settings::OptionNotFound unless Ubiquo::Settings[context].option_exists?(key)
+    if value_type = Ubiquo::Settings.settings[context.to_sym][key][:options][:value_type]
+      value_type
     else
       value = Ubiquo::Settings[context.to_sym].get(key.to_sym, :any_value => true)
       return UbiquoPasswordSetting if value.class == String && Ubiquo::Settings[context.to_sym].options(key.to_sym)[:is_password]
