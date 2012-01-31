@@ -429,8 +429,8 @@ module Ubiquo
             (form.hidden_field :content_id) + (hidden_field_tag(:from, params[:from]))
           end
 
-          def uhook_get_ubiquo_setting(context, setting_key)
-            ::UbiquoSetting.find_or_build(context, setting_key, :locale => current_locale.to_sym)
+          def uhook_get_ubiquo_setting(context, setting_key, options = {})
+            super(context, setting_key, options.merge(:locale => current_locale.to_sym))
           end
 
           def uhook_print_key_label ubiquo_setting
@@ -446,6 +446,7 @@ module Ubiquo
 
         end
         module InstanceMethods
+          include Standard::UbiquoSettingsController::InstanceMethods
 
           def uhook_is_ubiquo_setting_overriden? context, key
             Ubiquo::Settings[context].options_exists?(key) &&
@@ -466,31 +467,10 @@ module Ubiquo
             end
           end
 
-          # For password settings two inputs will be generated. One with the key
-          # of the setting and the other with the prefix "confirmation_"
-          def confirmation?(key, data)
-            !(key !~ /^confirmation_/)  && data.keys.find{|k| k == key.gsub('confirmation_','')}.present?
-          end
 
           # Creates or updates a new instance of setting.
-          def uhook_create_ubiquo_setting
-            valids = []
-            errors = []
-            params[:ubiquo_settings].each do |context, data|
-              data.each do |key, value_array|
-                 unless confirmation?(key, data)
-                  ubiquo_setting = ::UbiquoSetting.find_or_build(context, key, :locale => current_locale)
-                  ubiquo_setting.handle_confirmation(data) if ubiquo_setting.respond_to?(:handle_confirmation)
-                  ubiquo_setting.value = value_array
-                  if ubiquo_setting.config_value_same? || ubiquo_setting.save
-                    valids << ubiquo_setting
-                  else
-                    errors << ubiquo_setting
-                  end
-                end
-              end
-            end if params[:ubiquo_settings].present?
-            {:valids => valids, :errors => errors}
+          def uhook_create_ubiquo_setting options_for_find_or_build = {}
+            super(options_for_find_or_build.merge(:locale => current_locale))
           end
 
           #destroys an setting instance. returns a boolean that means if the destroy was done.

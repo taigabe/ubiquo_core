@@ -152,7 +152,7 @@ module Ubiquo
         end
 
         module ClassMethods
-          def uhook_find_or_build context, key
+          def uhook_find_or_build context, key, options = {}
             setting = ::UbiquoSetting.context(context.to_s).key(key.to_s).first
             setting ||= uhook_generate_instance(context, key)
           end
@@ -247,7 +247,7 @@ module Ubiquo
             Ubiquo::Settings[:context][:key]
           end
 
-          def uhook_get_ubiquo_setting(context, setting_key)
+          def uhook_get_ubiquo_setting(context, setting_key, options = {})
             ::UbiquoSetting.find_or_build(context, setting_key)
           end
 
@@ -295,27 +295,27 @@ module Ubiquo
           end          
 
           # Create or update a new instance of ubiquo_setting.
-          def uhook_create_ubiquo_setting
-            valids = []
-            errors = []
-            params[:ubiquo_settings].each do |context, data|
-              data.each do |key, value_array|
-                if confirmation?(key, data)
-                  ubiquo_setting = ::UbiquoSetting.find_or_build(context, key)
-                  ubiquo_setting.handle_confirmation(data) if ubiquo_setting.respond_to?(:handle_confirmation)
-                  ubiquo_setting.value = value_array
-                  if ubiquo_setting.config_value_same? || ubiquo_setting.save
-                    valids << ubiquo_setting
-                  else                    
-                    errors << ubiquo_setting
+          def uhook_create_ubiquo_setting options_for_find_or_build = {}
+            {}.tap do |result|
+              result[:valids] = result[:errors] = []
+              params[:ubiquo_settings].each do |context, data|
+                data.each do |key, value_array|
+                  unless confirmation?(key, data)
+                    ubiquo_setting = ::UbiquoSetting.find_or_build(context, key, options_for_find_or_build)
+                    ubiquo_setting.handle_confirmation(data) if ubiquo_setting.respond_to?(:handle_confirmation)
+                    ubiquo_setting.value = value_array
+                    if ubiquo_setting.config_value_same? || ubiquo_setting.save
+                      result[:valids] << ubiquo_setting
+                    else
+                      result[:errors] << ubiquo_setting
+                    end
                   end
                 end
               end
-            end if params[:ubiquo_settings].present?
-            {:valids => valids, :errors => errors}
+            end
           end
 
-         #destroys a ubiquo_setting instance. returns a boolean that means if the destroy was done.
+          #destroys a ubiquo_setting instance. returns a boolean that means if the destroy was done.
           def uhook_destroy_ubiquo_setting(ubiquo_setting)
             ubiquo_setting.destroy
           end
