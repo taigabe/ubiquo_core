@@ -259,7 +259,7 @@ module Ubiquo
         module InstanceMethods
 
           def uhook_index
-            Ubiquo::Settings.get_contexts.inject({}) do |result, context|
+            Ubiquo::Settings.get_contexts.inject(ActiveSupport::OrderedHash.new) do |result, context|
               settings = Ubiquo::Settings[context].get_editable_settings
               if settings.present?
                 result[context] = Ubiquo::Settings[context].get_editable_settings

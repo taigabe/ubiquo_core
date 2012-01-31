@@ -50,7 +50,8 @@ module Ubiquo
         end
 
         module ClassMethods
-
+          include Standard::Settings::ClassMethods
+          
           # Returns the default value for the setting
           def uhook_default_value(name = nil, options = {})
             if translatable?(name)
@@ -445,16 +446,6 @@ module Ubiquo
 
         end
         module InstanceMethods
-
-          def uhook_index
-            Ubiquo::Settings.get_contexts.inject({}) do |result, context|
-              settings = Ubiquo::Settings[context].get_editable_settings
-              if settings.present?
-                result[context] = Ubiquo::Settings[context].get_editable_settings
-              end
-              result
-            end
-          end
 
           def uhook_is_ubiquo_setting_overriden? context, key
             Ubiquo::Settings[context].options_exists?(key) &&

@@ -97,6 +97,17 @@ module Connectors
         assert Ubiquo::UbiquoSettingsController.new.uhook_edit_ubiquo_setting(UbiquoSetting.new)
       end
 
+
+      def test_uhook_index_should_order_contexts_acording_to_get_contexts_method
+        Ubiquo::Settings.create_context(:foo_first).integer  :a, 1, :is_editable => true
+        Ubiquo::Settings.create_context(:foo_third).integer  :b, 2, :is_editable => true
+        Ubiquo::Settings.create_context(:foo_second).integer :c, 3, :is_editable => true
+
+        ordered_context_created = [:foo_first, :foo_second, :foo_third]
+        index_data = Ubiquo::UbiquoSettingsController.new.uhook_index
+        assert_equal ordered_context_created, index_data.reject {|k, v| !ordered_context_created.include?(k) }.map(&:first)
+      end
+
       # TODO add more tests for the controller methods
 
     private
