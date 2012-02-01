@@ -47,21 +47,19 @@ table_id ||= name.pluralize + "-list"
     <% rows.each do |row| %>
       <li id="<%= name %>_<%= row[:id] %>" class="box <%= cycle('even', 'odd') %>">
         <%= row[:content] %>
-        
         <% unless hide_actions %>
           <div class="actions">
-            <%= row[:actions].delete_if{|r|r.blank?}.join(" | ") %>       
+            <%= row[:actions].delete_if { |r| r.blank? }.join(" | ").html_safe %>
           </div>
         <% end %>
       </li>
     <% end %>
   </ul>
-  <% if !pages.nil? %>
+  <% if pages.present? %>
     <%= render :partial => "shared/ubiquo/pagination", :locals => { :item_pages => pages } %>
   <% end %>
-
 <% else %>
-  <%= render :partial => "shared/ubiquo/lists/empty", 
+  <%= render :partial => "shared/ubiquo/lists/empty",
              :locals => { :name => name,
                           :link_to_new => link_to_new,
                           :model => model } %>
