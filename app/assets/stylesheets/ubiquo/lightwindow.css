@@ -16,7 +16,7 @@
 .lightwindow_overlay .alt-png{
     background-image: url("../../images/ubiquo/lightwindow/black-.png");
     background-color:#000;
-    filter: alpha("opacity:70");
+
 }
 
 div.lightwindow {
@@ -207,7 +207,6 @@ div.lightwindow {
 		background: none;
 		background-color: #000000;
 		opacity: .70;
-		filter: alpha(opacity=70);
 	}
 
 	a:hover.lightwindow_galleries_tab,
@@ -241,7 +240,7 @@ div.lightwindow {
 		background: none;
 		background-color: #000000;
 		opacity: .70;
-		filter: alpha(opacity=70);
+
 	}	
 
 	.lightwindow_galleries_list {
