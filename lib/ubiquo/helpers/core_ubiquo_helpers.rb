@@ -10,6 +10,13 @@ module Ubiquo
         end
       end
 
+
+      # Removes the non existent assets in the asset environment.
+      # ref: actionpack-3.x/lib/sprockets/helpers/rails_helper.rb
+      def filter_assets(assets, format)
+        assets.select{ |a| asset_environment["#{a.to_s}.#{format}"] }
+      end
+
       # Adds the default stylesheet tags needed for ubiquo
       # options:
       #   color: by default is red, but you can replace it calling another color
@@ -20,42 +27,38 @@ module Ubiquo
         options = sources.extract_options!.stringify_keys
         color = options.delete("color") || :red
         default_sources = []
+        should_include_ie = false
         if sources.include?(:defaults)
-          default_sources += [:ubiquo, :ubiquo_application, :lightwindow, :ubiquo_lightwindow, :listings, color]
-#          require 'ruby-debug';debugger
-#          default_sources += tag.send :collect_asset_files, "ubiquo/plugins/*.css"
-          default_sources += [:ipad] if defined?( request ) && request.user_agent.match(/Apple.*Mobile/)
+          default_sources += Ubiquo::Plugin.registered_plugins + ["ubiquo/colors/#{color}", "ubiquo/ubiquo_application"]
+          default_sources += ["ubiquo/ipad"] if defined?(request) && request.user_agent.match(/Apple.*Mobile/)
+          should_include_ie = true
+          sources.delete(:defaults)
         end
-        ubiquo_sources = (sources + default_sources).collect do |source|
-          next if source == :defaults
-          "ubiquo/#{source}"
-        end.compact
-        output = stylesheet_link_tag(ubiquo_sources, options)
-        if sources.include?(:defaults)
-          output += <<-eos
+        ubiquo_sources = filter_assets(sources + default_sources, "css")
+        output = stylesheet_link_tag(*ubiquo_sources, options)
+
+        if should_include_ie
+          ie_output = <<-eos
             <!--[if IE]>
               #{stylesheet_link_tag 'ubiquo/ubiquo_ie'}
             <![endif]-->
-            <!--[if lte IE 6]>
-              #{stylesheet_link_tag 'ubiquo/ubiquo_ie6'}
-            <![endif]-->
           eos
+          [output, ie_output].join("\n").html_safe
+        else
+          output
         end
-        output
+
       end
 
       def ubiquo_javascript_include_tag(*sources)
         options = sources.extract_options!.stringify_keys
         default_sources = []
         if sources.include?(:defaults)
-          default_sources += [:ubiquo, :lightwindow, :lightwindow_ubiquo]
-#          default_sources += collect_asset_files "ubiquo/plugins/*.js"
+          default_sources += Ubiquo::Plugin.registered_plugins + ["ubiquo/ubiquo_application"]
+          sources.delete(:defaults)
         end
-        ubiquo_sources = (sources + default_sources).collect do |source|
-          next if source == :defaults
-          "ubiquo/#{source}"
-        end.compact
-        javascript_include_tag(ubiquo_sources, options)
+        ubiquo_sources = filter_assets(sources + default_sources, "js")
+        javascript_include_tag(*ubiquo_sources, options).html_safe
       end
 
       # surrounds the block between the specified box.
