@@ -34,7 +34,7 @@ module Ubiquo
           should_include_ie = true
           sources.delete(:defaults)
         end
-        ubiquo_sources = filter_assets(sources + default_sources, "css")
+        ubiquo_sources = filter_assets(sources.map{ |s| "ubiquo/#{s}"} + default_sources, "css")
         output = stylesheet_link_tag(*ubiquo_sources, options)
 
         if should_include_ie
@@ -57,7 +57,7 @@ module Ubiquo
           default_sources += Ubiquo::Plugin.registered_plugins + ["ubiquo/ubiquo_application"]
           sources.delete(:defaults)
         end
-        ubiquo_sources = filter_assets(sources + default_sources, "js")
+        ubiquo_sources = filter_assets(sources.map{ |s| "ubiquo/#{s}"} + default_sources, "js")
         javascript_include_tag(*ubiquo_sources, options).html_safe
       end
 
