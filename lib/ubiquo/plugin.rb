@@ -5,14 +5,23 @@ module Ubiquo
 
     self.registered ||= {}
 
-    def self.register(name, &block)
+    def self.register(name, options = { },  &block)
+      engine = (options[:plugin] || name.to_s.classify.constantize)::Engine
       Ubiquo::Settings.create_context(name)
       Ubiquo::Settings.context(name, &block)
-      self.registered[name] = name
+      self.registered[name] = engine
     end
 
     def self.registered?(name)
       registered.include?(name)
+    end
+
+    def self.registered_plugins
+      registered.keys
+    end
+
+    def self.registered_engines
+      registered.values
     end
 
     def setting(*args)
