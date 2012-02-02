@@ -89,7 +89,6 @@ module Ubiquo
           translatable = options.delete(:translatable)
           description = options.delete(:description)
           help = options.delete(:help)
-
           label_name = options.delete(:label) || @object.class.human_attribute_name(field)
           label = "".html_safe
           if options.delete(:label_as_legend)
@@ -133,7 +132,6 @@ module Ubiquo
           post += group(:type => :description) do
             description
           end if description
-
           result = if group_options
             group(group_options) do
               pre + super_result + post
@@ -141,7 +139,7 @@ module Ubiquo
           else
             pre + super_result + post
           end
-          manage_result(result)
+          result
         end
       end
 
@@ -222,7 +220,7 @@ module Ubiquo
         end
         self.group_chain.pop
         # Any method here that accepts a block must check before concat
-        manage_result(result)
+        result
       end
 
       # Block to disable UbiquoFormBuilder "magic" inside it.
@@ -230,7 +228,7 @@ module Ubiquo
         last_status = self.enabled
         self.enabled = false
         begin
-          manage_result(@template.capture( &block ).to_s)
+          @template.capture(&block).to_s
         ensure
           self.enabled = last_status
         end
@@ -246,14 +244,14 @@ module Ubiquo
       def create_button( text = nil, options = {} )
         options = options.reverse_merge( default_tag_options[:create_button] )
         text = text || @template.t(options.delete(:i18n_label_key))
-        manage_result(submit text, options)
+        submit(text, options)
       end
 
       # Button to submit on the edit form
       def update_button( text = nil, options = {} )
         options = options.reverse_merge( default_tag_options[:update_button] )
         text = text || @template.t(options.delete(:i18n_label_key))
-        manage_result(submit text, options)
+        submit(text, options)
       end
 
       # Creates a tab on the current block.
@@ -286,7 +284,7 @@ module Ubiquo
         options.delete(:i18n_label_key)
         js_function = options[:js_function] || "document.location.href='#{url}'"
 
-        manage_result(@template.button_to_function text, js_function, options)
+        @template.button_to_function(text, js_function, options)
       end
 
       # It's a group of blocks. Used by tab construction
@@ -304,19 +302,6 @@ module Ubiquo
         def add(name, group_options = {}, &block)
           form_builder.group(group_options.reverse_merge({ :type => :tab, :legend => name }), &block)
         end
-      end
-
-      protected
-      # Any method here that accepts a block must check in case it has been called
-      # from an erb.
-      #
-      # In that case we must concat te result to the template, otherways the result
-      # will not appear on the response.
-      #
-      # Notice that block must not have to have an ampersand
-      def manage_result result
-        # No need to do special handling with the ERB changes in Rails 3
-        @template.concat(result)
       end
 
     end
