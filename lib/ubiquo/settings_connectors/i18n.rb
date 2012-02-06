@@ -33,7 +33,7 @@ module Ubiquo
       end
 
       def self.unload!
-        ::UbiquoSetting.untranslatable        
+        ::UbiquoSetting.untranslatable
       end
 
       module Settings
@@ -184,7 +184,10 @@ module Ubiquo
               else
                 check_type(options[:value_type], value) if self.loaded && options[:value_type]
               end
-              options.merge!(:default_value => value) if !options.delete(:is_a_override)
+              if !options.delete(:is_a_override)
+                options.merge!(:default_value => value)
+                options[:original_parameters].merge!({:default_value => value})
+              end
               options.delete(:inherits)
               settings[current_context][name] = {
                 :options => options,
@@ -352,7 +355,7 @@ module Ubiquo
             if self.config_exists? &&
                 !Ubiquo::Settings[self.context].translatable?(self.key)
                 existing_value = ::UbiquoSetting.context(self.context.to_s).key(self.key.to_s).first
-              if existing_value && existing_value != self                
+              if existing_value && existing_value != self
                 self.errors.add :key, "not translatable setting"
               end
             end
@@ -378,7 +381,7 @@ module Ubiquo
 
         module Helper
           include Standard::UbiquoSettingsController::Helper
-          
+
           # Adds a locale filter to the received filter_set
           def uhook_ubiquo_setting_filters filter_set
             filter_set.locale

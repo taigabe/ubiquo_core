@@ -24,17 +24,17 @@ module Ubiquo
                 :default_value, :is_translatable,
                 :allowed_values, :original_parameters].include?(k)
             }
-          end            
+          end
 
           # Returns the default value for the setting
           def uhook_default_value(name = nil, options = {})
             return settings[current_context][name][:options][:default_value]
-          end            
+          end
 
           # Returns the possible values for the setting
           def uhook_allowed_values(name = nil, options = {})
             return settings[current_context][name][:options][:allowed_values]
-          end              
+          end
 
           def uhook_load_from_backend!
             return 0 if !overridable?
@@ -62,7 +62,7 @@ module Ubiquo
               else
                 raise Ubiquo::Settings::InvalidOptionName if !check_valid_name(name)
                 raise Ubiquo::Settings::AlreadyExistingOption if settings[self.current_context].include?(name.to_sym) &&
-                                                                !options.delete(:is_a_connector_reload)                  
+                                                                !options.delete(:is_a_connector_reload)
                 name = name.to_sym
                 options = default_options.merge(options).merge(:default_value => default_value)
                 options.merge!( :original_parameters => {
@@ -76,8 +76,8 @@ module Ubiquo
                   :options => options,
                   :value => default_value
                 }
-              end    
-            end    
+              end
+            end
           end
 
           def uhook_set(name = nil, value = nil, options = {}, &block)
@@ -88,11 +88,14 @@ module Ubiquo
             else
               raise Ubiquo::Settings::InvalidOptionName if !check_valid_name(name)
               raise Ubiquo::Settings::OptionNotFound if !self.option_exists?(name)
-              
+
               name = name.to_sym
               options = settings[current_context][name][:options].merge(options)
               check_type(options[:value_type], value) if self.loaded && options[:value_type]
-              options.merge!(:default_value => value) if !options.delete(:is_a_override)
+              if !options.delete(:is_a_override)
+                options.merge!(:default_value => value)
+                options[:original_parameters].merge!({:default_value => value})
+              end
               options.delete(:inherits)
               settings[current_context][name] = {
                 :options => options,
@@ -122,7 +125,7 @@ module Ubiquo
               end
               self.context(inherited_context).get(inherited_key)
             else
-              raise Ubiquo::Settings::ValueNeverSet if settings[self.current_context][name][:value].nil? && !nullable?(name) 
+              raise Ubiquo::Settings::ValueNeverSet if settings[self.current_context][name][:value].nil? && !nullable?(name)
               if overridable?
                 settings[self.current_context][name][:value]
               else
@@ -137,16 +140,16 @@ module Ubiquo
           end
 
 #          def uhook_reinitialize options = {}
-#            self.overridable = options[:settings_overridable].present? 
-#          end            
+#            self.overridable = options[:settings_overridable].present?
+#          end
 
-          def uhook_default_options 
+          def uhook_default_options
             {
               :is_nullable => false,
               :is_editable => false,
               :is_translatable => false
-            } 
-          end            
+            }
+          end
         end
       end
       module UbiquoSetting
@@ -193,8 +196,8 @@ module Ubiquo
           end
 
           def uhook_config_value_same?
-            !self.id && 
-              config_exists? && 
+            !self.id &&
+              config_exists? &&
               Ubiquo::Settings[self.context].default_value(self.key) == self.value
           end
         end
@@ -235,7 +238,7 @@ module Ubiquo
               restore_text = t('ubiquo.ubiquo_setting.index.restore_default')
               restore_url  = ubiquo_ubiquo_setting_path(ubiquo_setting)
               confirm_text = t('ubiquo.ubiquo_setting.index.confirm_restore_default')
-              
+
               actions << link_to(restore_text,
                                   restore_url,
                                   :confirm => confirm_text,
@@ -299,7 +302,7 @@ module Ubiquo
           # of the setting and the other with the prefix "confirmation_"
           def confirmation?(key, data)
             !(key !~ /^confirmation_/)  && data.keys.find{|k| k == key.gsub('confirmation_','')}.present?
-          end          
+          end
 
           # Create or update a new instance of ubiquo_setting.
           def uhook_create_ubiquo_setting options_for_find_or_build = {}
