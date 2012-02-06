@@ -561,7 +561,7 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
   end
 
   def test_get_editable_settings_should_list_first_some_settings
-    Ubiquo::Settings[:prioritary_settings] = [:foo_b]
+    Ubiquo::Settings[:prioritary_settings] = { Ubiquo::Settings.default_context => [:foo_b]}
 
     Ubiquo::Settings.add(:foo_aa,  1, :is_editable => true)
     Ubiquo::Settings.add(:foo_b,   1, :is_editable => true)
@@ -569,7 +569,7 @@ class Ubiquo::SettingsTest < ActiveSupport::TestCase
 
     assert_equal [:foo_b, :foo_aa, :foo_ccc], Ubiquo::Settings.get_editable_settings.select{ |c| c.to_s.index('foo') == 0 }
 
-    Ubiquo::Settings[:prioritary_settings] = []
+    Ubiquo::Settings[:prioritary_settings] = { }
 
     assert_equal [:foo_aa, :foo_b, :foo_ccc], Ubiquo::Settings.get_editable_settings.select{ |c| c.to_s.index('foo') == 0 }
 

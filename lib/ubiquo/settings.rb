@@ -142,7 +142,12 @@ module Ubiquo
     end
 
     def self.sort_settings(setting_keys)
-      prioritary_sorting(setting_keys, :prioritary_settings)
+      output = if self[default_context].option_exists?(:prioritary_settings) && self[default_context][:prioritary_settings][current_context]
+                 self[default_context][:prioritary_settings][current_context]
+               else
+                 []
+               end
+      output.map(&:to_sym) | setting_keys.sort{|a,b| a.to_s <=> b.to_s}
     end
 
     def self.sort_contexts(context_keys)
@@ -150,7 +155,7 @@ module Ubiquo
     end
 
     def self.prioritary_sorting(input, key)
-      output = []      
+      output = []
       output += self[default_context][key] if self[default_context].option_exists?(key)
       output.map(&:to_sym) | input.sort{|a,b| a.to_s <=> b.to_s}
     end
@@ -218,7 +223,7 @@ module Ubiquo
 
     def self.with_options(new_options = {}, &block)
       backup = @with_options
-      begin        
+      begin
         @with_options ||= {}
         @with_options.merge!(new_options || {})
         yield(self)
