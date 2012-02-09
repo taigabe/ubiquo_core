@@ -26,13 +26,13 @@ namespace :ubiquo do
     copy_dir(Dir.glob(Rails.root.join('vendor', 'plugins', 'ubiquo**', 'install')), "/", :force => overwrite)
   end
 
-  desc "Run given command inside each plugin directory."
+  desc "Run given command inside each plugin directory. Command can be set with COMMAND env var.\n"
   task :foreach, [ :command ] do |t, args|
     ubiquo_dependencies = %w[ calendar_date_select exception_notification paperclip responds_to_parent tiny_mce translate ]
     plugin_directory = Rails.root.join('vendor', 'plugins')
     ubiquo_plugins = Dir.glob(File.join(plugin_directory,"ubiquo_*")).map { |file| file.split("/").last }
     plugins = ubiquo_dependencies + ubiquo_plugins
-    args.with_defaults(:command => 'git pull')
+    args.with_defaults(:command => ENV["COMMAND"] || 'git pull')
     plugins.each do |plugin|
       plugin_path = File.join(plugin_directory, plugin)
       command = "cd #{plugin_path} && #{args.command}"
