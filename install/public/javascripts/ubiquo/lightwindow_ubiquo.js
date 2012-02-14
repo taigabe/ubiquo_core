@@ -6,18 +6,25 @@
 var myLightWindow = null;
 
 tinyMceLightWindow = Class.create( lightwindow,{
+    _availableTinyMCE: function(){
+      return(typeof(tinyMCE) != "undefined");
+    },
     // TinyMCE
     _putTinyMCE: function(reference){
         $$("."+reference+", #"+reference).each(function(v) {
-            tinyMCE.execCommand('mceAddControl', true, $(v).id);
+          tinyMCE.execCommand('mceAddControl', true, $(v).id);
         });
     },
     _processWindow: function($super){
         $super();
-        this._putTinyMCE('visual_editor');
+        if(this._availableTinyMCE()){
+          this._putTinyMCE('visual_editor');
+        }
     },
     deactivate: function($super){
-        killeditor();
+        if(this._availableTinyMCE()){
+          killeditor();
+        }
         var classname = this._getParameter("lightwindow_class");
         if(classname){
             this._getInternalElem('lightwindow').removeClassName(classname);
