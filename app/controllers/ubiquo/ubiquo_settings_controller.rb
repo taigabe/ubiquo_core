@@ -4,6 +4,7 @@ class Ubiquo::UbiquoSettingsController < UbiquoController
 
   ubiquo_config_call :settings_access_control
   before_filter :clean_result
+  uses_tiny_mce(:options => default_tiny_mce_options)
 
   # GET /settings
   # GET /settings.xml

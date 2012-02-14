@@ -80,7 +80,7 @@ module Ubiquo::UbiquoSettingsHelper
     result = render(:partial => "/ubiquo/ubiquo_settings/#{ubiquo_setting.context}/#{ubiquo_setting.key}",
                         :locals => { :ubiquo_setting => ubiquo_setting }) rescue false
     result = render(:partial => "/ubiquo/ubiquo_settings/#{type}",
-                        :locals => { :ubiquo_setting => ubiquo_setting }) rescue false if !result
+                        :locals => { :ubiquo_setting => ubiquo_setting })
     result = render(:partial => "/ubiquo/ubiquo_settings/ubiquo_setting.html.erb",
                       :locals => { :ubiquo_setting => ubiquo_setting }) if !result
     result
@@ -117,5 +117,13 @@ module Ubiquo::UbiquoSettingsHelper
 
   def error_class ubiquo_setting
     ubiquo_setting.errors.present? ? " error_field" : " "
+  end
+  def text_setting_class ubiquo_setting
+    classes = []
+    classes << error_class(ubiquo_setting)
+    if ubiquo_setting.options && ubiquo_setting.options[:tinymce]
+      classes << Ubiquo::Config.context(:ubiquo_form_builder).get(:default_tag_options)[:text_area][:class]
+    end
+    classes.join(' ').strip.squeeze
   end
 end

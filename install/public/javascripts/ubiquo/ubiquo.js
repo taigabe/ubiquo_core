@@ -334,6 +334,7 @@ function addHiddenFieldsForSettings(form, settings, selectedSettingKey){
   }
 }
 function collectAndSendValues(selectedContext, selectedSettingKey){
+  tinyMCE.triggerSave();
   var settings = {};
   var contexts = $$('#new_ubiquo_setting div[id*="context_"]');
   for(var i = 0; i < contexts.length; ++i){

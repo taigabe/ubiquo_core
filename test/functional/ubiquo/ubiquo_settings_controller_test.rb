@@ -241,6 +241,17 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     end
   end
 
+  def test_should_show_tinymce
+    Ubiquo::Settings[:controller_test].add(:test_tinymce, "using tinymce",
+      :is_editable => true,
+      :is_text => true,
+      :tinymce => true
+    )
+    assert_equal "using tinymce", Ubiquo::Settings[:controller_test][:test_tinymce]
+    get :index
+    assert_tag :tag => "textarea", :attributes => { :class => Ubiquo::Config.context(:ubiquo_form_builder).get(:default_tag_options)[:text_area][:class]}
+  end
+
   def test_should_show_a_text_area_for_string_text
     Ubiquo::Settings[:controller_test].add(:test_index, 'yes please',
       :is_editable => true,
