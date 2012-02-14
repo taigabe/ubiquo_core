@@ -38,7 +38,7 @@ module Ubiquo::UbiquoSettingsHelper
   end
 
   def javascript_callback
-    "return collectAndSendValues();return false;"
+    "collectAndSendValues();return false;"
   end
 
   def setting_info(ubiquo_setting)

@@ -285,7 +285,7 @@ function removeSettingValue(element){
 }
 function isSelect(dom, settingKey){
   return (dom.getElementsBySelector('input[name="' + settingKey + '"]').length == 0
-    && dom.getElementsBySelector('select[name="' + settingKey + '"]').length)
+    && dom.getElementsBySelector('select[name="' + settingKey + '"]').length);
 }
 function isTextArea(dom, settingKey){
   return dom.getElementsBySelector('textarea[name="' + settingKey + '"]').length;
@@ -301,12 +301,12 @@ function isSingleIput(dom, settingKey){
 }
 function isCheckbox(dom, settingKey){
   var input = dom.getElementsBySelector('input[name="' + settingKey + '"]').first();
-  return input && input.type == 'checkbox' && input.checked == true
+  return input && input.type == 'checkbox' && input.checked == true;
 }
 function isPassword(dom, settingKey){
   var input = dom.getElementsBySelector('input[name="' + settingKey + '"]').first();
-  var hidden_input = dom.getElementsBySelector('input[name="confirmation_' + settingKey + '"]').first()
-  return input && input.type == 'password' && hidden_input
+  var hidden_input = dom.getElementsBySelector('input[name="confirmation_' + settingKey + '"]').first();
+  return input && input.type == 'password' && hidden_input;
 }
 function addHiddenFieldsForSettings(form, settings, selectedSettingKey){
   for(var context in settings) {
@@ -317,15 +317,15 @@ function addHiddenFieldsForSettings(form, settings, selectedSettingKey){
         hiddenField.setAttribute("type", "hidden");
         // is a array, change the name and add one hidden input for each value
         if(typeof settings[context][settingKey].first === 'function'){
-          hiddenFieldName = "ubiquo_settings" + "[" + context + "[" + settingKey + "][]"
-          hiddenField.setAttribute("name", hiddenFieldName)
+          hiddenFieldName = "ubiquo_settings" + "[" + context + "[" + settingKey + "][]";
+          hiddenField.setAttribute("name", hiddenFieldName);
           $(settings[context][settingKey]).each(function(s) {
             hiddenField.value = s;
             $(form).appendChild(hiddenField.cloneNode(true));
-          })
+          });
         } else {
-          hiddenFieldName = "ubiquo_settings" + "[" + context + "[" + settingKey + "]]"
-          hiddenField.setAttribute("name", hiddenFieldName)
+          hiddenFieldName = "ubiquo_settings" + "[" + context + "[" + settingKey + "]]";
+          hiddenField.setAttribute("name", hiddenFieldName);
           hiddenField.setAttribute("value", settings[context][settingKey]);
           $(form).appendChild(hiddenField.cloneNode(true));
         }
@@ -334,13 +334,13 @@ function addHiddenFieldsForSettings(form, settings, selectedSettingKey){
   }
 }
 function collectAndSendValues(selectedContext, selectedSettingKey){
-  var settings = {}
+  var settings = {};
   var contexts = $$('#new_ubiquo_setting div[id*="context_"]');
   for(var i = 0; i < contexts.length; ++i){
-    var contextKey = $(contexts[i]).readAttribute('id')
+    var contextKey = $(contexts[i]).readAttribute('id');
     contextKey = contextKey.replace('context_','');
     if(selectedContext == null || contextKey == selectedContext ){
-      settings[contextKey] = {}
+      settings[contextKey] = {};
       var settingsRows = $(contexts[i]).getElementsBySelector('.setting-value');
       for(var j = 0; j < settingsRows.length; ++j){
         var settingKey = settingsRows[j].readAttribute('id');
@@ -356,8 +356,8 @@ function collectAndSendValues(selectedContext, selectedSettingKey){
           }
           else if(isMultipleInput(settingsRows[j], settingKey)){
             settingValue = settingsRows[j].getElementsBySelector('input[name="' + settingKey + '[]"]').collect(function(s) {
-              return s.value
-            })
+              return s.value;
+            });
           }
           else if(isMultipleForSelect(settingsRows[j], settingKey)){
             settingValue = settingsRows[j].getElementsBySelector('select[name="' + settingKey + '[]"]').first().getValue();
@@ -372,7 +372,7 @@ function collectAndSendValues(selectedContext, selectedSettingKey){
               var confirmationValue = settingsRows[j].getElementsBySelector('input[name="confirmation_' + settingKey + '"]').first().value;
               settings[contextKey][confirmationKey] = confirmationValue;
             } else {
-              var input = settingsRows[j].getElementsBySelector('input[name="' + settingKey + '"]').first()
+              var input = settingsRows[j].getElementsBySelector('input[name="' + settingKey + '"]').first();
               if(input){
                 settingValue = input.value;
               }
@@ -386,7 +386,6 @@ function collectAndSendValues(selectedContext, selectedSettingKey){
   var form = $('bulk_submit');
   addHiddenFieldsForSettings(form, settings);
   form.submit();
-
 }
 //Init tabs before page load but after required dom objects loaded.
 //This initalization could be done on dom:loaded but it creates a strange effect.
