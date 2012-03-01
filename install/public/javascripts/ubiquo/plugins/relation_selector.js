@@ -178,7 +178,9 @@ var RelationAutoCompleteSelector = Class.create({
   },
 
   prepareHiddenInput: function() {
-    var hidden_input = $(this.object_name + "_" + this.key + "_autocomplete");
+    var class_name = this.object_name + "_" + this.key + "_autocomplete";
+    var hidden_input = $$("."+class_name).first();
+    hidden_input.removeClassName(class_name);
     hidden_input.hide();
     hidden_input.observe('focus', function(event) {
                            this.input_box.focus();
@@ -329,8 +331,12 @@ var RelationAutoCompleteSelector = Class.create({
     }
   },
 
+  token_input : function(h_value){
+    var token_id = this.object_name + "_" + this.key + "_" + h_value
+    return this.hidden_input.up().down("#" + token_id);
+  },
   add_token: function(id, value, h_value) {
-    if($(this.object_name+"_"+this.key+"_"+h_value) == undefined) {
+    if(this.token_input(h_value) == undefined) {
       var this_token = this.insert_token(h_value, value);
       
       // Clear input box and make sure it keeps focus
@@ -417,7 +423,7 @@ var RelationAutoCompleteSelector = Class.create({
 
     // execute callback before deletion if it exists
     if(this.removeCallback != null && this.removeCallback != undefined) {
-      window[this.removeCallback]($(this.object_name+"_"+this.key+"_"+token_data.id));
+      window[this.removeCallback](this.token_input(token_data.id));
     }
 
     // Delete the token
@@ -426,7 +432,7 @@ var RelationAutoCompleteSelector = Class.create({
 
     // Delete hidden input
     keys = []; for(iter in token_data) {keys.push(iter)};
-    $(this.object_name+"_"+this.key+"_"+token_data[keys[0]]).remove(); //TO-CHECK: working on relationselector environment
+    this.token_input(token_data[keys[0]]).remove(); //TO-CHECK: working on relationselector environment
 
     // Show the input box and give it focus again
     this.input_box.focus();
