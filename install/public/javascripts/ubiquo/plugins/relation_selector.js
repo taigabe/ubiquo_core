@@ -179,6 +179,9 @@ var RelationAutoCompleteSelector = Class.create({
 
   prepareHiddenInput: function() {
     var class_name = this.object_name + "_" + this.key + "_autocomplete";
+    // We need to escape square brackets as prototype requires it to be usable in selectors
+    // Square brackets are present when using nested attributes
+    class_name = class_name.replace(/([\[|\]])/g, '\\$1')
     var hidden_input = $$("."+class_name).first();
     hidden_input.removeClassName(class_name);
     hidden_input.hide();
