@@ -78,9 +78,9 @@ class FilteredSearchTest < ActiveSupport::TestCase
     pages, results = @m.paginated_filtered_search(:page => 1, :per_page => 1)
     assert_nil pages[:previous]
     assert_equal 2, pages[:next]
-    pages, results = @m.paginated_filtered_search(:page => 3, :per_page => 1)
+    pages, results = @m.paginated_filtered_search(:page => 4, :per_page => 1)
     assert_nil pages[:next]
-    assert_equal 2, pages[:previous]
+    assert_equal 3, pages[:previous]
   end
 
   test 'Should support order_by when using relation columns' do
@@ -124,6 +124,13 @@ class FilteredSearchTest < ActiveSupport::TestCase
     end
   end
 
+  test "Should escape regular expressions on text search" do
+    @m.class_eval do
+      filtered_search_scopes :text => [ :description ]
+    end
+    assert_equal [@m.find_by_description('?*|()[]{}+.,')], @m.filtered_search({'filter_text' => '*'})
+  end
+
   private
 
   def self.create_test_tables
@@ -156,6 +163,11 @@ class FilteredSearchTest < ActiveSupport::TestCase
      },
      { :title => 'Tíred',
        :description => 'stop',
+       :published_at => Date.tomorrow,
+       :private => false
+     },
+     { :title => 'Regexp',
+       :description => '?*|()[]{}+.,',
        :published_at => Date.tomorrow,
        :private => false
      }
