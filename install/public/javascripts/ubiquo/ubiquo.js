@@ -301,7 +301,7 @@ function isSingleIput(dom, settingKey){
 }
 function isCheckbox(dom, settingKey){
   var input = dom.getElementsBySelector('input[name="' + settingKey + '"]').first();
-  return input && input.type == 'checkbox' && input.checked == true;
+  return input && input.type == 'checkbox';
 }
 function isPassword(dom, settingKey){
   var input = dom.getElementsBySelector('input[name="' + settingKey + '"]').first();
