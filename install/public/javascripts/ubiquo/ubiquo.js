@@ -387,6 +387,7 @@ function collectAndSendValues(selectedContext, selectedSettingKey){
   var form = $('bulk_submit');
   addHiddenFieldsForSettings(form, settings);
   form.submit();
+  return false;
 }
 //Init tabs before page load but after required dom objects loaded.
 //This initalization could be done on dom:loaded but it creates a strange effect.
