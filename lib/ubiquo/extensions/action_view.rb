@@ -7,7 +7,7 @@ module Ubiquo
           msg = instance.error_message
           error_class = Ubiquo::Settings.get(:error_field_class)
           unless (html_tag =~ /<input.*?type=\"(checkbox|radio|file)\"/)
-            if html_tag =~ /<(input|textarea|select)[^>]+class=/
+            if html_tag =~ /<(input|textarea|select)[^>]+class=['"]/
               class_attribute = html_tag =~ /class=['"]/
               html_tag.insert(class_attribute + 7, "#{error_class} ")
             elsif html_tag =~ /<(input|textarea|select)/
