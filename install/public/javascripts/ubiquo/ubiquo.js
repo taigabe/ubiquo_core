@@ -69,7 +69,7 @@ document.observe("dom:loaded", function() {
     e.observe('click', function(ev){
       ev.stop();
       var url = e.readAttribute('href');
-      window.open(url,'New window');
+      window.open(url);
     });
   });
 
