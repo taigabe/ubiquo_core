@@ -179,9 +179,7 @@ var RelationAutoCompleteSelector = Class.create({
 
   prepareHiddenInput: function() {
     var class_name = this.object_name + "_" + this.key + "_autocomplete";
-    // We need to escape square brackets as prototype requires it to be usable in selectors
-    // Square brackets are present when using nested attributes
-    class_name = class_name.replace(/([\[|\]])/g, '\\$1')
+    class_name = this.escape_brakets(class_name);
     var hidden_input = $$("."+class_name).first();
     hidden_input.removeClassName(class_name);
     hidden_input.hide();
@@ -335,20 +333,21 @@ var RelationAutoCompleteSelector = Class.create({
   },
 
   token_input : function(h_value){
-    var token_id = this.object_name + "_" + this.key + "_" + h_value
+    var token_id = this.object_name + "_" + this.key + "_" + h_value;
+    token_id = this.escape_brakets(token_id);
     return this.hidden_input.up().down("#" + token_id);
   },
   add_token: function(id, value, h_value) {
     if(this.token_input(h_value) == undefined) {
       var this_token = this.insert_token(h_value, value);
-      
+
       // Clear input box and make sure it keeps focus
       this.input_box.value = "";
       //this.input_box.focus();
       this.selected_dropdown_item = null;
       // Don't show the help dropdown, they've got the idea
       this.hide_dropdown();
-      
+
       // Save this token id
       if(this.tokenLimit == null || this.tokenLimit == false){
         var new_hidden_input = new Element('input', {type: 'hidden', name: this.object_name+"["+this.key+"][]", id: this.object_name+"_"+this.key+"_"+h_value, value: h_value});
@@ -358,7 +357,7 @@ var RelationAutoCompleteSelector = Class.create({
       if(this.addCallback != null && this.addCallback != undefined) {
         window[this.addCallback](new_hidden_input);
       }
-      
+
       this.hidden_input.insert({after: new_hidden_input});
       this.token_count++;
       if(this.tokenLimit != null && this.tokenLimit >= this.token_count) {
@@ -434,7 +433,7 @@ var RelationAutoCompleteSelector = Class.create({
     this.selected_token = null;
 
     // Delete hidden input
-    keys = []; for(iter in token_data) {keys.push(iter)};
+    var keys = []; for(iter in token_data) {keys.push(iter)};
     this.token_input(token_data[keys[0]]).remove(); //TO-CHECK: working on relationselector environment
 
     // Show the input box and give it focus again
@@ -533,7 +532,11 @@ var RelationAutoCompleteSelector = Class.create({
     item.removeClassName(this.CLASSES.selectedDropdownItem);
     this.selected_dropdown_item = null;
   },
-
+  // We need to escape square brackets as prototype requires it to be usable in selectors
+  // Square brackets are present when using nested attributes
+  escape_brakets: function(str){
+    return str.replace(/([\[|\]])/g, '\\$1');
+  },
   // Do a search and show the "searching" dropdown if the input is longer
   // than settings.minChars
   do_search: function(immediate) {
