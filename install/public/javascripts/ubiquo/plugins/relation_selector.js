@@ -89,7 +89,8 @@ var RelationAutoCompleteSelector = Class.create({
       }
     }.bind(klass));
     input_box.observe('blur', function(event) {
-      this.hide_dropdown();
+      //Defer hide because IE triggers blur before click on list items.
+      setTimeout(function(){this.hide_dropdown();}.bind(this),200);
       event.stop();
     }.bind(klass));
     input_box.observe('keydown', function(event) {
@@ -194,6 +195,23 @@ var RelationAutoCompleteSelector = Class.create({
     hidden_input.value = "";
     return hidden_input;
   },
+  
+  focusOnInput: function(){
+    var can_show = true;
+    if( this.tokenLimit != null ){
+      if( this.tokenLimit <= this.token_count){
+        can_show=false;
+      }
+    }
+    if( can_show ){
+      this.input_box.show();
+      this.input_box.focus();
+    }else{
+      this.input_box.value="";
+      this.input_box.hide();
+      this.hide_dropdown();
+    }
+  },
 
   prepareTokenList: function() {
     var klass = this;
@@ -205,10 +223,10 @@ var RelationAutoCompleteSelector = Class.create({
         this.toggle_select_token(li);
         event.stop();
       } else {
-        this.input_box.focus();
         if(this.selected_token) {
           this.deselect_token($(this.selected_token), this.POSITIONS.END);
         }
+        this.focusOnInput();
         event.stop();
       }
     }.bind(klass));
@@ -258,7 +276,7 @@ var RelationAutoCompleteSelector = Class.create({
     var li_data = this.prePopulate;
     if(li_data && li_data.length) {
       li_data.each(function(item) {
-        keys = []; for(iter in item) {keys.push(iter)};
+        keys = [];for(iter in item) {keys.push(iter)};
         var this_token = this.add_token_from_json(item[keys[0]] || item);
     }.bind(this));
     }
@@ -277,9 +295,10 @@ var RelationAutoCompleteSelector = Class.create({
 
   // Get an element of a particular type from an event (click/mouseover etc)
   get_element_from_event: function(event, element_type) {
-    var target = $(event.target);
+    var target = $(Event.element(event));
     var element = null;
 
+    
     if(target.nodeName == element_type) {
       element = target;
     } else if(target.up(element_type)) {
@@ -369,7 +388,7 @@ var RelationAutoCompleteSelector = Class.create({
 
   add_token_from_li: function(item) {
     var li_data = item.readAttribute('alt').evalJSON();
-    keys = []; for(iter in li_data) {keys.push(iter)};
+    keys = [];for(iter in li_data) {keys.push(iter)};
     this.add_token(li_data.id, li_data[keys[0]][this.queryParam] || li_data[this.queryParam], li_data[keys[0]] [this.idQueryParam] || li_data[this.idQueryParam]);
   },
 
@@ -404,7 +423,7 @@ var RelationAutoCompleteSelector = Class.create({
       this.token_list.insert(this.input_token);
     }
     // Show the input box and give it focus again
-    this.input_box.focus();
+    this.focusOnInput();
   },
 
   // Toggle selection of a token in the token list
@@ -436,15 +455,11 @@ var RelationAutoCompleteSelector = Class.create({
     var keys = []; for(iter in token_data) {keys.push(iter)};
     this.token_input(token_data[keys[0]]).remove(); //TO-CHECK: working on relationselector environment
 
-    // Show the input box and give it focus again
-    this.input_box.focus();
     this.token_count--;
-
-    if (this.tokenLimit != null) {
-      this.input_box.value = "";
-      this.input_box.show();
-      this.input_box.focus();
-    }
+    
+    // Show the input box and give it focus again
+    this.input_box.value = "";
+    this.focusOnInput();
   },
   // Hide and clear the results dropdown
   hide_dropdown: function() {
@@ -491,7 +506,7 @@ var RelationAutoCompleteSelector = Class.create({
         if (results.hasOwnProperty(i)) {
           var this_li = new Element('li');
           //hack to retrieve keys
-          keys = []; for(iter in results[i]) {keys.push(iter)};
+          keys = [];for(iter in results[i]) {keys.push(iter)};
           var value = this.highlight_term(results[i][this.queryParam] || results[i][keys[0]][this.queryParam], query)
           this_li.insert(value);
           dropdown_ul.insert(this_li);
@@ -509,7 +524,12 @@ var RelationAutoCompleteSelector = Class.create({
       }
 
       this.dropdown.show();
-      dropdown_ul.slideDown({duration: 0.3});
+      //TODO: fix slideDown for IE
+      if(!Prototype.Browser.IE){ 
+          dropdown_ul.slideDown({duration: 0.3}); 
+      }else{
+          dropdown_ul.show();
+      }
     } else {
       this.selected_dropdown_item = null;
       this.dropdown.update("<p>"+this.CAPTIONS.noResultsText+"</p>");
@@ -576,7 +596,7 @@ var RelationAutoCompleteSelector = Class.create({
         klass.cache.add(query, results.responseText.evalJSON(true));
         klass.populate_dropdown(query, results.responseText.evalJSON(true));
       };
-      new Ajax.Response(new Ajax.Request(this.categories_url + queryStringDelimiter + "filter_text" + "=" + query, { method: "get", asynchronous: false, onSuccess: callback }));
+      new Ajax.Response(new Ajax.Request(this.categories_url + queryStringDelimiter + "filter_text" + "=" + query, {method: "get", asynchronous: false, onSuccess: callback}));
     }
   }
 });
