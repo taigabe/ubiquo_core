@@ -112,8 +112,8 @@ module Ubiquo
               options = {
                 :is_a_override => true
               }
-              options.merge!(:locale => name.locale)  if translatable?(name.key)
-              set(name.key, value, options)
+              options.merge!(:locale => name.locale)  if self[name.context].translatable?(name.key)
+              context(name.context).set(name.key, value, options)
             elsif name.is_a?(Hash)
               return nil if !overridable?
               raise Ubiquo::Settings::InvalidOptionName if options[:is_translatable] && !name.locale
