@@ -4,13 +4,13 @@ module Connectors
   class StandardTest < ActiveSupport::TestCase
 
       def setup
-        save_current_settings_connector 
+        save_current_settings_connector
         Ubiquo::Settings[:settings_connector] = :standard
         clean_translatable_settings
         Ubiquo::SettingsConnectors.load!
         Ubiquo::Settings.regenerate_settings
       end
-      
+
       def teardown
         clear_settings
         reload_old_settings_connector
@@ -21,48 +21,45 @@ module Connectors
 #      end
 
       test "should load values from database backend" do
-        
+        UbiquoSetting.delete_all
         create_settings_test_case = lambda {
-          Ubiquo::Settings.create_context(:foo)
-          Ubiquo::Settings.create_context(:foo2)
-          create_setting(:context => 'foo', :key => 'first', :value => 'value1')
-          create_setting(:context => 'foo', :key => 'second', :value => 'value2')
-          create_setting(:context => 'foo', :key => 'third', :value => 'value3')
-          create_setting(:context => 'foo2', :key => 'first', :value => 'value4')
+          create_setting(:context => :foo, :key => 'first', :value => 'value1')
+          create_setting(:context => :foo, :key => 'second', :value => 'value2')
+          create_setting(:context => :foo, :key => 'third', :value => 'value3')
+          create_setting(:context => :foo2, :key => 'first', :value => 'value4')
         }
 
         create_overrides_test_case = lambda {
-          UbiquoStringSetting.create(:context => :foo, :key => 'first', :value => 'value1_redefinido')
-          UbiquoStringSetting.create(:context => :foo, :key => 'second', :value => 'value2_redefinido')
-          UbiquoStringSetting.create(:context => :foo2, :key => 'first', :value => 'value3_redefinido')
+          create_ubiquo_setting(:context => :foo, :key => 'first', :value => 'value1_redefinido')
+          create_ubiquo_setting(:context => :foo, :key => 'second', :value => 'value2_redefinido')
+          create_ubiquo_setting(:context => :foo2, :key => 'first', :value => 'value3_redefinido')
         }
 
-        Ubiquo::Settings[:ubiquo][:settings_overridable] = true        
+        Ubiquo::Settings[:ubiquo][:settings_overridable] = true
         create_settings_test_case.call
         create_overrides_test_case.call
-        
         assert_equal 'value1_redefinido', Ubiquo::Settings[:foo][:first]
 
         Ubiquo::Settings.reset_overrides
         clear_settings
-        Ubiquo::Settings[:ubiquo][:settings_overridable] = true        
+        Ubiquo::Settings[:ubiquo][:settings_overridable] = true
         create_settings_test_case.call
 
         assert_equal 'value1', Ubiquo::Settings[:foo][:first]
-             
+
         create_overrides_test_case.call
         assert_equal 'value1_redefinido', Ubiquo::Settings[:foo].get(:first)
-       
+
         clear_settings
         assert !Ubiquo::Settings.context_exists?(:foo)
-                
+
         UbiquoStringSetting.any_instance.stubs(:apply).returns(false)
         create_settings_test_case.call
-        
+
         UbiquoStringSetting.create(:context => :foo, :key => 'first', :value => 'value1_redefinido')
         assert_equal 'value1', Ubiquo::Settings[:foo][:first]
         enable_settings_override
-        Ubiquo::Settings.load_from_backend!     
+        Ubiquo::Settings.load_from_backend!
         assert_equal 'value1_redefinido', Ubiquo::Settings[:foo][:first]
       end
 
@@ -75,16 +72,16 @@ module Connectors
 
         Ubiquo::Settings[:ubiquo][:settings_overridable] = true
         Ubiquo::Settings.create_context(:foo_context_1)
-        Ubiquo::Settings[:foo_context_1].add(:new_setting, 
+        Ubiquo::Settings[:foo_context_1].add(:new_setting,
                                          'hola',
                                          {
                                            :is_editable => false,
                                          })
-                        
+
         s1 = UbiquoStringSetting.create(:context => :foo_context_1, :key => :new_setting, :value => 'hola_redefinido')
         assert s1.errors
 
-        Ubiquo::Settings[:foo_context_1].set(:new_setting, 
+        Ubiquo::Settings[:foo_context_1].set(:new_setting,
                                          'hola',
                                          {
                                            :is_editable => true,
@@ -93,10 +90,37 @@ module Connectors
         assert_equal 'hola_redefinido', Ubiquo::Settings[:foo_context_1][:new_setting]
       end
 
+      test "should not raise error when a setting cannot be loaded" do
+        Ubiquo::Settings[:ubiquo][:settings_overridable] = true
+
+        UbiquoSetting.delete_all
+        UbiquoSetting.stubs(:all).returns([UbiquoStringSetting.new(:key => 'non-existant-or-non-valid')])
+        assert_equal 0, Settings.uhook_load_from_backend!
+      end
+
+      test "when a setting stored in the backend can not be loaded, log a error" do
+        Ubiquo::Settings[:ubiquo][:settings_overridable] = true
+        Rails.logger.expects(:error)
+        UbiquoSetting.delete_all
+        UbiquoSetting.stubs(:all).returns([UbiquoStringSetting.new(:key => 'non-existant-or-non-valid')])
+
+        assert_equal 0, Settings.uhook_load_from_backend!
+      end
+
+      test "should process all settings in the backend wether or not a previous cause a error and couldn't be loaded" do
+        Ubiquo::Settings[:ubiquo][:settings_overridable] = true
+        Rails.logger.expects(:error).once
+        UbiquoSetting.delete_all
+        UbiquoSetting.stubs(:all).returns([
+          UbiquoStringSetting.new(:key => 'non-existant-or-non-valid'),
+          new_ubiquo_setting(:key => 'foo22')])
+
+        assert_equal 1, Settings.uhook_load_from_backend!
+      end
+
       test 'uhook_edit_ubiquo_setting should return true' do
         assert Ubiquo::UbiquoSettingsController.new.uhook_edit_ubiquo_setting(UbiquoSetting.new)
       end
-
 
       def test_uhook_index_should_order_contexts_acording_to_get_contexts_method
         Ubiquo::Settings.create_context(:foo_first).integer  :a, 1, :is_editable => true
@@ -112,18 +136,36 @@ module Connectors
 
     private
 
-    def create_setting options = {}
-      default_options = {
+    def default_setting_options
+      {
         :context => 'foo',
         :key => 'setting_key',
         :value => 'one',
         :options => {
           :is_editable => true,
         }
-      }.merge(options)
-      Ubiquo::Settings[default_options[:context].to_sym].add(default_options[:key], 
-                                                    default_options[:value],
-                                                    default_options[:options])
+      }
+    end
+
+    def create_setting options = {}
+      options.reverse_merge!(default_setting_options)
+      Ubiquo::Settings.context_exists?(options[:context].to_sym) || create_context(options[:context])
+      Ubiquo::Settings[options[:context].to_sym].add(options[:key], options[:value], options[:options])
+    end
+
+    def new_ubiquo_setting options = {}
+      options.reverse_merge!(default_setting_options)
+      Ubiquo::Settings.context_exists?(options[:context].to_sym) || create_context(options[:context])
+      Ubiquo::Settings[options[:context].to_sym].option_exists?(options[:key].to_sym) || create_setting(options)
+      UbiquoStringSetting.new(options.except(:options))
+    end
+
+    def create_ubiquo_setting options = {}
+      new_ubiquo_setting(options).tap { |s| s.save }
+    end
+
+    def create_context context
+      Ubiquo::Settings.create_context(context.to_sym)
     end
 
     def clear_settings
@@ -136,13 +178,13 @@ module Connectors
       @old_connector = Ubiquo::SettingsConnectors::Base.current_connector
       @initial_contexts =  Ubiquo::Settings.settings.keys
       @old_configuration = Ubiquo::Settings.settings[Ubiquo::Settings.default_context].clone
-      
+
       Ubiquo::SettingsConnectors.load!
     end
 
     def reload_old_settings_connector
       clear_settings
-      @old_connector.load!      
+      @old_connector.load!
     end
 
     def clean_translatable_settings

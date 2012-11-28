@@ -39,9 +39,17 @@ module Ubiquo
           def uhook_load_from_backend!
             return 0 if !overridable?
             regenerate_settings
-            ::UbiquoSetting.all.map do |s|
-              self.context(s.context).add(s)
-            end.compact.length
+            ::UbiquoSetting.all.map{|s| add_ubiquo_setting(s)}.compact.length
+          end
+
+          def add_ubiquo_setting(s)
+            begin
+              add(s)
+              true
+            rescue Exception => e
+              Rails.logger.error "Couldn't load the setting #{s.inspect}, please check that the setting already exist in the initializer and the type has not changed"
+              nil
+            end
           end
 
           def uhook_add(name = nil, default_value = nil, options = {}, &block)
