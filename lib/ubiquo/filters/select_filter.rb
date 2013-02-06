@@ -55,9 +55,11 @@ module Ubiquo
                    name_field = @options[:name_field] || raise("options: missing 'name_field' key")
                    record.send(name_field)
                  elsif @options[:collection]
-                   value = @options[:collection].find do |value|
-              value.send(@options[:id_field]).to_s == @context.params[field_key]
-            end.send(@options[:name_field]) rescue @context.params[field_key]
+                   @context.params[field_key].to_a.map do |param_value|
+                     value = @options[:collection].to_a.find do |value|
+                       value.send(@options[:id_field]).to_s == param_value
+                     end.send(@options[:name_field]) rescue @context.params[field_key]
+                   end.join("' #{I18n.t('ubiquo.base.or')} '")
                  else
                    prefix = @options[:translate_prefix]
                    prefix ? @context.I18n.t("#{prefix}.filters.#{@context.params[field_key]}") : @context.params[field_key]

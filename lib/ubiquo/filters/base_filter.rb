@@ -39,7 +39,7 @@ module Ubiquo
       def hidden_fields(hash)
         hash.map do |field, value|
           if value.is_a? Array
-            value.map {|val| hidden_field_tag field+"[]", val}.flatten
+            value.map {|val| @context.hidden_field_tag field+"[]", val}.flatten
           else
             @context.hidden_field_tag field, value, :id => nil
           end
