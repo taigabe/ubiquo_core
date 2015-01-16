@@ -17,6 +17,8 @@ if connection
       Ubiquo::Adapters::Sqlite
     when "ActiveRecord::ConnectionAdapters::MysqlAdapter"
       Ubiquo::Adapters::Mysql
+    when "ActiveRecord::ConnectionAdapters::Mysql2Adapter"
+      Ubiquo::Adapters::Mysql2
     else
       nil
   end
@@ -24,13 +26,14 @@ if connection
   included_module ||= case connection.config[:adapter]
     when "mysql"
       Ubiquo::Adapters::Mysql
+    when "mysql2"
+      Ubiquo::Adapters::Mysql2
     when "postgresql"
       Ubiquo::Adapters::Postgres
     when "sqlite3"
       Ubiquo::Adapters::Sqlite
     else nil
   end rescue nil
-
 
   raise "Only PostgreSQL, MySQL and SQLite supported" if  included_module == nil
 

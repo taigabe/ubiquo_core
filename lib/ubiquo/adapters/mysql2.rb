@@ -1,6 +1,6 @@
 module Ubiquo
   module Adapters
-    module Mysql
+    module Mysql2
       def self.included(klass)
         klass.send :include, InstanceMethods
       end
@@ -24,7 +24,7 @@ module Ubiquo
 
         # Returns the next value for the sequence "name"
         def next_val_sequence(name)
-          if self.class.equal? ActiveRecord::ConnectionAdapters::MysqlAdapter
+          if self.class.equal? ActiveRecord::ConnectionAdapters::Mysql2Adapter
             self.insert_sql("INSERT INTO %s_sequence VALUES(NULL)" % name)
           else
             # the default insert_sql is nonsense, but jdbc_mysql doesn't override it
