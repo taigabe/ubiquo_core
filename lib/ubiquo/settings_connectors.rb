@@ -7,7 +7,7 @@ module Ubiquo
 
     def self.preload!
       Ubiquo::SettingsConnectors::Standard.preload!
-      Ubiquo::Settings.initialize
+      Ubiquo::Settings.initialize_settings
       Ubiquo::Settings.add :settings_connector, :standard
     end
 
