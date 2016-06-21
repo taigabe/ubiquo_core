@@ -281,8 +281,8 @@ class UbiquoFormBuilderTest < ActionView::TestCase
   end
 
   test "tabs can be unfolded" do
-    original_value = Ubiquo::Config.context(:ubiquo_form_builder).get(:unfold_tabs)
-    Ubiquo::Config.context(:ubiquo_form_builder).set(:unfold_tabs,true)
+    original_value = Ubiquo::Settings.context(:ubiquo_form_builder).get(:unfold_tabs)
+    Ubiquo::Settings.context(:ubiquo_form_builder).set(:unfold_tabs,true)
     begin
       the_form do |form|
          concat( form.group(:type => :tabbed, :class=> "a-group-of-tabs") do
@@ -296,7 +296,7 @@ class UbiquoFormBuilderTest < ActionView::TestCase
       assert_select ".form-tab-container-unfolded.a-group-of-tabs .form-tab", 1
     ensure
       # Restore config
-      Ubiquo::Config.context(:ubiquo_form_builder).set(:unfold_tabs, original_value )
+      Ubiquo::Settings.context(:ubiquo_form_builder).set(:unfold_tabs, original_value )
     end
   end
 

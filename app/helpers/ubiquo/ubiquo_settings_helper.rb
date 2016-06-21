@@ -122,7 +122,7 @@ module Ubiquo::UbiquoSettingsHelper
     classes = []
     classes << error_class(ubiquo_setting)
     if ubiquo_setting.options && ubiquo_setting.options[:tinymce]
-      classes << Ubiquo::Config.context(:ubiquo_form_builder).get(:default_tag_options)[:text_area][:class]
+      classes << Ubiquo::Settings.context(:ubiquo_form_builder).get(:default_tag_options)[:text_area][:class]
     end
     classes.join(' ').strip.squeeze
   end

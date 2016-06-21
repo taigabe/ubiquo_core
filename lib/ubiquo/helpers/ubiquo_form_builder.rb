@@ -15,7 +15,7 @@ module Ubiquo
     #   input fields (#text_field, #select_field, #date_select, etc.)
     #   
     #   We add a wrapper around all the fields as configured in the 
-    #   Ubiquo::Config.context(:ubiquo_form_builder).get(:default_tag_options)
+    #   Ubiquo::Settings.context(:ubiquo_form_builder).get(:default_tag_options)
     #   
     #   So all methods mentioned have the following options added, and the proxy
     #   (UbiquoFormBuilder instance) processes them accordingly.
@@ -50,7 +50,7 @@ module Ubiquo
       # Dont decorate these
       helpers -= %w{hidden_field label fields_for}
       
-      Ubiquo::Config.context(:ubiquo_form_builder) do |context|
+      Ubiquo::Settings.context(:ubiquo_form_builder) do |context|
         self.default_tag_options = context.get(:default_tag_options)
         self.groups_configuration = context.get(:groups_configuration)
       end
@@ -147,7 +147,7 @@ module Ubiquo
 
       def initialize(*args)
         super(*args)
-        Ubiquo::Config.context(:ubiquo_form_builder) do |ctx|
+        Ubiquo::Settings.context(:ubiquo_form_builder) do |ctx|
           self.builder_options = {
             :unfold_tabs => ctx.get(:unfold_tabs),
             :default_group_type => ctx.get(:default_group_type),
@@ -164,7 +164,7 @@ module Ubiquo
       #
       # Options are:
       #   +:type+: the type name of group to render. The default group name is
-      #     read from Ubiquo::Config.context(:ubiquo_form_builder).get(:default_group_type)
+      #     read from Ubiquo::Settings.context(:ubiquo_form_builder).get(:default_group_type)
       #     We get default configuration based on this type. Some of the available
       #     types are :div, :fieldset and :tabbed. To see all of them look at the
       #     ubiquo_core/rails/init.rb in :groups_configuration or get there in runtime.

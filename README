@@ -7,7 +7,7 @@ http://www.ubiquo.me
 
 This plugin contains the basic common Ubiquo structure so that other plugins can be built on top of it. This includes:
 
-* Ubiquo::Config system
+* Ubiquo::Settings system
 * Core helpers
 * Ubiquo layout and styling elements
 * Main ruby/rails extensions

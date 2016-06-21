@@ -28,7 +28,7 @@ hide_actions ||= false
 link_to_new ||= ""
 table_id ||= name.pluralize + "-list"
 #We look for the configuration value if not provided
-edit_on_row_click = Ubiquo::Config.get(:edit_on_row_click) if edit_on_row_click.nil? 
+edit_on_row_click = Ubiquo::Settings.get(:edit_on_row_click) if edit_on_row_click.nil? 
 table_class ||=""
 table_class += " edit_on_row_click" if edit_on_row_click
 %>

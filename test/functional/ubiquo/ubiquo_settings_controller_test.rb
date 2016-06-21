@@ -249,7 +249,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     )
     assert_equal "using tinymce", Ubiquo::Settings[:controller_test][:test_tinymce]
     get :index
-    assert_tag :tag => "textarea", :attributes => { :class => Ubiquo::Config.context(:ubiquo_form_builder).get(:default_tag_options)[:text_area][:class]}
+    assert_tag :tag => "textarea", :attributes => { :class => Ubiquo::Settings.context(:ubiquo_form_builder).get(:default_tag_options)[:text_area][:class]}
   end
 
   def test_should_show_a_text_area_for_string_text
@@ -316,7 +316,7 @@ class Ubiquo::UbiquoSettingsControllerTest < ActionController::TestCase
     translated_key = 'This key is translated'
     non_translated_key = 'Non translated key setting'
 
-    Ubiquo::Config[:supported_locales].each do |locale|
+    Ubiquo::Settings[:supported_locales].each do |locale|
       I18n.backend.store_translations locale,
         {:ubiquo => {:ubiquo_settings => {:controller_test => {:translated_key_setting => {:name => translated_key}}}}}
     end

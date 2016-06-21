@@ -26,10 +26,10 @@ Ubiquo::Plugin.register(:ubiquo, directory, config) do |setting|
   setting.add(:prioritary_contexts, [])
 end
 
-Ubiquo::Config.add(:edit_on_row_click, true)
+Ubiquo::Settings.add(:edit_on_row_click, true)
 
-Ubiquo::Config.create_context(:ubiquo_form_builder)
-Ubiquo::Config.context(:ubiquo_form_builder) do |context|
+Ubiquo::Settings.create_context(:ubiquo_form_builder)
+Ubiquo::Settings.context(:ubiquo_form_builder) do |context|
   context.add( :default_tag_options, {
     :text_area => { :class => "visual_editor" },
     :relation_selector => { :append_class => "relation" },
