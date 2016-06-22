@@ -33,6 +33,21 @@ module Ubiquo::Concerns::Settings
   end
 
   module ClassMethods
+
+    def fresh key
+      return nil unless UbiquoSetting.table_exists?
+      ubiquo_setting = UbiquoSetting.find_by_context_and_key(current_context.to_s, key.to_s)
+      ubiquo_setting ? ubiquo_setting.value : self[key]
+    end
+
+    def cached key
+      [key.to_sym]
+    end
+
+    def find_editable key
+      fresh(key) || cached(key)
+    end
+
     def overridable?
       settings[default_context][default_overridable_key][:value]
     end
