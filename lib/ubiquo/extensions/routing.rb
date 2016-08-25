@@ -11,7 +11,7 @@ module Ubiquo
         self.with_options(options) do |map|
           routes_path = Rails.root.join('vendor', 'plugins', name.to_s, 'config', 'plugin_routes.rb')
           # logger.debug "loading routes from #{routes_path}"
-          eval(IO.read(routes_path), binding, routes_path) if File.file?(routes_path)
+          eval(IO.read(routes_path.to_s), binding, routes_path.to_s) if File.file?(routes_path.to_s)
         end
       end
     end
