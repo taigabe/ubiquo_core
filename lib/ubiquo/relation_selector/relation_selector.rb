@@ -182,6 +182,7 @@ module Ubiquo
 
       def relation_autocomplete_selector(object, object_name, key, related_objects, humanized_field, relation_type, options = {})
         url_params = {:format => :js}
+        url_params.merge!(:use_scopes => object.page.try(:overriden_scopes)) if object.class.ancestors.include?(Widget)
         url_params.merge!(options[:url_params]) if options[:url_params].present?
 
         autocomplete_options = {
