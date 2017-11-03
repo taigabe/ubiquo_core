@@ -59,9 +59,7 @@ module Ubiquo
         false
       rescue Exception => e
         error_msg = build_error_msg(e)
-        if @recipients
-          JobMailer.deliver_error(@recipients, task, run_msg, error_msg)
-        end
+        Airbrake.notify(e)
         false
       ensure
         run_msg << " (#{Time.now - start} seconds elapsed)"
