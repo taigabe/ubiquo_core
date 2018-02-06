@@ -82,6 +82,8 @@ module Ubiquo
       #  >> Book.paginated_filtered_search(params)
       #  >> Book.paginated_filtered_search(params, :scopes => [ :text ])
       def filtered_search(params = {}, options = {})
+        return job_filtered_search(params, options) if respond_to? :job_filtered_search
+
         scopes = select_scopes(params, options[:scopes])
         scopes.inject(self) do |results, pair|
           pair.last.blank? ? results : results.send(pair.first, pair.last)
